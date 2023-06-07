@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imyuanxiao.rbac.mapper.UserAuthMapper">
+
+    <resultMap id="BaseResultMap" type="com.imyuanxiao.rbac.model.entity.UserAuth">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="loginType" column="login_type" jdbcType="INTEGER"/>
+            <result property="openid" column="openid" jdbcType="VARCHAR"/>
+            <result property="accessToken" column="access_token" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,login_type,
+        openid,access_token
+    </sql>
+</mapper>
