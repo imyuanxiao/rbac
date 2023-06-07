@@ -21,7 +21,7 @@ import java.util.Set;
 
 /**
  * @description  登录注册接口
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 @Validated
@@ -79,6 +79,7 @@ public class AuthController {
     public String updateToken(){
         return userService.updateToken();
     }
+
     @GetMapping("/my-permission")
     @ApiOperation(value = "Get UserVO every time route changes")
     public Set<Long> myPermission(){

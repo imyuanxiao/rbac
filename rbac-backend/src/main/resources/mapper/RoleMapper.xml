@@ -35,7 +35,7 @@
     <!--查询分页对象-->
     <select id="selectPage" resultType="com.imyuanxiao.rbac.model.vo.RolePageVO">
         select
-            id, name
+            id, role_name
         from
             role
                 ${ew.customSqlSegment}

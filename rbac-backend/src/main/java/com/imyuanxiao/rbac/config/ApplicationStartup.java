@@ -19,11 +19,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @ClassName ApplicationStartup
- * @Description Scan @auth on interface and add permissions to database.
- * @Author imyuanxiao
- * @Date 2023/5/7 16:49
- * @Version 1.0
+ * @description  Scan @auth on interface and add permissions to database.
+ * @author  imyuanxiao
  **/
 @Component
 public class ApplicationStartup implements ApplicationRunner {
@@ -35,21 +32,24 @@ public class ApplicationStartup implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 扫描并获取所有需要权限处理的接口资源(该方法逻辑写在下面)
-        List<Permission> list = getAuthResources();
+        List<Permission> list = getAuthOnMethod();
+
         // 先删除所有操作权限类型的权限资源，待会再新增资源，以实现全量更新（注意哦，数据库中不要设置外键，否则会删除失败）
+        permissionService.deletePermissionByType(0);
         permissionService.deletePermissionByType(1);
+
         // 如果权限资源为空，就不用走后续数据插入步骤
-        if (CollectionUtil.isEmpty(list)) {
-            return;
+        if (!CollectionUtil.isEmpty(list)) {
+            // 将资源数据批量添加到数据库
+            permissionService.insertPermissions(list);
         }
-        // 将资源数据批量添加到数据库
-        permissionService.insertPermissions(list);
+
     }
 
     /**
      * 扫描并返回所有需要权限处理的接口资源
      */
-    private List<Permission> getAuthResources() {
+    private List<Permission> getAuthOnMethod() {
         // 接下来要添加到数据库的资源
         List<Permission> list = new LinkedList<>();
         // 拿到所有接口信息，并开始遍历
@@ -59,11 +59,21 @@ public class ApplicationStartup implements ApplicationRunner {
             Auth moduleAuth = handlerMethod.getBeanType().getAnnotation(Auth.class);
             // 拿到接口方法上的权限注解
             Auth methodAuth = handlerMethod.getMethod().getAnnotation(Auth.class);
-            // 模块注解和方法注解缺一个都代表不进行权限处理
-            if (moduleAuth == null || methodAuth == null) {
+
+            // 先添加类上的注解
+            if (moduleAuth == null) {
                 return;
             }
+            Permission permissionOnClass = new Permission()
+                    .setType(0).setPermissionName(moduleAuth.name()).setId(moduleAuth.id());
+            if(!list.contains(permissionOnClass)){
+                list.add(permissionOnClass);
+            }
 
+            // 再添加方法上的注解
+            if (methodAuth == null) {
+                return;
+            }
             // 拿到该接口方法的请求方式(GET、POST等)
             Set<RequestMethod> methods = info.getMethodsCondition().getMethods();
             // 如果一个接口方法标记了多个请求方式，权限id是无法识别的，不进行处理
@@ -82,4 +92,5 @@ public class ApplicationStartup implements ApplicationRunner {
         });
         return list;
     }
+
 }

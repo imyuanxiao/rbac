@@ -9,14 +9,13 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * @ClassName UserParam
- * @Description Receive user-related parameters.
- * @Author imyuanxiao
- * @Date 2023/5/7 11:12
- * @Version 1.0
+ * @description  Receive user-related parameters.
+ * @author  imyuanxiao
+ * @date  2023/5/7 11:12
  **/
 @Data
 public class UserAddRequest {
+
     @NotNull(message = "UserID is required.", groups = Update.class)
     private Long id;
 
@@ -30,4 +29,5 @@ public class UserAddRequest {
     public interface Update {}
 
     public interface CreateUser{}
+
 }

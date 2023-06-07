@@ -1,12 +1,16 @@
 package com.imyuanxiao.rbac.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.mapper.PermissionMapper;
 import com.imyuanxiao.rbac.model.entity.Role;
 import com.imyuanxiao.rbac.model.dto.RoleParam;
+import com.imyuanxiao.rbac.model.vo.RolePageVO;
 import com.imyuanxiao.rbac.service.RoleService;
 import com.imyuanxiao.rbac.mapper.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,17 +58,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
         baseMapper.insertRolesByUserId(userId, roleIds);
     }
 
-//    @Override
-//    public IPage<RolePageVO> selectPage(Page<RolePageVO> page) {
-//        QueryWrapper<RolePageVO> queryWrapper = new QueryWrapper<>();
-//        // 获取分页列表
-//        IPage<RolePageVO> pages = baseMapper.selectPage(page, queryWrapper);
-//        // 再查询各角色的权限
-//        for (RolePageVO vo : pages.getRecords()) {
-//            vo.setPermissionIds(permissionMapper.selectIdsByRoleId(vo.getId()));
-//        }
-//        return pages;
-//    }
+    @Override
+    public IPage<RolePageVO> selectPage(Page<RolePageVO> page) {
+        QueryWrapper<RolePageVO> queryWrapper = new QueryWrapper<>();
+        // 获取分页列表
+        IPage<RolePageVO> pages = baseMapper.selectPage(page, queryWrapper);
+        // 再查询各角色的权限
+        for (RolePageVO vo : pages.getRecords()) {
+            vo.setPermissionIds(permissionMapper.selectIdsByRoleId(vo.getId()));
+        }
+        return pages;
+    }
 
     @Override
     public void updatePermissions(RoleParam param) {

@@ -231,18 +231,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public void createUser(UserAddRequest param) {
-        if (lambdaQuery().eq(User::getUserAccount, param.getAccount()).one() != null) {
+    public void createUser(UserAddRequest userAddRequest) {
+        if (lambdaQuery().eq(User::getUserAccount, userAddRequest.getAccount()).one() != null) {
             throw new ApiException(ResultCode.FAILED,"Account already exists.");
         }
         User user = new User();
-        user.setUserAccount(param.getAccount()).setUserPassword(passwordEncoder.encode(param.getAccount()));
+        user.setUserAccount(userAddRequest.getAccount()).setUserPassword(passwordEncoder.encode(userAddRequest.getAccount()));
         save(user);
-        if (CollectionUtil.isEmpty(param.getRoleIds())) {
+        if (CollectionUtil.isEmpty(userAddRequest.getRoleIds())) {
             return;
         }
         // Add info in table [user-role]
-        roleService.insertRolesByUserId(user.getId(), param.getRoleIds());
+        roleService.insertRolesByUserId(user.getId(), userAddRequest.getRoleIds());
     }
 
     @Override

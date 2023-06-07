@@ -1,8 +1,13 @@
 package com.imyuanxiao.rbac.controller.api;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import com.imyuanxiao.rbac.annotation.Auth;
 import com.imyuanxiao.rbac.model.entity.Role;
 import com.imyuanxiao.rbac.model.dto.RoleParam;
+import com.imyuanxiao.rbac.model.vo.RolePageVO;
 import com.imyuanxiao.rbac.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,11 +22,9 @@ import java.util.List;
 import static com.imyuanxiao.rbac.util.CommonUtil.ACTION_SUCCESSFUL;
 
 /**
- * @ClassName RoleController
- * @Description Role Management Interface
- * @Author imyuanxiao
- * @Date 2023/5/4 17:35
- * @Version 1.0
+ * @description  Role Management Interface
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
+ * @date: 2023/6/7 23:17
  **/
 @Slf4j
 @RestController
@@ -62,15 +65,16 @@ public class RoleController {
         return roleService.list();
     }
 
-//    @GetMapping("/page/{current}&{pageSize}")
-//    @ApiOperation(value = "Page through role information")
-//    public IPage<RolePageVO> getRolePage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
-//        // Set pagination parameters
-//        Page<RolePageVO> page = new Page<>();
-//        OrderItem orderItem = new OrderItem();
-//        orderItem.setColumn("id");
-//        page.setCurrent(current).setSize(pageSize).addOrder(orderItem);
-//        return roleService.selectPage(page);
-//    }
+    @GetMapping("/page/{current}&{pageSize}")
+//    @Auth(id = 4, name = "角色分页信息")
+    @ApiOperation(value = "Page through role information")
+    public IPage<RolePageVO> getRolePage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
+        // Set pagination parameters
+        Page<RolePageVO> page = new Page<>();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setColumn("id");
+        page.setCurrent(current).setSize(pageSize).addOrder(orderItem);
+        return roleService.selectPage(page);
+    }
 
 }

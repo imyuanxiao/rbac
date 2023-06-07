@@ -27,11 +27,9 @@ import java.util.Set;
 import static com.imyuanxiao.rbac.util.CommonUtil.ACTION_SUCCESSFUL;
 
 /**
- * @ClassName UserController
- * @Description User Management Interface
- * @Author imyuanxiao
- * @Date 2023/5/3 0:54
- * @Version 1.0
+ * @description  User Management Interface
+ * @author  imyuanxiao
+ * @date  2023/5/3 0:54
  **/
 @Slf4j
 @RestController
@@ -49,8 +47,8 @@ public class UserController {
     @PostMapping("/add")
     @Auth(id = 1, name = "新增用户")
     @ApiOperation(value = "Add user")
-    public String createUser(@RequestBody @Validated(UserAddRequest.CreateUser.class) UserAddRequest param) {
-        userService.createUser(param);
+    public String createUser(@RequestBody @Validated(UserAddRequest.CreateUser.class) UserAddRequest userAddRequest) {
+        userService.createUser(userAddRequest);
         return ACTION_SUCCESSFUL;
     }
 
@@ -58,9 +56,8 @@ public class UserController {
     @Auth(id = 2, name = "删除用户")
     @ApiOperation(value = "Delete user")
     public String deleteUser(@RequestBody Long[] ids) {
-
         if (ArrayUtils.isEmpty(ids)) {
-            throw new ApiException(ResultCode.VALIDATE_FAILED);
+            throw new ApiException(ResultCode.PARAMS_ERROR);
         }
         userService.removeByIds(Arrays.asList(ids));
         return ACTION_SUCCESSFUL;
@@ -75,7 +72,7 @@ public class UserController {
     }
 
     @GetMapping("/get/{id}")
-//    @Auth(id = 4, name = "通过id获取用户信息")
+    @Auth(id = 4, name = "通过id获取用户信息")
     @ApiOperation(value = "Get user info based on user ID")
     public User getUserById(@ApiParam(value = "User ID", required = true)
                             @PathVariable("id") Long id) {
@@ -83,7 +80,7 @@ public class UserController {
     }
 
     @GetMapping("/permissions/{id}")
-//    @Auth(id = 5, name = "通过id获取用户权限")
+    @Auth(id = 5, name = "通过id获取用户权限")
     @ApiOperation(value = "Get permissions based on user ID")
     public Set<Long> getPermissionsByUserId(@PathVariable("id") Long userId) {
         return permissionService.getIdsByUserId(userId);

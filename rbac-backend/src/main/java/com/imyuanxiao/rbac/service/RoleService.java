@@ -1,8 +1,11 @@
 package com.imyuanxiao.rbac.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.model.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.imyuanxiao.rbac.model.dto.RoleParam;
+import com.imyuanxiao.rbac.model.vo.RolePageVO;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -48,14 +51,14 @@ public interface RoleService extends IService<Role> {
      **/
     void updatePermissions(RoleParam param);
 
-//    /**
-//     * Get pagination information
-//     * @author imyuanxiao
-//     * @date 15:13 2023/5/7
-//     * @param page Pagination parameters
-//     * @return Pagination object
-//     **/
-//    IPage<RolePageVO> selectPage(Page<RolePageVO> page);
+    /**
+     * Get pagination information
+     * @author imyuanxiao
+     * @date 15:13 2023/5/7
+     * @param page Pagination parameters
+     * @return Pagination object
+     **/
+    IPage<RolePageVO> selectPage(Page<RolePageVO> page);
 
     /**
      * Get role IDs based on user ID.

@@ -16,11 +16,8 @@ import java.util.List;
 
 
 /**
- * @ClassName PermissionController
- * @Description Permission Management Interface
- * @Author imyuanxiao
- * @Date 2023/5/4 15:49
- * @Version 1.0
+ * @description  Permission Management Interface
+ * @author  imyuanxiao
  **/
 @Slf4j
 @RestController

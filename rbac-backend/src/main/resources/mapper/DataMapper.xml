@@ -13,4 +13,15 @@
     <sql id="Base_Column_List">
         id,name,organization_id
     </sql>
+
+    <!--查询数据分页信息-->
+    <select id="selectPage" resultType="com.imyuanxiao.rbac.model.vo.DataPageVO">
+        select
+            *
+        from
+            `data`
+                ${ew.customSqlSegment}
+    </select>
+
+
 </mapper>
