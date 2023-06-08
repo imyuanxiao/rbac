@@ -25,7 +25,7 @@ public class UserDetailsVO extends org.springframework.security.core.userdetails
     private String token;
 
     public UserDetailsVO(User user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getUserAccount(), user.getUserPassword(), authorities);
+        super(user.getUsername(), user.getUserPassword(), authorities);
         this.user = user;
     }
 

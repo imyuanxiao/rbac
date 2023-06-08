@@ -58,19 +58,19 @@ public class RedisUtil {
     }
 
     public void removeUserMap(){
-        String account = SecurityContextUtil.getCurrentUserDetailsVO().getUser().getUserAccount();
+        String username = SecurityContextUtil.getCurrentUserDetailsVO().getUser().getUsername();
         // Delete token from redis
-        stringRedisTemplate.delete(LOGIN_USER_KEY + account);
+        stringRedisTemplate.delete(LOGIN_USER_KEY + username);
     }
 
     public String refreshToken(){
 
-        String account = SecurityContextUtil.getCurrentUserDetailsVO().getUser().getUserAccount();
+        String username = SecurityContextUtil.getCurrentUserDetailsVO().getUser().getUsername();
         // Rename oldKey newKey
-        String oldKey = LOGIN_USER_KEY + account;
+        String oldKey = LOGIN_USER_KEY + username;
 
-        String newToken = JwtManager.generate(account);
-        String newKey = LOGIN_USER_KEY + account;
+        String newToken = JwtManager.generate(username);
+        String newKey = LOGIN_USER_KEY + username;
 
         stringRedisTemplate.rename(oldKey, newKey);
         stringRedisTemplate.opsForHash().put(newKey, "token", newToken);

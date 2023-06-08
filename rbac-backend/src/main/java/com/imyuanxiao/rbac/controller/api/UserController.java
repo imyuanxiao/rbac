@@ -13,6 +13,7 @@ import com.imyuanxiao.rbac.model.dto.UserAddRequest;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.service.PermissionService;
 import com.imyuanxiao.rbac.service.UserService;
+import com.imyuanxiao.rbac.util.ValidationGroups;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +47,7 @@ public class UserController {
     @PostMapping("/add")
     @Auth(id = 1, name = "新增用户")
     @ApiOperation(value = "Add user")
-    public String createUser(@RequestBody @Validated(UserAddRequest.CreateUser.class) UserAddRequest userAddRequest) {
+    public String createUser(@RequestBody @Validated(ValidationGroups.CreateUser.class) UserAddRequest userAddRequest) {
         userService.createUser(userAddRequest);
         return ACTION_SUCCESSFUL;
     }
@@ -65,7 +66,7 @@ public class UserController {
     @PutMapping("/update")
     @Auth(id = 3, name = "编辑用户")
     @ApiOperation(value = "Update user")
-    public String updateUser(@RequestBody @Validated(UserAddRequest.Update.class) UserAddRequest param) {
+    public String updateUser(@RequestBody @Validated(ValidationGroups.UpdateUser.class) UserAddRequest param) {
         userService.update(param);
         return ACTION_SUCCESSFUL;
     }

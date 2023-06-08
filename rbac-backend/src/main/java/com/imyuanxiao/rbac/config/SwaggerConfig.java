@@ -16,8 +16,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @description  Configuration for swagger
- * @author  imyuanxiao
+ * @description Configuration for swagger
+ * @author imyuanxiao
+ * <a href="http://localhost:8080/swagger-ui/index.html">swagger</a>
  **/
 @Configuration
 @EnableSwagger2

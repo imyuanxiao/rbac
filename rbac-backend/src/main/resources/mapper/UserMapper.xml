@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.imyuanxiao.rbac.model.entity.User">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userAccount" column="user_account" jdbcType="VARCHAR"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="userPhone" column="user_phone" jdbcType="VARCHAR"/>
             <result property="userEmail" column="user_email" jdbcType="VARCHAR"/>
             <result property="userPassword" column="user_password" jdbcType="VARCHAR"/>
@@ -16,14 +16,14 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_account,user_phone,
+        id,username,user_phone,
         user_email,user_password,user_status,
         updated_time,created_time
     </sql>
 
     <select id="selectPage" resultType="com.imyuanxiao.rbac.model.vo.UserPageVO">
         select
-            id, user_account
+            id, username
         from
             user
                 ${ew.customSqlSegment}

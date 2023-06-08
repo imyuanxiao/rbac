@@ -1,6 +1,7 @@
 package com.imyuanxiao.rbac.model.dto;
 
 import com.imyuanxiao.rbac.annotation.ExceptionCode;
+import com.imyuanxiao.rbac.util.ValidationGroups;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -8,27 +9,32 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 /**
- * @ClassName LoginParam
- * @Description Receive login-related parameters.
- * @Author imyuanxiao
- * @Date 2023/5/3 0:58
- * @Version 1.0
+ * @description  Receive login-related parameters.
+ * @author  imyuanxiao
  **/
 @Data
 public class LoginRequest {
 
-    @NotBlank(message = "Account is required.")
-    @Length(min = 4, max = 20, message = "Account must be between 4-20 characters in length.")
-    @ExceptionCode(value = 100002, message = "Invalid account.")
-    private String account;
+    @NotBlank
+    @Pattern(regexp = "^(account|mobile)$", message = "Invalid request.")
+    @ExceptionCode(value = 100006, message = "Invalid request.")
+    private String type;
 
-    private String password;
+    @NotBlank(message = "Phone number is required.", groups = {ValidationGroups.Mobile.class})
+    private String mobile;
 
+    @NotBlank(message = "Captcha is required.", groups = {ValidationGroups.Mobile.class})
+    @Pattern(regexp = "^\\d{4}$", message = "Invalid captcha.")
     private String captcha;
 
-    @NotBlank
-    @Pattern(regexp = "^(phone|password)$", message = "Invalid request.")
-    @ExceptionCode(value = 100006, message = "Invalid request.")
-    private String loginType;
+    @NotBlank(message = "Username is required.", groups = {ValidationGroups.Account.class})
+    @Length(min = 4, max = 20, message = "Username must be between 4-20 characters in length.")
+    @ExceptionCode(value = 100002, message = "Invalid username.")
+    private String username;
+
+    @NotBlank(message = "Password is required.", groups = {ValidationGroups.Account.class})
+    @Length(min = 4, max = 20, message = "Password must be between 4-20 characters in length.")
+    @ExceptionCode(value = 100002, message = "Invalid password.")
+    private String password;
 
 }

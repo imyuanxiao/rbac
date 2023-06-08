@@ -21,10 +21,10 @@ public class User implements Serializable {
     private Long id;
 
     /**
-     *
+     * username
      */
-    @TableField(value = "user_account")
-    private String userAccount;
+    @TableField(value = "username")
+    private String username;
 
     /**
      *

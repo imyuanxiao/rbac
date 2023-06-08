@@ -15,4 +15,11 @@
         id,org_name,created_time,
         updated_time
     </sql>
+
+    <!--根据用户id查询org id集合-->
+    <select id="selectIdsByUserId" resultType="java.lang.Long">
+        select org_id from user_organization where user_id = #{userId}
+    </select>
+
+
 </mapper>

@@ -154,3 +154,6 @@ VALUES
     ('Data 6', 2),
     ('Data 7', 3);
 
+INSERT INTO `user_organization` (`user_id`, `org_id`) VALUES
+  (1, 1),
+  (2, 2),

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
-import com.imyuanxiao.rbac.model.dto.RegisterRequest;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.model.vo.UserVO;
@@ -16,7 +15,7 @@ import java.util.Set;
 /**
 * @author Administrator
 * @description 针对表【user(user table)】的数据库操作Service
-* @createDate 2023-05-26 17:15:53
+* @date  2023-05-26 17:15:53
 */
 public interface UserService extends IService<User> {
 
@@ -27,7 +26,7 @@ public interface UserService extends IService<User> {
      * @author imyuanxiao
      * @param registerRequest Register form parameters
      **/
-    String register(RegisterRequest registerRequest);
+    String register(LoginRequest registerRequest);
 
     /**
      * @description Log in

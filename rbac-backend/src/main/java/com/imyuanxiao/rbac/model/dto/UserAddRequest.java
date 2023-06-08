@@ -1,5 +1,6 @@
 package com.imyuanxiao.rbac.model.dto;
 
+import com.imyuanxiao.rbac.util.ValidationGroups;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -11,23 +12,20 @@ import java.util.List;
 /**
  * @description  Receive user-related parameters.
  * @author  imyuanxiao
- * @date  2023/5/7 11:12
  **/
 @Data
 public class UserAddRequest {
 
-    @NotNull(message = "UserID is required.", groups = Update.class)
+    @NotNull(message = "UserID is required.", groups = ValidationGroups.UpdateUser.class)
     private Long id;
 
-    @NotBlank(message = "Account is required.", groups = CreateUser.class)
-    @Length(min = 4, max = 20, message = "Account must be between 4-20 characters in length.")
-    @Email(message = "Invalid account.")
-    private String account;
+    @NotBlank(message = "Username is required.", groups = ValidationGroups.CreateUser.class)
+    @Length(min = 4, max = 20, message = "Username must be between 4-20 characters in length.")
+    @Email(message = "Invalid username.")
+    private String username;
 
     private List<Long> roleIds;
 
-    public interface Update {}
 
-    public interface CreateUser{}
 
 }

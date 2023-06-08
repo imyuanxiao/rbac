@@ -16,11 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @ClassName JwtManager
- * @Description Generation and management util for jwt token
- * @Author imyuanxiao
- * @Date 2023/5/3 16:23
- * @Version 1.0
+ * @description  Generation and management util for jwt token
+ * @author  imyuanxiao
  **/
 @Slf4j
 public final class JwtManager {
@@ -39,10 +36,10 @@ public final class JwtManager {
     /**
      * @description Generate jwt token
      * @author imyuanxiao
-     * @param account account
+     * @param username account
      * @return jwt token
      **/
-    public static String generate(String account) {
+    public static String generate(String username) {
         DateTime now = DateUtil.date();
         DateTime ddl = DateUtil.offsetMinute(now, EXPIRATION);
         Map<String, Object> map = new HashMap<String, Object>() {
@@ -50,7 +47,7 @@ public final class JwtManager {
                 put(JWTPayload.ISSUED_AT, now);
                 put(JWTPayload.EXPIRES_AT, ddl);
                 put(JWTPayload.NOT_BEFORE, now);
-                put(JWTPayload.SUBJECT, account); //put account in 'sub'
+                put(JWTPayload.SUBJECT, username); //put account in 'sub'
             }
         };
         return "Bearer " + JWTUtil.createToken(map, secretKeyBytes);

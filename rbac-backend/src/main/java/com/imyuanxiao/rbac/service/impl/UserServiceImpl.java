@@ -3,8 +3,6 @@ package com.imyuanxiao.rbac.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,7 +24,6 @@ import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.imyuanxiao.rbac.mapper.UserMapper;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
-import com.imyuanxiao.rbac.model.dto.RegisterRequest;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -62,6 +59,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private UserProfileService userProfileService;
 
     @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
     private UserLoginHistoryService loginHistoryService;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -76,13 +76,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public String register(RegisterRequest registerRequest) {
+    public String register(LoginRequest registerRequest) {
 
         // 通过注册类型判断应该采用哪种注册方式
-        String account = registerRequest.getAccount();
-        String registerType = registerRequest.getRegisterType();
+        String type = registerRequest.getType();
+
         // 1. 手机号注册
-        if("phone".equals(registerType) && registerByPhone(account, registerRequest.getCaptcha())){
+        if(CommonConst.MOBILE.equals(type) && registerByPhone(registerRequest.getMobile(), registerRequest.getCaptcha())){
             return "Register successfully";
         }
         // 2. 密码注册
@@ -91,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         // 3. 普通用户名密码注册
         User user = new User()
-                .setUserAccount(account)
+                .setUsername(registerRequest.getUsername())
                 .setUserStatus(0)
                 .setUserPassword(passwordEncoder.encode(registerRequest.getPassword()));
         try {
@@ -105,16 +105,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     public boolean registerByPhone(String phone, String captcha){
-        if(StrUtil.isBlank(captcha)){
-            throw new ApiException(ResultCode.PARAMS_ERROR, "验证码格式错误！");
-        }
-        if(!PhoneUtil.isPhone(phone)){
-            throw new ApiException(ResultCode.PARAMS_ERROR, "手机号格式错误！");
-        }
         // Get captcha from redis
         redisUtil.getCaptcha(phone, captcha);
         User user = new User()
-                .setUserAccount(phone)
+                .setUsername(phone)
                 .setUserPhone(phone)
                 .setUserStatus(0)
                 // 默认密码为手机号
@@ -133,32 +127,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public UserVO login(LoginRequest loginRequest, HttpServletRequest request) {
 
-        String account = loginRequest.getAccount();
-
-        // Get user from database
-        User userResult = this.lambdaQuery()
-                .eq(StrUtil.isNotBlank(account), User::getUserAccount, account)
-                .one();
-
+        User userResult = null;
         // 如果登录类型为手机号验证码
-        if("phone".equals(loginRequest.getLoginType())){
+        if(CommonConst.MOBILE.equals(loginRequest.getType())){
+            String phone = loginRequest.getMobile();
+            // Get user by phone from database
+            userResult = this.lambdaQuery()
+                    .eq(StrUtil.isNotBlank(phone), User::getUserPhone, phone)
+                    .one();
             // 用户不存在，且则自动注册新账号
             if(userResult == null){
-                registerByPhone(account, loginRequest.getCaptcha());
+                registerByPhone(phone, loginRequest.getCaptcha());
                 // 注册成功，重新查询用户信息
                 userResult = this.lambdaQuery()
-                        .eq(StrUtil.isNotBlank(account), User::getUserAccount, account)
+                        .eq(StrUtil.isNotBlank(phone), User::getUserPhone, phone)
                         .one();
             }else{
                 // 用户存在，表示正在使用验证码登录
                 // 从redis验证手机号和验证码
-                redisUtil.getCaptcha(account, loginRequest.getCaptcha());
+                redisUtil.getCaptcha(phone, loginRequest.getCaptcha());
                 // 移除手机号和验证码，登录成功
-                redisUtil.removeCaptcha(account);
+                redisUtil.removeCaptcha(phone);
                 // 下一步，验证账户有效性，需要返回token
             }
-        }else if(userResult == null || !passwordEncoder.matches(loginRequest.getPassword(), userResult.getUserPassword())){
-            throw new ApiException(ResultCode.VALIDATE_FAILED, "Username or password is incorrect！");
+        }else {
+            String username = loginRequest.getUsername();
+            userResult = this.lambdaQuery()
+                    .eq(StrUtil.isNotBlank(username), User::getUsername, username)
+                    .one();
+            if(userResult == null || !passwordEncoder.matches(loginRequest.getPassword(), userResult.getUserPassword())){
+                throw new ApiException(ResultCode.VALIDATE_FAILED, "Username or password is incorrect！");
+            }
         }
 
         // If state is abnormal
@@ -198,7 +197,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userVO.setRoleIds(roleService.getIdsByUserId(user.getId()))
                 .setPermissionIds(permissionService.getIdsByUserId(user.getId()));
         // Generate token
-        String token = JwtManager.generate(user.getUserAccount());
+        String token = JwtManager.generate(user.getUsername());
         userVO.setToken(token);
         // Manually handle or use util to convert id 'long' to 'string'.
         Map<String, Object> userMap = BeanUtil.beanToMap(userVO, new HashMap<>(),
@@ -233,11 +232,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public void createUser(UserAddRequest userAddRequest) {
-        if (lambdaQuery().eq(User::getUserAccount, userAddRequest.getAccount()).one() != null) {
+        if (lambdaQuery().eq(User::getUsername, userAddRequest.getUsername()).one() != null) {
             throw new ApiException(ResultCode.FAILED,"Account already exists.");
         }
         User user = new User();
-        user.setUserAccount(userAddRequest.getAccount()).setUserPassword(passwordEncoder.encode(userAddRequest.getAccount()));
+        user.setUsername(userAddRequest.getUsername()).setUserPassword(passwordEncoder.encode(userAddRequest.getUsername()));
         save(user);
         if (CollectionUtil.isEmpty(userAddRequest.getRoleIds())) {
             return;
@@ -277,11 +276,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User getUserByUsername(String email) {
-        if(StrUtil.isBlank(email)){
+    public User getUserByUsername(String username) {
+        if(StrUtil.isBlank(username)){
             throw new ApiException(ResultCode.VALIDATE_FAILED);
         }
-        return this.lambdaQuery().eq(User::getUserAccount, email).one();
+        return this.lambdaQuery().eq(User::getUsername, username).one();
     }
 
     @Override
@@ -305,10 +304,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.ne("id", myId).ne("id", 1);
         // Get page info
         IPage<UserPageVO> pages = baseMapper.selectPage(page, queryWrapper);
-        // Get rolse for all users
+        // Get roles and organizations for all users
         for (UserPageVO vo : pages.getRecords()) {
             vo.setRoleIds(roleService.getIdsByUserId(vo.getId()));
-//            vo.setCompanyIds(companyService.getIdsByUserId(vo.getId()));
+            vo.setOrgIds(organizationService.getIdsByUserId(vo.getId()));
         }
         return pages;
     }

@@ -5,9 +5,10 @@ import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.dto.CaptchaRequest;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
-import com.imyuanxiao.rbac.model.dto.RegisterRequest;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 import com.imyuanxiao.rbac.service.UserService;
+import com.imyuanxiao.rbac.util.CommonConst;
+import com.imyuanxiao.rbac.util.ValidationGroups;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.Set;
 
 /**
@@ -32,6 +35,8 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     /**
     * @description: show captcha in frontend (actually should be void)
@@ -50,24 +55,39 @@ public class AuthController {
 
     /**
     * @description: register
-    * @param request register-related parameters
+    * @param registerRequest register-related parameters
     * @author imyuanxiao
     */
     @PostMapping("/register")
     @ApiOperation(value = "Register")
-    public String register(@RequestBody @Valid RegisterRequest request){
-        return userService.register(request);
+    public String register(@RequestBody @Valid LoginRequest registerRequest){
+        dataValidation(registerRequest);
+        return userService.register(registerRequest);
+    }
+
+    private void dataValidation(LoginRequest request) {
+        String type = request.getType();
+        if (CommonConst.ACCOUNT.equals(type)) {
+            // 执行账号登录的验证逻辑
+            validator.validate(request, ValidationGroups.Account.class);
+        } else if (CommonConst.MOBILE.equals(type)) {
+            // 执行手机号登录的验证逻辑
+            validator.validate(request, ValidationGroups.Mobile.class);
+        } else {
+            throw new ApiException(ResultCode.PARAMS_ERROR);
+        }
     }
 
     /**
     * @description: login
-    * @param param login-related parameters
+    * @param loginRequest login-related parameters
     * @author imyuanxiao
     */
     @PostMapping("/login")
     @ApiOperation(value = "Login")
-    public UserVO login(@RequestBody @Valid LoginRequest param, HttpServletRequest request){
-        return userService.login(param, request);
+    public UserVO login(@RequestBody @Validated LoginRequest loginRequest, HttpServletRequest request){
+        dataValidation(loginRequest);
+        return userService.login(loginRequest, request);
     }
 
     @GetMapping("/logout")
