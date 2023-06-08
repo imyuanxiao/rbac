@@ -1,6 +1,6 @@
 import { Footer } from '@/components';
 import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { getCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -87,6 +87,7 @@ const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
+  const [mobile, setMobile] = useState<string>();
 
   const containerClassName = useEmotionCss(() => {
     return {
@@ -118,7 +119,8 @@ const Login: React.FC = () => {
     try {
       // 登录
       const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
+
+      if (msg.code === 0) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -129,9 +131,12 @@ const Login: React.FC = () => {
         history.push(urlParams.get('redirect') || '/');
         return;
       }
+
       console.log(msg);
+
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      // setUserLoginState(msg);
+
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
@@ -296,6 +301,10 @@ const Login: React.FC = () => {
                     ),
                   },
                 ]}
+                // 增加onChange方法，获取手机号
+                onChange={(event) => {
+                  setMobile(event.target.value)
+                }}
               />
               <ProFormCaptcha
                 fieldProps={{
@@ -333,10 +342,9 @@ const Login: React.FC = () => {
                     ),
                   },
                 ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
+                // 修改onGetCaptcha方法
+                onGetCaptcha={async () => {
+                  const result = await getCaptcha(mobile);
                   if (!result) {
                     return;
                   }

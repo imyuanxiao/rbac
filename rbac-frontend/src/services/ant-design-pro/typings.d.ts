@@ -2,6 +2,13 @@
 /* eslint-disable */
 
 declare namespace API {
+
+  type ResultVO = {
+    code?: number;
+    msg?: string;
+    data?: any;
+  };
+
   type CurrentUser = {
     name?: string;
     avatar?: string;

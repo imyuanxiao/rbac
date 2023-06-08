@@ -2,19 +2,19 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** 发送验证码 POST /api/login/captcha */
-export async function getFakeCaptcha(
-  params: {
-    // query
-    /** 手机号 */
-    phone?: string;
-  },
+/** 发送验证码 POST /api/auth/captcha */
+export async function getCaptcha(
+  mobile?: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.FakeCaptcha>('/api/login/captcha', {
-    method: 'GET',
-    params: {
-      ...params,
+  console.log(mobile);
+  return request<API.FakeCaptcha>('/api/auth/captcha', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      phone: mobile
     },
     ...(options || {}),
   });

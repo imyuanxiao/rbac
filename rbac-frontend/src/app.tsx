@@ -127,6 +127,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 };
 
 // TODO 此处配置token
+/**
+ * 请求拦截器
+ * @param url
+ * @param options
+ */
 const authHeaderInterceptor = (url: string, options: RequestConfig) => {
   const token: string | null = localStorage.getItem("token")
   const authHeader = { Authorization: token };
@@ -140,12 +145,64 @@ const authHeaderInterceptor = (url: string, options: RequestConfig) => {
 };
 
 /**
+ * 响应拦截器
+ * @param response
+ * @param options
+ */
+const demoResponseInterceptors = (response: Response, options: RequestConfig) => {
+
+  console.log(response)
+
+
+  // if(response.data.code !== 0){
+  //   console.log("响应出错" + response.data)
+  // }else{
+  //   console.log("响应正常")
+  // }
+
+  return response;
+};
+
+/**
  * @name request 配置，可以配置错误处理
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request: RequestConfig = {
   // 新增自动添加AccessToken的请求前拦截器
-  ...errorConfig, requestInterceptors: [authHeaderInterceptor]
+  // 后端接口返回的数据规范不满足umiJS的默认配置,可以通过配置errorConfig.adaptor进行适配.
+  // 全局统一错误处理
+  errorConfig: { // 错误处理
+    adaptor: (resData) => { // 适配器
+      return {
+        ...resData, // 适配器里面要返回一个对象，里面包含了 success 和 errorMessage
+        success: resData.code === 0, // 这里的 success 表示是否请求成功
+        errorMessage: resData.data, // 这里的 errorMessage 表示错误信息
+      };
+    },
+  },
+  // 全局接口异常处理
+  errorHandler: (error) => { // errorHandler: 异常处理程序
+    // console.log('error:',error)
+    const { response } = error;
+    if (response && response.status) {
+      // const errorText = codeMessage[response.status] || response.statusText;
+      const { status, url } = response;
+      message.error(`请求错误 ${status}: ${url}`)
+      /*notification.error({ //右侧提示框 notification需要 import { notification } from 'antd';
+        message: `请求错误 ${status}: ${url}`,
+        description: errorText,
+      });*/
+    }
+    if (!response) {
+      message.error('您的网络发生异常，无法连接服务器')
+      /*notification.error({ // 右侧提示框
+        description: '您的网络发生异常，无法连接服务器',
+        message: '网络异常',
+      });*/
+    }
+    throw error;
+  },
+  responseInterceptors: [demoResponseInterceptors]
 };
 
