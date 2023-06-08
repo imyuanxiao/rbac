@@ -7,10 +7,6 @@ import lombok.Data;
 
 import java.util.Date;
 
-/**
- * 
- * @TableName data
- */
 @Data
 public class DataPageVO {
     /**
@@ -22,25 +18,13 @@ public class DataPageVO {
     /**
      * data name, unique
      */
-    @TableField(value = "name")
-    private String name;
+    @TableField(value = "data_name")
+    private String dataName;
 
     /**
-     * company ID
+     * organization ID
      */
-    @TableField(value = "company_id")
-    private Long companyId;
-
-    /**
-     * createdTime
-     */
-    @TableField(value = "created_time")
-    private Date createdTime;
-
-    /**
-     * updatedTime
-     */
-    @TableField(value = "updated_time")
-    private Date updatedTime;
+    @TableField(value = "org_id")
+    private Long orgId;
 
 }

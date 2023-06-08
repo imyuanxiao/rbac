@@ -98,6 +98,12 @@ public class ApplicationStartup implements ApplicationRunner {
 
 
 
+# 数据权限控制
+
+通过分页拦截器MyPaginationInterceptor实现
+
+
+
 # 分组校验
 
 在校验规则里指定校验分组，例如 "groups = Update.class"

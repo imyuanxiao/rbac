@@ -26,11 +26,8 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * @ClassName SpringSecurityConfig
- * @Description Configuration for spring security
- * @Author: imyuanxiao
- * @Date: 2023/5/3 15:35
- * @Version 1.0
+ * @description  Configuration for spring security
+ * @author imyuanxiao
  **/
 @Configuration
 @EnableWebSecurity

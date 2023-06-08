@@ -20,16 +20,16 @@ public class Data implements Serializable {
     private Long id;
 
     /**
-     * data name, unique
+     * data name
      */
-    @TableField(value = "name")
-    private String name;
+    @TableField(value = "data_name")
+    private String dataName;
 
     /**
      * organization ID
      */
-    @TableField(value = "organization_id")
-    private Long organizationId;
+    @TableField(value = "org_id")
+    private Long orgId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

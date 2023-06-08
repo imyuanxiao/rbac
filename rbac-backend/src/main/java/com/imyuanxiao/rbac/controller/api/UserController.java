@@ -29,7 +29,6 @@ import static com.imyuanxiao.rbac.util.CommonUtil.ACTION_SUCCESSFUL;
 /**
  * @description  User Management Interface
  * @author  imyuanxiao
- * @date  2023/5/3 0:54
  **/
 @Slf4j
 @RestController

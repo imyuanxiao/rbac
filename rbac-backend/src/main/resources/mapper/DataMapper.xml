@@ -6,12 +6,12 @@
 
     <resultMap id="BaseResultMap" type="com.imyuanxiao.rbac.model.entity.Data">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="organizationId" column="organization_id" jdbcType="BIGINT"/>
+            <result property="dataName" column="data_name" jdbcType="VARCHAR"/>
+            <result property="orgId" column="org_id" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,organization_id
+        id,data_name,org_id
     </sql>
 
     <!--查询数据分页信息-->

@@ -6,13 +6,13 @@
 
     <resultMap id="BaseResultMap" type="com.imyuanxiao.rbac.model.entity.Organization">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="orgName" column="org_name" jdbcType="VARCHAR"/>
             <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
             <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,created_time,
+        id,org_name,created_time,
         updated_time
     </sql>
 </mapper>

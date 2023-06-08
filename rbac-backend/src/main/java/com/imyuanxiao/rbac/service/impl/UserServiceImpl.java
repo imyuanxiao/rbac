@@ -17,6 +17,7 @@ import com.imyuanxiao.rbac.model.vo.UserDetailsVO;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.security.JwtManager;
 import com.imyuanxiao.rbac.service.*;
+import com.imyuanxiao.rbac.util.CommonConst;
 import com.imyuanxiao.rbac.util.RedisUtil;
 import com.imyuanxiao.rbac.util.SecurityContextUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -170,7 +171,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // Save login info
         loginHistoryService.save(new UserLoginHistory()
                 .setUserId(userResult.getId())
-                .setLoginTime(DateUtil.date())
+                .setType(CommonConst.LOG_IN)
                 .setUserAgent(request.getHeader("User-Agent"))
                 .setIpAddress(request.getRemoteAddr()));
 
@@ -213,7 +214,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public void logout(HttpServletRequest request) {
         loginHistoryService.save(new UserLoginHistory()
                 .setUserId(SecurityContextUtil.getCurrentUserDetailsVO().getUser().getId())
-                .setLogoutTime(DateUtil.date())
+                .setType(CommonConst.LOG_OUT)
                 .setUserAgent(request.getHeader("User-Agent"))
                 .setIpAddress(request.getRemoteAddr()));
         redisUtil.removeUserMap();

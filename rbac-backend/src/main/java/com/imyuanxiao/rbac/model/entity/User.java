@@ -10,10 +10,6 @@ import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * user table
- * @TableName user
- */
 @TableName(value ="user")
 @Data
 @Accessors(chain = true)

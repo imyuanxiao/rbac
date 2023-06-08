@@ -30,9 +30,10 @@ public class ApplicationStartup implements ApplicationRunner {
     private PermissionService permissionService;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        // 扫描并获取所有需要权限处理的接口资源(该方法逻辑写在下面)
-        List<Permission> list = getAuthOnMethod();
+    public void run(ApplicationArguments args){
+
+        // 扫描并获取所有需要权限处理的接口资源
+        List<Permission> list = getAuthPermissions();
 
         // 先删除所有操作权限类型的权限资源，待会再新增资源，以实现全量更新（注意哦，数据库中不要设置外键，否则会删除失败）
         permissionService.deletePermissionByType(0);
@@ -49,7 +50,7 @@ public class ApplicationStartup implements ApplicationRunner {
     /**
      * 扫描并返回所有需要权限处理的接口资源
      */
-    private List<Permission> getAuthOnMethod() {
+    private List<Permission> getAuthPermissions() {
         // 接下来要添加到数据库的资源
         List<Permission> list = new LinkedList<>();
         // 拿到所有接口信息，并开始遍历
@@ -65,7 +66,7 @@ public class ApplicationStartup implements ApplicationRunner {
                 return;
             }
             Permission permissionOnClass = new Permission()
-                    .setType(0).setPermissionName(moduleAuth.name()).setId(moduleAuth.id());
+                    .setType(0).setPermName(moduleAuth.name()).setId(moduleAuth.id());
             if(!list.contains(permissionOnClass)){
                 list.add(permissionOnClass);
             }
@@ -86,7 +87,7 @@ public class ApplicationStartup implements ApplicationRunner {
             Permission permission = new Permission();
             permission.setType(1)
                     .setPath(url)
-                    .setPermissionName(methodAuth.name())
+                    .setPermName(methodAuth.name())
                     .setId(moduleAuth.id() + methodAuth.id());
             list.add(permission);
         });

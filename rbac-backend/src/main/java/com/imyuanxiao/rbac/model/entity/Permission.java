@@ -8,10 +8,6 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * 
- * @TableName permission
- */
 @TableName(value ="permission")
 @Data
 @Accessors(chain = true)
@@ -25,8 +21,8 @@ public class Permission implements Serializable {
     /**
      * 
      */
-    @TableField(value = "permission_name")
-    private String permissionName;
+    @TableField(value = "perm_name")
+    private String permName;
 
     /**
      * 
@@ -35,7 +31,7 @@ public class Permission implements Serializable {
     private Integer type;
 
     /**
-     * 
+     * description
      */
     @TableField(value = "description")
     private String description;

@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
- * @ClassName ResponseControllerAdvice
- * @Description 全局统一响应
- * @Author imyuanxiao
- * @Date 2023/5/3 9:37
- * @Version 1.0
+ * @description  全局统一响应
+ * @author  imyuanxiao
  **/
 @RestControllerAdvice(basePackages = {"com.imyuanxiao.uls.controller"})
 public class ResponseControllerAdvice implements ResponseBodyAdvice<Object> {

@@ -7,14 +7,14 @@
     <resultMap id="BaseResultMap" type="com.imyuanxiao.rbac.model.entity.UserLoginHistory">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
-            <result property="logoutTime" column="logout_time" jdbcType="TIMESTAMP"/>
+            <result property="type" column="type" jdbcType="TINYINT"/>
+            <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
             <result property="ipAddress" column="ip_address" jdbcType="VARCHAR"/>
             <result property="userAgent" column="user_agent" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,login_time,
-        logout_time,ip_address, user_agent
+        id,user_id,type,
+        created_time,ip_address,user_agent
     </sql>
 </mapper>

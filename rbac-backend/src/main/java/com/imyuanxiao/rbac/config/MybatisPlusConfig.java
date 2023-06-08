@@ -9,11 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @ClassName MybatisPlusConfig
- * @Description MyBatis-Plus pagination plugin configuration.
- * @Author imyuanxiao
- * @Date 2023/5/3 15:17
- * @Version 1.0
+ * @description  MyBatis-Plus pagination plugin configuration.
+ * @author  imyuanxiao
  **/
 @Configuration
 @MapperScan("com.imyuanxiao.rbac.mapper")

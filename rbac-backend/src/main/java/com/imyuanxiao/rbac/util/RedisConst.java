@@ -1,6 +1,6 @@
 package com.imyuanxiao.rbac.util;
 
-public class RedisConstants {
+public class RedisConst {
     public static final String APP_NAME = "rbac";
     public static final String REGISTER_CODE_KEY = APP_NAME + ":register:code:";
     public static final Long REGISTER_CODE_TTL = 10L;

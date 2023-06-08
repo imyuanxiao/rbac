@@ -9,10 +9,6 @@ import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * 
- * @TableName user_login_history
- */
 @TableName(value ="user_login_history")
 @Data
 @Accessors(chain = true)
@@ -30,16 +26,16 @@ public class UserLoginHistory implements Serializable {
     private Long userId;
 
     /**
-     * login time
+     * 0-login, 1-logout
      */
-    @TableField(value = "login_time")
-    private Date loginTime;
+    @TableField(value = "type")
+    private Integer type;
 
     /**
-     * logout time
+     *
      */
-    @TableField(value = "logout_time")
-    private Date logoutTime;
+    @TableField(value = "created_time")
+    private Date createdTime;
 
     /**
      * ip address
@@ -47,6 +43,9 @@ public class UserLoginHistory implements Serializable {
     @TableField(value = "ip_address")
     private String ipAddress;
 
+    /**
+     *
+     */
     @TableField(value = "user_agent")
     private String userAgent;
 

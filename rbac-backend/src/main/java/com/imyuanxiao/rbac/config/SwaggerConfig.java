@@ -12,11 +12,12 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * @Description Configuration for swagger
- * @Author: imyuanxiao
+ * @description  Configuration for swagger
+ * @author  imyuanxiao
  **/
 @Configuration
 @EnableSwagger2
@@ -34,8 +35,8 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.imyuanxiao.rbac.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .securityContexts(Arrays.asList(securityContexts()))
-                .securitySchemes(Arrays.asList(securitySchemes()))
+                .securityContexts(Collections.singletonList(securityContexts()))
+                .securitySchemes(List.of(securitySchemes()))
                 .apiInfo(apiInfo());
     }
 
@@ -80,7 +81,7 @@ public class SwaggerConfig {
         AuthorizationScope authorizationScope = new AuthorizationScope("All", "Use all api");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
+        return List.of(new SecurityReference("Authorization", authorizationScopes));
     }
 
 }

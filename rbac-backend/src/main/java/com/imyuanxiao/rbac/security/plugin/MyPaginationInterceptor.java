@@ -26,11 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @ClassName MyPaginationInterceptor
- * @Description TODO
- * @Author imyuanxiao
- * @Date 2023/5/7 18:28
- * @Version 1.0
+ * @description 该拦截器用于数据权限控制，拦截查询数据语句，增加筛选条件org_id
+ * @author  imyuanxiao
  **/
 @Slf4j
 public class MyPaginationInterceptor implements InnerInterceptor {
@@ -39,12 +36,12 @@ public class MyPaginationInterceptor implements InnerInterceptor {
         MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
 
-        // id为执行的mapper方法的全路径名，如com.imyuanxiao.uls.mapper.selectPage
+        // id为执行的mapper方法的全路径名，如com.imyuanxiao.rbac.mapper.selectPage
         String id = mappedStatement.getId();
         log.info("mapper: ==> {}", id);
         // 如果不是指定的方法，直接结束拦截
         // 如果方法多可以存到一个集合里，然后判断当前拦截的是否存在集合中
-        if (!id.startsWith("com.imyuanxiao.uls.mapper.DataMapper.selectPage")) {
+        if (!id.startsWith("com.imyuanxiao.rbac.mapper.DataMapper.selectPage")) {
             return;
         }
 
@@ -82,14 +79,14 @@ public class MyPaginationInterceptor implements InnerInterceptor {
             // 创建连表join条件
             Join join = new Join();
             join.setInner(true);
-            join.setRightItem(new Table("user_company uc"));
+            join.setRightItem(new Table("user_organization uo"));
             // 第一个：两表通过company_id连接
             EqualsTo joinExpression = new EqualsTo();
-            joinExpression.setLeftExpression(new Column(mainTable + ".company_id"));
-            joinExpression.setRightExpression(new Column("uc.company_id"));
+            joinExpression.setLeftExpression(new Column(mainTable + ".org_id"));
+            joinExpression.setRightExpression(new Column("uo.org_id"));
             // 第二个条件：和当前登录用户id匹配
             EqualsTo userIdExpression = new EqualsTo();
-            userIdExpression.setLeftExpression(new Column("uc.user_id"));
+            userIdExpression.setLeftExpression(new Column("uo.user_id"));
             // 拿到当前用户
             UserDetailsVO user = (UserDetailsVO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             userIdExpression.setRightExpression(new LongValue(user.getUser().getId()));

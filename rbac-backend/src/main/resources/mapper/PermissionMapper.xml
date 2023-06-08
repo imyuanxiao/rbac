@@ -6,20 +6,20 @@
 
     <resultMap id="BaseResultMap" type="com.imyuanxiao.rbac.model.entity.Permission">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="permissionName" column="permission_name" jdbcType="VARCHAR"/>
+            <result property="permName" column="perm_name" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="TINYINT"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="path" column="path" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,permission_name,type,
+        id,perm_name,type,
         description,path
     </sql>
 
     <!--根据角色id批量增加权限-->
     <insert id="insertPermissionsByRoleId">
-        insert into role_permission(role_id, permission_id) values
+        insert into role_permission(role_id, perm_id) values
         <foreach collection="permissionIds" separator="," item="permissionId">
             (#{roleId}, #{permissionId})
         </foreach>
@@ -27,9 +27,9 @@
 
     <!--批量新增权限资源-->
     <insert id="insertPermissions">
-        insert into permission(id, path, permission_name, type) values
+        insert into permission(id, path, perm_name, type) values
         <foreach collection="permissions" separator="," item="permission">
-            (#{permission.id}, #{permission.path}, #{permission.permissionName}, #{permission.type})
+            (#{permission.id}, #{permission.path}, #{permission.permName}, #{permission.type})
         </foreach>
     </insert>
 
@@ -41,7 +41,7 @@
     <!--根据用户id获取权限id-->
     <select id="selectIdsByUserId" resultType="java.lang.Long">
         SELECT
-            rr.permission_id
+            rr.perm_id
         FROM
             user_role ur
                 INNER JOIN role_permission rr ON ur.role_id = rr.role_id
@@ -51,7 +51,7 @@
 
     <!--根据角色id获取权限id-->
     <select id="selectIdsByRoleId" resultType="java.lang.Long">
-        select permission_id from role_permission where role_id = #{roleId}
+        select perm_id from role_permission where role_id = #{roleId}
     </select>
 
     <!--根据用户id获取权限集合-->

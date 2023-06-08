@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.imyuanxiao.rbac.util.RedisConstants.*;
+import static com.imyuanxiao.rbac.util.RedisConst.*;
 
 /**
  * @version 1.0

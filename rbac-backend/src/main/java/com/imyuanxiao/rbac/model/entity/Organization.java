@@ -8,10 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
-/**
- * 
- * @TableName organization
- */
 @TableName(value ="organization")
 @Data
 public class Organization implements Serializable {
@@ -24,8 +20,8 @@ public class Organization implements Serializable {
     /**
      * organization name, unique
      */
-    @TableField(value = "name")
-    private String name;
+    @TableField(value = "org_name")
+    private String orgName;
 
     /**
      * createdTime

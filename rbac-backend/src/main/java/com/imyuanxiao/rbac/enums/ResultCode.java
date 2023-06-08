@@ -3,9 +3,9 @@ package com.imyuanxiao.rbac.enums;
 import lombok.Getter;
 
 /**
- * 响应码
- * @Author: imyuanxiao
- */
+ * @description result code
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
+ **/
 @Getter
 public enum ResultCode {
 

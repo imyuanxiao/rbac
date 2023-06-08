@@ -30,21 +30,17 @@ public class DataController {
     @Autowired
     DataService dataService;
 
-    @GetMapping("/page/{current}")
+    @GetMapping("/page/{current}&{pageSize}")
 //    @Auth(id = 1, name = "查询所有测试数据")
     @ApiOperation(value = "Get data based on current page")
-    public IPage<DataPageVO> getPage(@PathVariable("current") int current) {
+    public IPage<DataPageVO> getPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
         // 设置分页参数
         Page<DataPageVO> page = new Page<>();
-        // 设置按创建时间倒序
-        OrderItem orderItem = new OrderItem();
-        orderItem.setColumn("data.created_time");
-        orderItem.setAsc(false);
         // 设置按id升序
-        OrderItem orderItem2 = new OrderItem();
-        orderItem2.setColumn("data.id");
-        orderItem2.setAsc(true);
-        page.setCurrent(current).addOrder(orderItem).addOrder(orderItem2);
+        OrderItem orderItem = new OrderItem();
+        orderItem.setColumn("data.id");
+        orderItem.setAsc(true);
+        page.setCurrent(current).setSize(pageSize).addOrder(orderItem);
         return dataService.selectPage(page);
     }
 

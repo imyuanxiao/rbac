@@ -8,10 +8,6 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * 
- * @TableName role
- */
 @TableName(value ="role")
 @Data
 @Accessors(chain = true)
@@ -29,7 +25,7 @@ public class Role implements Serializable {
     private String roleName;
 
     /**
-     * 
+     * description
      */
     @TableField(value = "description")
     private String description;
