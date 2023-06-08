@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS `rbac` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLL
 
 CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'user ID',
-  `user_account` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'user account',
+  `username` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'username',
   `user_phone` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'phone number',
   `user_email` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'user email',
   `user_password` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'user password, encoded',
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `updated_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'updated time',
   `created_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'created time',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk` (`user_account`)
+  UNIQUE KEY `uk` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='user table';
 
 CREATE TABLE IF NOT EXISTS `user_profile` (
@@ -107,7 +107,7 @@ TRUNCATE TABLE user_organization;
 TRUNCATE TABLE user_profile;
 TRUNCATE TABLE user_role;
 
-INSERT INTO `user` (`user_account`, `user_phone`, `user_email`, `user_password`, `user_status`) VALUES
+INSERT INTO `user` (`username`, `user_phone`, `user_email`, `user_password`, `user_status`) VALUES
   ('admin', '13111111111', 'admin@example.com', '$2a$10$BLYxyDMlacAaAapo4D5Ar.OQ9sVhsxvvDINO0JzM9Q6Q5f7e4LUBa', 0),
   ('user', '13222222222', 'user@example.com', '$2a$10$RNST4TsduOnaPAEhyqWi2', 0);
 

@@ -217,7 +217,7 @@ const Login: React.FC = () => {
           {type === 'account' && (
             <>
               <ProFormText
-                name="account"
+                name="username"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,

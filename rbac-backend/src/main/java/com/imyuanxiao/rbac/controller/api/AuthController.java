@@ -1,6 +1,7 @@
 package com.imyuanxiao.rbac.controller.api;
 
 import cn.hutool.core.util.PhoneUtil;
+import com.imyuanxiao.rbac.annotation.ExceptionCode;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.dto.CaptchaRequest;
@@ -17,9 +18,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
@@ -60,7 +63,7 @@ public class AuthController {
     */
     @PostMapping("/register")
     @ApiOperation(value = "Register")
-    public String register(@RequestBody @Valid LoginRequest registerRequest){
+    public String register(@RequestBody @Validated LoginRequest registerRequest){
         dataValidation(registerRequest);
         return userService.register(registerRequest);
     }
@@ -69,10 +72,18 @@ public class AuthController {
         String type = request.getType();
         if (CommonConst.ACCOUNT.equals(type)) {
             // 执行账号登录的验证逻辑
-            validator.validate(request, ValidationGroups.Account.class);
+            Set<ConstraintViolation<LoginRequest>> validate = validator.validate(request, ValidationGroups.Account.class);
+            if(!validate.isEmpty()){
+                String errorMessage = validate.iterator().next().getMessage();
+                throw new ApiException(ResultCode.PARAMS_ERROR, errorMessage);
+            }
         } else if (CommonConst.MOBILE.equals(type)) {
             // 执行手机号登录的验证逻辑
-            validator.validate(request, ValidationGroups.Mobile.class);
+            Set<ConstraintViolation<LoginRequest>> validate = validator.validate(request, ValidationGroups.Mobile.class);
+            if(!validate.isEmpty()){
+                String errorMessage = validate.iterator().next().getMessage();
+                throw new ApiException(ResultCode.PARAMS_ERROR, errorMessage);
+            }
         } else {
             throw new ApiException(ResultCode.PARAMS_ERROR);
         }
