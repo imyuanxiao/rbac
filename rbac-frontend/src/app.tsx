@@ -23,18 +23,17 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const {data: msg, token: token } = await queryCurrentUser({
+      const {data: userInfo, token: token } = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      console.log('msg')
-      console.log(msg)
-      console.log('token')
-      console.log(token)
       if(token){
         localStorage.setItem('token', token)
       }
-      return msg.data;
+      console.log('getInitialState>>')
+      console.log(userInfo)
+      return userInfo;
     } catch (error) {
+      console.log('fetchUserInfo内重定向至主页>>')
       history.push(loginPath);
     }
     return undefined;
@@ -67,13 +66,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.nickName,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
+        console.log('layout内重定向至主页>>')
         history.push(loginPath);
       }
     },

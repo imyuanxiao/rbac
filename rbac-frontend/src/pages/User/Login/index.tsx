@@ -131,13 +131,18 @@ const Login: React.FC = () => {
         // 获取后端用户数据和token，设置为全局变量
         const { data } = resultVO;
         const { token, ...userInfo } = data as { token: string } & API.CurrentUser;
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
+      
         if(token){
           localStorage.setItem('token', token);
         }
+
+        // 强制刷新同步状态
+        flushSync(() => {
+          setInitialState((s) => ({
+            ...s,
+            currentUser: userInfo,
+          }));
+        });
 
         // await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
