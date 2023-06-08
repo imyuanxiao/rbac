@@ -192,6 +192,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             userProfile.setUserId(user.getId());
             userProfileService.save(userProfile);
         }
+        // 讲userProfile数据拷贝到userVO，但是忽视id
         BeanUtil.copyProperties(userProfile, userVO, "id", "userID");
         // Set roleIds and permissionIds
         userVO.setRoleIds(roleService.getIdsByUserId(user.getId()))

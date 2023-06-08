@@ -18,11 +18,11 @@ public class UserVO {
 
     private Long id;
 
-    private String userAccount;
+    private String username;
 
-    private String userEmail;
-
-    private String userPhone;
+//    private String userEmail;
+//
+//    private String userPhone;
 
     private String avatar;
 

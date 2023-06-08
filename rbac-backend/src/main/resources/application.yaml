@@ -22,6 +22,17 @@ spring:
         min-idle: 1
         time-between-eviction-runs: 10s
 
+# swagger config
+swagger:
+  title: RBAC
+  description: API documentation for RBAC.
+  version: 1.0.0
+
+# base-packages
+packages:
+  controller: com.imyuanxiao.rbac.controller
+
+
 logging:
   level:
     root: info

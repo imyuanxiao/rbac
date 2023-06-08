@@ -1,5 +1,6 @@
 package com.imyuanxiao.rbac.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -24,6 +25,19 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
+
+    @Value("${packages.controller}")
+    private String controllerPackages;
+
+    @Value("${swagger.title}")
+    private String swaggerTitle;
+
+    @Value("${swagger.description}")
+    private String swaggerDescription;
+
+    @Value("${swagger.version}")
+    private String swaggerVersion;
+
     /**
      * Configures the Swagger documentation for the API.
      * It sets the API title, description, version, and security context.
@@ -33,7 +47,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.imyuanxiao.rbac.controller"))
+                .apis(RequestHandlerSelectors.basePackage(controllerPackages))
                 .paths(PathSelectors.any())
                 .build()
                 .securityContexts(Collections.singletonList(securityContexts()))
@@ -47,9 +61,9 @@ public class SwaggerConfig {
      **/
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("RBAC")
-                .description("API documentation for RBAC.")
-                .version("1.0.0")
+                .title(swaggerTitle)
+                .description(swaggerDescription)
+                .version(swaggerVersion)
                 .build();
     }
 
