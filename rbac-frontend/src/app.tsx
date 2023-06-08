@@ -8,6 +8,7 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import React from 'react';
+import {useModel} from "@@/exports";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -22,9 +23,16 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
+      const {data: msg, token: token } = await queryCurrentUser({
         skipErrorHandler: true,
       });
+      console.log('msg')
+      console.log(msg)
+      console.log('token')
+      console.log(token)
+      if(token){
+        localStorage.setItem('token', token)
+      }
       return msg.data;
     } catch (error) {
       history.push(loginPath);
@@ -126,21 +134,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 };
 
-// TODO 此处配置token
 /**
  * 请求拦截器
  * @param url
  * @param options
  */
-const authHeaderInterceptor = (url: string, options: RequestConfig) => {
-  const token: string | null = localStorage.getItem("token")
-  const authHeader = { Authorization: token };
+const requestHandler = (url: string, options: RequestConfig) => {
+
+  const token = localStorage.getItem('token');
   if (token !== null) {
     return {
       url: `${url}`,
-      options: { ...options, interceptors: true, headers: authHeader },
+      options: { ...options, interceptors: true, headers: { Authorization: token } },
     };
   }
+
   return { url, options };
 };
 
@@ -149,19 +157,45 @@ const authHeaderInterceptor = (url: string, options: RequestConfig) => {
  * @param response
  * @param options
  */
-const demoResponseInterceptors = (response: Response, options: RequestConfig) => {
+const responseHandler = (response: Response, options: RequestConfig) => {
+  console.log("响应拦截器")
+  if(response.status === 500){
+    // 500 意味着token出错，删除本地token
+    localStorage.removeItem('token');
+  }
 
-  console.log(response)
-
-
-  // if(response.data.code !== 0){
-  //   console.log("响应出错" + response.data)
-  // }else{
-  //   console.log("响应正常")
-  // }
-
+  if(response.data.code !== 0){
+    console.log("响应出错")
+  }else{
+    console.log("响应异常")
+  }
+  // 返回响应数据里的data
   return response;
 };
+
+const errorHandler = (error: any) => {
+    console.log('errorHandler')
+    // console.log('error:',error)
+    const { response } = error;
+    if (response && response.status) {
+      // const errorText = codeMessage[response.status] || response.statusText;
+      const { status, url } = response;
+      // message.error(`请求错误 ${status}: ${url}`)
+      /*notification.error({ //右侧提示框 notification需要 import { notification } from 'antd';
+        message: `请求错误 ${status}: ${url}`,
+        description: errorText,
+      });*/
+    }
+    if (!response) {
+      // message.error('您的网络发生异常，无法连接服务器')
+      /*notification.error({ // 右侧提示框
+        description: '您的网络发生异常，无法连接服务器',
+        message: '网络异常',
+      });*/
+    }
+    throw error;
+};
+
 
 /**
  * @name request 配置，可以配置错误处理
@@ -169,40 +203,39 @@ const demoResponseInterceptors = (response: Response, options: RequestConfig) =>
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request: RequestConfig = {
-  // 新增自动添加AccessToken的请求前拦截器
   // 后端接口返回的数据规范不满足umiJS的默认配置,可以通过配置errorConfig.adaptor进行适配.
   // 全局统一错误处理
   errorConfig: { // 错误处理
-    adaptor: (resData) => { // 适配器
+    errorThrower: (res: any) => {
+      console.log('拦截错误>>>', res);
+    },
+    adaptor: res => { // 适配器
+      console.log('适配器内');
       return {
-        ...resData, // 适配器里面要返回一个对象，里面包含了 success 和 errorMessage
-        success: resData.code === 0, // 这里的 success 表示是否请求成功
-        errorMessage: resData.data, // 这里的 errorMessage 表示错误信息
+        ...res, // 适配器里面要返回一个对象，里面包含了 success 和 errorMessage
+        success: res.code === 0, // 这里的 success 表示是否请求成功
+        errorMessage: res.msg, // 这里的 errorMessage 表示错误信息
       };
+    },
+    errorHandler: (error: any, opts: any) => {
+      if (opts?.skipErrorHandler) throw error;
+      console.log('处理错误>>>', { error, opts });
+      // const { response } = error;
+      // if (response && !response.data) {
+      //   setLocalStorage(storageKey.userInfo, '');
+      //   setLocalStorage(storageKey.token, '');
+      //   history.push(loginPath);
+      // }
     },
   },
   // 全局接口异常处理
-  errorHandler: (error) => { // errorHandler: 异常处理程序
-    // console.log('error:',error)
-    const { response } = error;
-    if (response && response.status) {
-      // const errorText = codeMessage[response.status] || response.statusText;
-      const { status, url } = response;
-      message.error(`请求错误 ${status}: ${url}`)
-      /*notification.error({ //右侧提示框 notification需要 import { notification } from 'antd';
-        message: `请求错误 ${status}: ${url}`,
-        description: errorText,
-      });*/
-    }
-    if (!response) {
-      message.error('您的网络发生异常，无法连接服务器')
-      /*notification.error({ // 右侧提示框
-        description: '您的网络发生异常，无法连接服务器',
-        message: '网络异常',
-      });*/
-    }
-    throw error;
+  // 请求拦截器
+  requestInterceptors: [requestHandler],
+  // 响应拦截器
+  responseInterceptors: [responseHandler],
+  validateStatus: (status: number) =>{
+    console.log('状态码>>', status);
+    return !!status;
   },
-  responseInterceptors: [demoResponseInterceptors]
 };
 

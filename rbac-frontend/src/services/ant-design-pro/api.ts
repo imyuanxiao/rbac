@@ -5,17 +5,18 @@ import { request } from '@umijs/max';
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
   return request<{
-    data: API.CurrentUser;
+    data: API.CurrentUser, token: string;
   }>('/api/currentUser', {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-/** 退出登录接口 POST /api/login/outLogin */
+/** 退出登录接口 POST /api/auth/logout */
 export async function outLogin(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/login/outLogin', {
-    method: 'POST',
+  localStorage.removeItem('token');
+  return request<Record<string, any>>('/api/auth/logout', {
+    method: 'GET',
     ...(options || {}),
   });
 }

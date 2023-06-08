@@ -20,10 +20,6 @@ public class UserVO {
 
     private String username;
 
-//    private String userEmail;
-//
-//    private String userPhone;
-
     private String avatar;
 
     private String nickName;

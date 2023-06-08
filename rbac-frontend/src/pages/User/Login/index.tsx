@@ -118,35 +118,47 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
-      const msg = await login({ ...values, type });
-
-      if (msg.code === 0) {
+      const resultVO = await login({ ...values, type });
+      console.log('login result')
+      console.log(resultVO)
+      if (resultVO.code === 0) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
+
+        // 获取后端用户数据和token，设置为全局变量
+        const { data } = resultVO;
+        const { token, ...userInfo } = data as { token: string } & API.CurrentUser;
+        setInitialState((s) => ({
+          ...s,
+          currentUser: userInfo,
+        }));
+        if(token){
+          localStorage.setItem('token', token);
+        }
+
+        // await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
       }
-
-      console.log(msg);
-
       // 如果失败去设置用户错误信息
-      // setUserLoginState(msg);
+      setUserLoginState({
+        status: 'error',
+        msg: resultVO.data
+      });
 
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
         defaultMessage: '登录失败，请重试！',
       });
-      console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+  const { status, msg: loginMsg } = userLoginState;
 
   return (
     <div className={containerClassName}>
@@ -211,12 +223,13 @@ const Login: React.FC = () => {
             ]}
           />
 
-          {status === 'error' && loginType === 'account' && (
+          {status === 'error' && (
             <LoginMessage
-              content={intl.formatMessage({
-                id: 'pages.login.accountLogin.errorMessage',
-                defaultMessage: '账户或密码错误(admin/ant.design)',
-              })}
+              // content={intl.formatMessage({
+              //   id: 'pages.login.accountLogin.errorMessage',
+              //   defaultMessage: '账户或密码错误(admin/ant.design)',
+              // })}
+              content={loginMsg}
             />
           )}
           {type === 'account' && (
@@ -268,7 +281,7 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
+          {/*{status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}*/}
           {type === 'mobile' && (
             <>
               <ProFormText
@@ -348,9 +361,17 @@ const Login: React.FC = () => {
                   if (!result) {
                     return;
                   }
-                  message.success('获取验证码成功！验证码为：1234');
+                  if(result.code !== 0) {
+                    message.error(result.data);
+                    return;
+                  }
+                  message.success(result.data);
                 }}
               />
+              <p style={{color:"red"}}>{intl.formatMessage({
+                id: 'pages.login.mobile.tip',
+                defaultMessage: '未注册号码将会自动注册',
+              })}</p>
             </>
           )}
           <div

@@ -22,11 +22,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @ClassName LoginFilter
- * @Description Authentication filter
- * @Author imyuanxiao
- * @Date 2023/5/6 11:07
- * @Version 1.0
+ * @description  Authentication filter
+ * @author  imyuanxiao
  **/
 @Slf4j
 @Component

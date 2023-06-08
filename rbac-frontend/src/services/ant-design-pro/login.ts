@@ -7,8 +7,7 @@ export async function getCaptcha(
   mobile?: string,
   options?: { [key: string]: any },
 ) {
-  console.log(mobile);
-  return request<API.FakeCaptcha>('/api/auth/captcha', {
+  return request<API.CaptchaInfo>('/api/auth/captcha', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

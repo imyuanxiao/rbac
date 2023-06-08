@@ -22,6 +22,7 @@ export default {
   'pages.login.submit': '登录',
   'pages.login.loginWith': '其他登录方式 :',
   'pages.login.registerAccount': '注册账户',
+  'pages.login.mobile.tip': '未注册号码将会自动注册',
   'pages.welcome.link': '欢迎使用',
   'pages.welcome.alertMessage': '更快更强的重型组件，已经发布。',
   'pages.admin.subPage.title': ' 这个页面只有 admin 权限才能查看',
