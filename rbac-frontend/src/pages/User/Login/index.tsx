@@ -119,8 +119,6 @@ const Login: React.FC = () => {
     try {
       // 登录
       const resultVO = await login({ ...values, type });
-      console.log('login result')
-      console.log(resultVO)
       if (resultVO.code === 0) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
@@ -131,7 +129,7 @@ const Login: React.FC = () => {
         // 获取后端用户数据和token，设置为全局变量
         const { data } = resultVO;
         const { token, ...userInfo } = data as { token: string } & API.CurrentUser;
-      
+
         if(token){
           localStorage.setItem('token', token);
         }

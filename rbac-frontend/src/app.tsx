@@ -158,42 +158,19 @@ const requestHandler = (url: string, options: RequestConfig) => {
  * @param options
  */
 const responseHandler = (response: Response, options: RequestConfig) => {
-  console.log("响应拦截器")
+  console.log("响应拦截器>>")
   if(response.status === 500){
     // 500 意味着token出错，删除本地token
+    console.log("删除本地token>>")
     localStorage.removeItem('token');
   }
 
   if(response.data.code !== 0){
-    console.log("响应出错")
-  }else{
-    console.log("响应异常")
+    console.log("响应异常>>")
   }
+
   // 返回响应数据里的data
   return response;
-};
-
-const errorHandler = (error: any) => {
-    console.log('errorHandler')
-    // console.log('error:',error)
-    const { response } = error;
-    if (response && response.status) {
-      // const errorText = codeMessage[response.status] || response.statusText;
-      const { status, url } = response;
-      // message.error(`请求错误 ${status}: ${url}`)
-      /*notification.error({ //右侧提示框 notification需要 import { notification } from 'antd';
-        message: `请求错误 ${status}: ${url}`,
-        description: errorText,
-      });*/
-    }
-    if (!response) {
-      // message.error('您的网络发生异常，无法连接服务器')
-      /*notification.error({ // 右侧提示框
-        description: '您的网络发生异常，无法连接服务器',
-        message: '网络异常',
-      });*/
-    }
-    throw error;
 };
 
 
@@ -201,22 +178,18 @@ const errorHandler = (error: any) => {
  * @name request 配置，可以配置错误处理
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
+ * https://umijs.org/docs/max/request#errorconfig
  */
 export const request: RequestConfig = {
   // 后端接口返回的数据规范不满足umiJS的默认配置,可以通过配置errorConfig.adaptor进行适配.
   // 全局统一错误处理
-  errorConfig: { // 错误处理
-    errorThrower: (res: any) => {
-      console.log('拦截错误>>>', res);
+  errorConfig: {
+    // 错误处理
+    errorThrower: (resData: any) => {
+      console.log('拦截错误>>>', resData);
+
     },
-    adaptor: res => { // 适配器
-      console.log('适配器内');
-      return {
-        ...res, // 适配器里面要返回一个对象，里面包含了 success 和 errorMessage
-        success: res.code === 0, // 这里的 success 表示是否请求成功
-        errorMessage: res.msg, // 这里的 errorMessage 表示错误信息
-      };
-    },
+    // 错误处理
     errorHandler: (error: any, opts: any) => {
       if (opts?.skipErrorHandler) throw error;
       console.log('处理错误>>>', { error, opts });
@@ -233,9 +206,6 @@ export const request: RequestConfig = {
   requestInterceptors: [requestHandler],
   // 响应拦截器
   responseInterceptors: [responseHandler],
-  validateStatus: (status: number) =>{
-    console.log('状态码>>', status);
-    return !!status;
-  },
+
 };
 
