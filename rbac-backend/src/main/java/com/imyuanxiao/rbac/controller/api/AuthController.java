@@ -1,7 +1,6 @@
 package com.imyuanxiao.rbac.controller.api;
 
 import cn.hutool.core.util.PhoneUtil;
-import com.imyuanxiao.rbac.annotation.ExceptionCode;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.dto.CaptchaRequest;
@@ -10,6 +9,7 @@ import com.imyuanxiao.rbac.model.vo.LoginResponse;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 import com.imyuanxiao.rbac.service.UserService;
 import com.imyuanxiao.rbac.util.CommonConst;
+import com.imyuanxiao.rbac.util.SecurityContextUtil;
 import com.imyuanxiao.rbac.util.ValidationGroups;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
@@ -104,8 +102,8 @@ public class AuthController {
 
     @GetMapping("/currentUser")
     @ApiOperation(value = "Current User Info")
-    public void currentUser(HttpServletRequest request){
-        userService.currentUser(request);
+    public UserVO currentUser(){
+        return SecurityContextUtil.getCurrentUser();
     }
 
     @GetMapping("/logout")

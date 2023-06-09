@@ -1,6 +1,5 @@
 package com.imyuanxiao.rbac.model.vo;
 
-import com.imyuanxiao.rbac.model.entity.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,12 +19,10 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = false)
 public class UserDetailsVO extends org.springframework.security.core.userdetails.User {
 
-    private User user;
+    private UserVO user;
 
-    private String token;
-
-    public UserDetailsVO(User user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getUsername(), user.getUserPassword(), authorities);
+    public UserDetailsVO(UserVO user, Collection<? extends GrantedAuthority> authorities) {
+        super(user.getUsername(), "", authorities);
         this.user = user;
     }
 

@@ -41,11 +41,11 @@ import java.util.stream.Collectors;
 /**
 * @author Administrator
 * @description 针对表【user(user table)】的数据库操作Service实现
-* @createDate 2023-05-26 17:15:53
+* @date  2023-05-26 17:15:53
 */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
-    implements UserService, UserDetailsService {
+    implements UserService {
 
     @Autowired
     private RedisUtil redisUtil;
@@ -229,10 +229,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         redisUtil.removeUserMap();
     }
 
-    @Override
-    public void currentUser(HttpServletRequest request) {
-
-    }
 
     @Override
     public Set<Long> myPermission() {
@@ -288,27 +284,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         // If roleIds not empty, add new roles for this user
         roleService.insertRolesByUserId(param.getId(), param.getRoleIds());
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        if(StrUtil.isBlank(username)){
-            throw new ApiException(ResultCode.VALIDATE_FAILED);
-        }
-        return this.lambdaQuery().eq(User::getUsername, username).one();
-    }
-
-    @Override
-    public UserDetailsVO loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Get user by username
-        User user = this.getUserByUsername(username);
-        // Get permissionIds and tranfer them to `SimpleGrantedAuthority` Object
-        Set<SimpleGrantedAuthority> authorities = permissionService.getIdsByUserId(user.getId())
-                .stream()
-                .map(String::valueOf)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
-        return new UserDetailsVO(user, authorities);
     }
 
     @Override

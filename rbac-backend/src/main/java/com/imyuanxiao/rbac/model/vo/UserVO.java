@@ -17,6 +17,8 @@ public class UserVO {
 
     private String username;
 
+    private Integer userStatus;
+
     private String avatar;
 
     private String nickName;

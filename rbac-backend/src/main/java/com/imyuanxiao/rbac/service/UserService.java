@@ -20,7 +20,7 @@ import java.util.Set;
 */
 public interface UserService extends IService<User> {
 
-    User getUserByUsername(String username);
+//    User getUserByUsername(String username);
 
     /**
      * @description Register
@@ -69,5 +69,4 @@ public interface UserService extends IService<User> {
 
     void logout(HttpServletRequest request);
 
-    void currentUser(HttpServletRequest request);
 }

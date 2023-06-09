@@ -4,7 +4,7 @@ import com.imyuanxiao.rbac.security.AuthFilter;
 import com.imyuanxiao.rbac.security.LoginFilter;
 import com.imyuanxiao.rbac.security.MyDeniedHandler;
 import com.imyuanxiao.rbac.security.MyEntryPoint;
-import com.imyuanxiao.rbac.service.impl.UserServiceImpl;
+import com.imyuanxiao.rbac.service.impl.RedisUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +33,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SpringSecurityConfig {
 
-    @Autowired
-    private UserServiceImpl userDetailsService;
+//    @Autowired
+//    private UserServiceImpl userDetailsService;
+     @Autowired
+    private RedisUserServiceImpl redisUserService;
+
     @Autowired
     private LoginFilter loginFilter;
 
@@ -95,7 +98,8 @@ public class SpringSecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+//        provider.setUserDetailsService(userDetailsService);
+        provider.setUserDetailsService(redisUserService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

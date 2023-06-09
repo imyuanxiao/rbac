@@ -3,7 +3,7 @@ package com.imyuanxiao.rbac.security;
 import cn.hutool.core.util.StrUtil;
 import com.imyuanxiao.rbac.exception.AccountTakeoverException;
 import com.imyuanxiao.rbac.model.vo.UserDetailsVO;
-import com.imyuanxiao.rbac.service.impl.UserServiceImpl;
+import com.imyuanxiao.rbac.service.impl.RedisUserServiceImpl;
 import com.imyuanxiao.rbac.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,9 @@ import java.util.Map;
 @Slf4j
 @Component
 public class LoginFilter  extends OncePerRequestFilter {
+
     @Autowired
-    private UserServiceImpl userService;
+    private RedisUserServiceImpl redisUserService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -59,7 +60,7 @@ public class LoginFilter  extends OncePerRequestFilter {
             // Get user info from redis
             Map<Object, Object> userMap = redisUtil.getUserMap(username);
             // 如果userMap不存在，说明该token登录信息已失效
-            if(userMap == null ){
+            if(userMap.isEmpty()){
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -68,12 +69,9 @@ public class LoginFilter  extends OncePerRequestFilter {
                 request.setAttribute("errorMessage","账户异地登录!");
                 throw new AccountTakeoverException("账户异地登录");
             }
-            // TODO userMap存在,token一致，讲userMap转为userDetailsVO
-
 
             // 从数据库中获取用户信息、密码、角色信息等，返回一个包含用户详细信息的 UserDetailsVO 对象
-            UserDetailsVO userDetails = userService.loadUserByUsername(username);
-            userDetails.setToken("Bearer " + jwt);
+            UserDetailsVO userDetails = redisUserService.loadUserByUsername(username);
             // 创建一个包含了用户的认证信息、凭证信息（之前验证过jwt，不需要凭证）、用户的授权信息的对象
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
