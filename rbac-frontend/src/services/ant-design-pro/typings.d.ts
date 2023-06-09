@@ -3,10 +3,9 @@
 
 declare namespace API {
 
-  type ResultVO = {
-    code?: number;
-    msg?: string;
-    data?: any;
+  type LoginResponse = {
+    userVO?: CurrentUser;
+    token?: string;
   };
 
   type CurrentUser = {

@@ -117,12 +117,12 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     // try {
+
       // 登录
-      const currentUser = await login({ ...values, type });
 
-      console.log('handleSubmit>>')
-      console.log(currentUser)
-
+     const loginResponse = await login({ ...values, type });
+     console.log('handleSubmit>>')
+      const { userVO } = loginResponse;
       const defaultLoginSuccessMessage = intl.formatMessage({
         id: 'pages.login.success',
         defaultMessage: '登录成功！',
@@ -133,7 +133,7 @@ const Login: React.FC = () => {
       flushSync(() => {
         setInitialState((s) => ({
           ...s,
-          currentUser: currentUser,
+          currentUser: userVO,
         }));
       });
 

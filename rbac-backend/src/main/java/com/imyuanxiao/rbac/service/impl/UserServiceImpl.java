@@ -11,9 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.model.entity.UserLoginHistory;
 import com.imyuanxiao.rbac.model.entity.UserProfile;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
-import com.imyuanxiao.rbac.model.vo.LoginResponse;
-import com.imyuanxiao.rbac.model.vo.UserDetailsVO;
-import com.imyuanxiao.rbac.model.vo.UserPageVO;
+import com.imyuanxiao.rbac.model.vo.*;
 import com.imyuanxiao.rbac.security.JwtManager;
 import com.imyuanxiao.rbac.service.*;
 import com.imyuanxiao.rbac.util.CommonConst;
@@ -25,7 +23,6 @@ import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.imyuanxiao.rbac.mapper.UserMapper;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
-import com.imyuanxiao.rbac.model.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -237,8 +234,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public String updateToken() {
-        return redisUtil.refreshToken();
+    public TokenResponse updateToken() {
+        String newToken = redisUtil.refreshToken();
+        return new TokenResponse().setToken(newToken);
     }
 
     @Override

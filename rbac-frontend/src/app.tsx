@@ -173,11 +173,12 @@ const responseHandler = (response: Response, options: RequestConfig) => {
   }
 
   //响应拦截器内获取token并设置到本地
-  if(response.data.data.token){
+  if(response.data.data?.token){
     console.log("设置token>>")
+    console.log(response.data.data.token)
     localStorage.setItem('token', response.data.data.token);
   }
-
+  
   //返回data
   return response.data;
 };
@@ -203,9 +204,9 @@ export const request: RequestConfig = {
       if (opts?.skipErrorHandler) throw error;
       console.log('errorHandler处理错误>>>', { error, opts });
       if (error.data && error.data.data) {
-        // message.error(error.data.data)
+        message.error(error.data.data)
       }else{
-        // message.error('请求异常');
+        message.error('请求异常');
         console.log("删除本地token>>")
         localStorage.removeItem('token');
         history.push(loginPath);

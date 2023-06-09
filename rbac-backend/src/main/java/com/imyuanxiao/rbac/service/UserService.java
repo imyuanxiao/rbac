@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
 import com.imyuanxiao.rbac.model.vo.LoginResponse;
+import com.imyuanxiao.rbac.model.vo.TokenResponse;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 
@@ -63,7 +64,7 @@ public interface UserService extends IService<User> {
      **/
     Set<Long> myPermission();
 
-    String updateToken();
+    TokenResponse updateToken();
 
     String sendCaptcha(String phone);
 

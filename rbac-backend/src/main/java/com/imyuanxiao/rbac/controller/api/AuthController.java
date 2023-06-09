@@ -6,6 +6,7 @@ import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.dto.CaptchaRequest;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
 import com.imyuanxiao.rbac.model.vo.LoginResponse;
+import com.imyuanxiao.rbac.model.vo.TokenResponse;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 import com.imyuanxiao.rbac.service.UserService;
 import com.imyuanxiao.rbac.util.CommonConst;
@@ -104,6 +105,13 @@ public class AuthController {
     @ApiOperation(value = "Current User Info")
     public UserVO currentUser(){
         return SecurityContextUtil.getCurrentUser();
+    }
+
+    @GetMapping("/updateToken")
+    @ApiOperation(value = "Update token in redis")
+    public TokenResponse updateToken(){
+        TokenResponse tokenResponse = userService.updateToken();
+        return tokenResponse;
     }
 
     @GetMapping("/logout")
