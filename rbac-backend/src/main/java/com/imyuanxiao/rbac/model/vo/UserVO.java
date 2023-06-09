@@ -6,11 +6,8 @@ import lombok.experimental.Accessors;
 import java.util.Set;
 
 /**
- * @ClassName UserVO
- * @Description User Value Object
- * @Author imyuanxiao
- * @Date 2023/5/4 15:05
- * @Version 1.0
+ * @description  User Value Object
+ * @author  imyuanxiao
  **/
 @Data
 @Accessors(chain = true)
@@ -27,7 +24,5 @@ public class UserVO {
     private Set<Long> roleIds;
 
     private Set<Long> permissionIds;
-
-    private String token;
 
 }

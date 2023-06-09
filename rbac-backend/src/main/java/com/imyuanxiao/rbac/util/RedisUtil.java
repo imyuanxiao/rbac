@@ -46,7 +46,7 @@ public class RedisUtil {
     }
 
     public void saveUserMap(Map<String, Object> userMap){
-        String key = LOGIN_USER_KEY + userMap.get("userAccount");
+        String key = LOGIN_USER_KEY + userMap.get("username");
         stringRedisTemplate.opsForHash().putAll(key, userMap);
         // Set token expire time, which is consistent with jwt token expire time
         stringRedisTemplate.expire(key, LOGIN_USER_TTL, TimeUnit.MINUTES);

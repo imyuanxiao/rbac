@@ -103,65 +103,88 @@ const Login: React.FC = () => {
 
   const intl = useIntl();
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
+  // const fetchUserInfo = async () => {
+  //   const userInfo = await initialState?.fetchUserInfo?.();
+  //   if (userInfo) {
+  //     flushSync(() => {
+  //       setInitialState((s) => ({
+  //         ...s,
+  //         currentUser: userInfo,
+  //       }));
+  //     });
+  //   }
+  // };
+
+  const handleSubmit = async (values: API.LoginParams) => {
+    // try {
+      // 登录
+      const currentUser = await login({ ...values, type });
+
+      console.log('handleSubmit>>')
+      console.log(currentUser)
+
+      const defaultLoginSuccessMessage = intl.formatMessage({
+        id: 'pages.login.success',
+        defaultMessage: '登录成功！',
+      });
+      message.success(defaultLoginSuccessMessage);
+
+      //强制刷新同步状态
       flushSync(() => {
         setInitialState((s) => ({
           ...s,
-          currentUser: userInfo,
+          currentUser: currentUser,
         }));
       });
-    }
+
+      // await fetchUserInfo();
+      const urlParams = new URL(window.location.href).searchParams;
+      history.push(urlParams.get('redirect') || '/');
+      return;
+
+      // if (resultVO.code === 0) {
+      //   const defaultLoginSuccessMessage = intl.formatMessage({
+      //     id: 'pages.login.success',
+      //     defaultMessage: '登录成功！',
+      //   });
+      //   message.success(defaultLoginSuccessMessage);
+
+      //   // 获取后端用户数据和token，设置为全局变量
+      //   const { data } = resultVO;
+      //   const { token, ...userInfo } = data as { token: string } & API.CurrentUser;
+      //
+      //   if(token){
+      //     localStorage.setItem('token', token);
+      //   }
+      //
+      //   // 强制刷新同步状态
+      //   flushSync(() => {
+      //     setInitialState((s) => ({
+      //       ...s,
+      //       currentUser: userInfo,
+      //     }));
+      //   });
+      //
+      //   // await fetchUserInfo();
+      //   const urlParams = new URL(window.location.href).searchParams;
+      //   history.push(urlParams.get('redirect') || '/');
+      //   return;
+      // }
+      // // 如果失败去设置用户错误信息
+      // setUserLoginState({
+      //   status: 'error',
+      //   msg: resultVO.data
+      // });
+    //
+    // } catch (error) {
+    //   const defaultLoginFailureMessage = intl.formatMessage({
+    //     id: 'pages.login.failure',
+    //     defaultMessage: '登录失败，请重试！',
+    //   });
+    //   message.error(defaultLoginFailureMessage);
+    // }
   };
-
-  const handleSubmit = async (values: API.LoginParams) => {
-    try {
-      // 登录
-      const resultVO = await login({ ...values, type });
-      if (resultVO.code === 0) {
-        const defaultLoginSuccessMessage = intl.formatMessage({
-          id: 'pages.login.success',
-          defaultMessage: '登录成功！',
-        });
-        message.success(defaultLoginSuccessMessage);
-
-        // 获取后端用户数据和token，设置为全局变量
-        const { data } = resultVO;
-        const { token, ...userInfo } = data as { token: string } & API.CurrentUser;
-
-        if(token){
-          localStorage.setItem('token', token);
-        }
-
-        // 强制刷新同步状态
-        flushSync(() => {
-          setInitialState((s) => ({
-            ...s,
-            currentUser: userInfo,
-          }));
-        });
-
-        // await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      }
-      // 如果失败去设置用户错误信息
-      setUserLoginState({
-        status: 'error',
-        msg: resultVO.data
-      });
-
-    } catch (error) {
-      const defaultLoginFailureMessage = intl.formatMessage({
-        id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
-      });
-      message.error(defaultLoginFailureMessage);
-    }
-  };
-  const { status, msg: loginMsg } = userLoginState;
+  // const { status, msg: loginMsg } = userLoginState;
 
   return (
     <div className={containerClassName}>
@@ -226,15 +249,16 @@ const Login: React.FC = () => {
             ]}
           />
 
-          {status === 'error' && (
-            <LoginMessage
-              // content={intl.formatMessage({
-              //   id: 'pages.login.accountLogin.errorMessage',
-              //   defaultMessage: '账户或密码错误(admin/ant.design)',
-              // })}
-              content={loginMsg}
-            />
-          )}
+          {/*{status === 'error' && (*/}
+          {/*  <LoginMessage*/}
+          {/*    // content={intl.formatMessage({*/}
+          {/*    //   id: 'pages.login.accountLogin.errorMessage',*/}
+          {/*    //   defaultMessage: '账户或密码错误(admin/ant.design)',*/}
+          {/*    // })}*/}
+          {/*    content={loginMsg}*/}
+          {/*  />*/}
+          {/*)}*/}
+
           {type === 'account' && (
             <>
               <ProFormText

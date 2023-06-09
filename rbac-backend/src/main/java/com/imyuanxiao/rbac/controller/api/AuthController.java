@@ -6,6 +6,7 @@ import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.dto.CaptchaRequest;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
+import com.imyuanxiao.rbac.model.vo.LoginResponse;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 import com.imyuanxiao.rbac.service.UserService;
 import com.imyuanxiao.rbac.util.CommonConst;
@@ -96,20 +97,20 @@ public class AuthController {
     */
     @PostMapping("/login")
     @ApiOperation(value = "Login")
-    public UserVO login(@RequestBody @Validated LoginRequest loginRequest, HttpServletRequest request){
+    public LoginResponse login(@RequestBody @Validated LoginRequest loginRequest, HttpServletRequest request){
         dataValidation(loginRequest);
         return userService.login(loginRequest, request);
+    }
+
+    @GetMapping("/currentUser")
+    @ApiOperation(value = "Current User Info")
+    public void currentUser(HttpServletRequest request){
+        userService.currentUser(request);
     }
 
     @GetMapping("/logout")
     @ApiOperation(value = "Logout")
     public void logout(HttpServletRequest request){ userService.logout(request);}
-
-    @GetMapping("/update-token")
-    @ApiOperation(value = "Update token")
-    public String updateToken(){
-        return userService.updateToken();
-    }
 
     @GetMapping("/my-permission")
     @ApiOperation(value = "Get UserVO every time route changes")

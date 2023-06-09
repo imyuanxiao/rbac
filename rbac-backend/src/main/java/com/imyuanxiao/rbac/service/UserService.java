@@ -6,6 +6,7 @@ import com.imyuanxiao.rbac.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
+import com.imyuanxiao.rbac.model.vo.LoginResponse;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 
@@ -33,7 +34,7 @@ public interface UserService extends IService<User> {
      * @author imyuanxiao
      * @param loginRequest Login form parameters
      **/
-    UserVO login(LoginRequest loginRequest, HttpServletRequest request);
+    LoginResponse login(LoginRequest loginRequest, HttpServletRequest request);
 
     /**
      * @description Add new user
@@ -67,4 +68,6 @@ public interface UserService extends IService<User> {
     String sendCaptcha(String phone);
 
     void logout(HttpServletRequest request);
+
+    void currentUser(HttpServletRequest request);
 }

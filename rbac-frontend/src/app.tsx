@@ -9,6 +9,7 @@ import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import React from 'react';
 import {useModel} from "@@/exports";
+import {message} from "antd";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -23,12 +24,9 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const {data: userInfo, token: token } = await queryCurrentUser({
+      const userInfo = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      if(token){
-        localStorage.setItem('token', token)
-      }
       console.log('getInitialState>>')
       console.log(userInfo)
       return userInfo;
@@ -140,9 +138,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * @param options
  */
 const requestHandler = (url: string, options: RequestConfig) => {
-
+  console.log("requestHandler请求拦截器>>")
   const token = localStorage.getItem('token');
   if (token !== null) {
+    console.log("token加入header")
     return {
       url: `${url}`,
       options: { ...options, interceptors: true, headers: { Authorization: token } },
@@ -158,19 +157,29 @@ const requestHandler = (url: string, options: RequestConfig) => {
  * @param options
  */
 const responseHandler = (response: Response, options: RequestConfig) => {
-  console.log("响应拦截器>>")
+  console.log("responseHandler响应拦截器>>")
+  console.log(response)
+
   if(response.status === 500){
     // 500 意味着token出错，删除本地token
     console.log("删除本地token>>")
     localStorage.removeItem('token');
   }
 
-  if(response.data.code !== 0){
+  if(response.data.errorCode !== 0){
     console.log("响应异常>>")
+    console.log(response.data)
+    throw response;
   }
 
-  // 返回响应数据里的data
-  return response;
+  //响应拦截器内获取token并设置到本地
+  if(response.data.data.token){
+    console.log("设置token>>")
+    localStorage.setItem('token', response.data.data.token);
+  }
+
+  //返回data
+  return response.data;
 };
 
 
@@ -186,19 +195,22 @@ export const request: RequestConfig = {
   errorConfig: {
     // 错误处理
     errorThrower: (resData: any) => {
-      console.log('拦截错误>>>', resData);
+      console.log('errorThrower拦截错误>>>', resData);
 
     },
     // 错误处理
     errorHandler: (error: any, opts: any) => {
       if (opts?.skipErrorHandler) throw error;
-      console.log('处理错误>>>', { error, opts });
-      // const { response } = error;
-      // if (response && !response.data) {
-      //   setLocalStorage(storageKey.userInfo, '');
-      //   setLocalStorage(storageKey.token, '');
-      //   history.push(loginPath);
-      // }
+      console.log('errorHandler处理错误>>>', { error, opts });
+      if (error.data && error.data.data) {
+        // message.error(error.data.data)
+      }else{
+        // message.error('请求异常');
+        console.log("删除本地token>>")
+        localStorage.removeItem('token');
+        history.push(loginPath);
+      }
+
     },
   },
   // 全局接口异常处理

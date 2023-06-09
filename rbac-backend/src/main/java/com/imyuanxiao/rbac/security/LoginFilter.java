@@ -42,19 +42,20 @@ public class LoginFilter  extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
+
         // 如果token为空或没有以”Bearer "开头，跳过本层过滤
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
+
         // 提取用户名，查询数据库
         // 在提取时会验证token是否有效
         username = JwtManager.extractUsername(jwt);
 
         // username有效，并且上下文对象中没有配置用户
         if (StrUtil.isNotBlank(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-
             // Get user info from redis
             Map<Object, Object> userMap = redisUtil.getUserMap(username);
             // 如果userMap不存在，说明该token登录信息已失效
@@ -67,7 +68,9 @@ public class LoginFilter  extends OncePerRequestFilter {
                 request.setAttribute("errorMessage","账户异地登录!");
                 throw new AccountTakeoverException("账户异地登录");
             }
-            // TODO 将从数据库获取用户信息改为从userMap转换成userDetailsVO
+            // TODO userMap存在,token一致，讲userMap转为userDetailsVO
+
+
             // 从数据库中获取用户信息、密码、角色信息等，返回一个包含用户详细信息的 UserDetailsVO 对象
             UserDetailsVO userDetails = userService.loadUserByUsername(username);
             userDetails.setToken("Bearer " + jwt);

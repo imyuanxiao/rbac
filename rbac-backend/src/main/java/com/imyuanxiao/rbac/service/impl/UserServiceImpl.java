@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.model.entity.UserLoginHistory;
 import com.imyuanxiao.rbac.model.entity.UserProfile;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
+import com.imyuanxiao.rbac.model.vo.LoginResponse;
 import com.imyuanxiao.rbac.model.vo.UserDetailsVO;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.security.JwtManager;
@@ -125,7 +126,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public UserVO login(LoginRequest loginRequest, HttpServletRequest request) {
+    public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request) {
 
         User userResult = null;
         // 如果登录类型为手机号验证码
@@ -175,7 +176,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .setIpAddress(request.getRemoteAddr()));
 
         // Put user basic info, profile, token, permissions in UserVO object
-        return getUserVO(userResult);
+        UserVO userVO = getUserVO(userResult);
+
+        // save UserMap to redis
+        // Manually handle or use util to convert id 'long' to 'string'.
+        Map<String, Object> userMap = BeanUtil.beanToMap(userVO, new HashMap<>(),
+                CopyOptions.create().
+                        setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue != null ? fieldValue.toString() : null));
+        // Generate token
+        String token = JwtManager.generate(userResult.getUsername());
+        // Add token to userMap
+        userMap.put("token", token);
+        // Save user info and token in redis
+        redisUtil.saveUserMap(userMap);
+
+        // return loginResponse
+        return new LoginResponse().setUserVO(userVO).setToken(token);
     }
 
     private UserVO getUserVO(User user) {
@@ -197,18 +214,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // Set roleIds and permissionIds
         userVO.setRoleIds(roleService.getIdsByUserId(user.getId()))
                 .setPermissionIds(permissionService.getIdsByUserId(user.getId()));
-        // Generate token
-        String token = JwtManager.generate(user.getUsername());
-        userVO.setToken(token);
-        // Manually handle or use util to convert id 'long' to 'string'.
-        Map<String, Object> userMap = BeanUtil.beanToMap(userVO, new HashMap<>(),
-                CopyOptions.create().
-                        setIgnoreNullValue(true)
-                .setFieldValueEditor((fieldName, fieldValue) -> fieldValue != null ? fieldValue.toString() : null));
-        // Save user info and token in redis
-        redisUtil.saveUserMap(userMap);
         return userVO;
     }
+
+
 
     @Override
     public void logout(HttpServletRequest request) {
@@ -218,6 +227,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .setUserAgent(request.getHeader("User-Agent"))
                 .setIpAddress(request.getRemoteAddr()));
         redisUtil.removeUserMap();
+    }
+
+    @Override
+    public void currentUser(HttpServletRequest request) {
+
     }
 
     @Override
