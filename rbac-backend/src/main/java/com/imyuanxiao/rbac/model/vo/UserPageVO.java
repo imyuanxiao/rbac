@@ -12,6 +12,7 @@ import java.util.Set;
 public class UserPageVO {
     private Long id;
     private String username;
+    private int userStatus;
     private Set<Long> roleIds;
     private Set<Long> orgIds;
 }

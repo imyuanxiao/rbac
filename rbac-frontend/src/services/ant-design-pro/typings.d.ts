@@ -22,6 +22,22 @@ declare namespace API {
     pageSize?: number;
   };
 
+  type UserListItem = {
+    id?: number;
+    username?: string;
+    userStatus?: number;
+    roleIds?: number[];
+    orgIds?: number[];
+  };
+
+  type UserList = {
+    records?: UserListItem[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+  };
+
+
   type RuleListItem = {
     key?: number;
     disabled?: boolean;

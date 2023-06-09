@@ -39,6 +39,50 @@ export async function getNotices(options?: { [key: string]: any }) {
   });
 }
 
+/** 获取用户列表 GET /api/user/page */
+export async function getUserList(
+  params: {
+    current?: number;
+    pageSize?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  const response = await request<API.UserList>(`/api/user/page/${params.current}&${params.pageSize}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+  return {
+    ...response,
+    data: response.records,
+  };
+}
+
+/** 新建规则 PUT /api/rule */
+export async function updateUser(options?: { [key: string]: any }) {
+  return request<API.UserListItem>('/api/user/update', {
+    method: 'PUT',
+    ...(options || {}),
+  });
+}
+
+/** 新建规则 POST /api/rule */
+export async function addUser(options?: { [key: string]: any }) {
+  return request<API.UserListItem>('/api/user/add', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+/** 删除规则 DELETE /api/rule */
+export async function removeUser(options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/user/delete', {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
+
+
+
 /** 获取规则列表 GET /api/rule */
 export async function rule(
   params: {

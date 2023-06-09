@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_phone` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'phone number',
   `user_email` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'user email',
   `user_password` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'user password, encoded',
-  `user_status` tinyint(4) DEFAULT NULL COMMENT '0-normal, 1-disabled, -1-deleted',
+  `user_status` tinyint(4) DEFAULT NULL COMMENT '0-normal, 1-disabled, 2-deleted',
   `updated_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'updated time',
   `created_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'created time',
   PRIMARY KEY (`id`),

@@ -158,7 +158,6 @@ const requestHandler = (url: string, options: RequestConfig) => {
  */
 const responseHandler = (response: Response, options: RequestConfig) => {
   console.log("responseHandler响应拦截器>>")
-  console.log(response)
 
   if(response.status === 500){
     // 500 意味着token出错，删除本地token
@@ -178,7 +177,9 @@ const responseHandler = (response: Response, options: RequestConfig) => {
     console.log(response.data.data.token)
     localStorage.setItem('token', response.data.data.token);
   }
-  
+  console.log("response.data")
+  console.log(response.data)
+
   //返回data
   return response.data;
 };
@@ -203,14 +204,23 @@ export const request: RequestConfig = {
     errorHandler: (error: any, opts: any) => {
       if (opts?.skipErrorHandler) throw error;
       console.log('errorHandler处理错误>>>', { error, opts });
-      if (error.data && error.data.data) {
-        message.error(error.data.data)
-      }else{
-        message.error('请求异常');
-        console.log("删除本地token>>")
-        localStorage.removeItem('token');
-        history.push(loginPath);
+
+      const { response } = error;
+
+      if(response && response.status === 500){
+          console.log("删除本地token>>")
+          localStorage.removeItem('token');
+          history.push(loginPath);
       }
+
+      // if (error.data && error.data.data) {
+      //   message.error(error.data.data)
+      // }else{
+      //   message.error('请求异常');
+      //   // console.log("删除本地token>>")
+      //   // localStorage.removeItem('token');
+      //   // history.push(loginPath);
+      // }
 
     },
   },

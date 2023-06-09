@@ -23,7 +23,7 @@
 
     <select id="selectPage" resultType="com.imyuanxiao.rbac.model.vo.UserPageVO">
         select
-            id, username
+            id, username, user_status
         from
             user
                 ${ew.customSqlSegment}
