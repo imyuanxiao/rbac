@@ -46,12 +46,19 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
       <ProForm
         onFinish={props.onSubmit}
         initialValues={{
+          id: props.values.id,
           username: props.values.username,
           userStatus: props.values.userStatus,
           roleIds: props.values.roleIds?.map(id => id.toString()),
           orgIds: props.values.orgIds?.map(id => id.toString()),
         }}
       >
+          <ProFormText
+            name="id"
+            label="ID"
+            hidden
+            disabled
+          />
           <ProFormText
             name="username"
             label={intl.formatMessage({

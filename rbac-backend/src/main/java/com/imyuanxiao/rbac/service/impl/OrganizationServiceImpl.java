@@ -6,6 +6,8 @@ import com.imyuanxiao.rbac.service.OrganizationService;
 import com.imyuanxiao.rbac.mapper.OrganizationMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -20,6 +22,17 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
     public Set<Long> getIdsByUserId(Long userId) {
         return baseMapper.selectIdsByUserId(userId);
     }
+
+    @Override
+    public void removeByUserId(Serializable userId) {
+        baseMapper.deleteByUserId(userId);
+    }
+
+    @Override
+    public void insertOrgsByUserId(Long userId, Collection<Long> orgIds) {
+        baseMapper.insertOrgsByUserId(userId, orgIds);
+    }
+
 }
 
 

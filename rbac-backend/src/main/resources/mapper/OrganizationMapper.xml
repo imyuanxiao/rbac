@@ -21,5 +21,17 @@
         select org_id from user_organization where user_id = #{userId}
     </select>
 
+    <!--根据用户id批量新增组织ID-->
+    <insert id="insertOrgsByUserId">
+        insert into user_organization(user_id, org_id) values
+        <foreach collection="orgIds" separator="," item="orgId">
+            (#{userId}, #{orgId})
+        </foreach>
+    </insert>
+
+    <!--根据用户id删除该用户所有组织-->
+    <delete id="deleteByUserId">
+        delete from user_organization where user_id = #{userId}
+    </delete>
 
 </mapper>

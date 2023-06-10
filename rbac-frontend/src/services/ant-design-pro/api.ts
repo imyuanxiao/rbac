@@ -58,9 +58,10 @@ export async function getUserList(
 }
 
 /** 新建规则 PUT /api/rule */
-export async function updateUser(options?: { [key: string]: any }) {
+export async function updateUser(body: API.UserListItem, options?: { [key: string]: any }) {
   return request<API.UserListItem>('/api/user/update', {
     method: 'PUT',
+    data: body,
     ...(options || {}),
   });
 }

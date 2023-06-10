@@ -8,8 +8,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 /**
+ * 该请求应该比分页数据多一些用户详细信息
  * @description  Receive user-related parameters.
  * @author  imyuanxiao
  **/
@@ -24,8 +26,10 @@ public class UserAddRequest {
     @Email(message = "Invalid username.")
     private String username;
 
-    private List<Long> roleIds;
+    private Integer userStatus;
 
+    private Set<Long> roleIds;
 
+    private Set<Long> orgIds;
 
 }

@@ -9,10 +9,7 @@ import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * 
- * @TableName user_profile
- */
+
 @TableName(value ="user_profile")
 @Data
 @Accessors(chain = true)

@@ -14,13 +14,13 @@ import {
   FooterToolbar,
   ModalForm,
   PageContainer,
-  ProDescriptions,
+  ProDescriptions, ProFormSelect,
   ProFormText,
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Drawer, Input, message } from 'antd';
+import {Button, Drawer, Input, message, Tag} from 'antd';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
@@ -53,19 +53,14 @@ const handleAdd = async (fields: API.UserListItem) => {
 const handleUpdate = async (fields: API.UserListItem) => {
   const hide = message.loading('Updating');
   try {
-    await updateUser({
-      username: fields.username,
-      userStatus: fields.userStatus,
-      roleIds: fields.roleIds,
-      orgIds: fields.orgIds
-    });
+    console.log('fields', fields)
+    await updateUser(fields);
     hide();
-
-    message.success('Configuration is successful');
+    message.success('Update is successful');
     return true;
   } catch (error) {
     hide();
-    message.error('Configuration failed, please try again!');
+    message.error('Update failed, please try again!');
     return false;
   }
 };
@@ -118,6 +113,11 @@ const UserList: React.FC = () => {
   const intl = useIntl();
 
   const columns: ProColumns<API.UserListItem>[] = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      hideInTable: true, // 隐藏该列
+    },
     {
       title: (
         <FormattedMessage
@@ -172,6 +172,29 @@ const UserList: React.FC = () => {
       },
     },
     {
+      title: 'Role IDs',
+      dataIndex: 'roleIds',
+      render: (roleIds: number[]) => {
+        const displayRoleIds = roleIds.slice(0, 2);
+        const ellipsis = roleIds.length > 2 ? '...' : '';
+        const roleLabels = {
+          1: '管理员',
+          2: '用户',
+        };
+        return (
+          <>
+            {displayRoleIds.map(roleId => (
+              <Tag
+                key={roleId}
+                style={{ display: 'inline-block', marginRight: '8px' }}
+              >{roleLabels[roleId]}</Tag>
+            ))}
+            {ellipsis}
+          </>
+        );
+      },
+    },
+    {
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
@@ -180,6 +203,7 @@ const UserList: React.FC = () => {
           key="edit"
           onClick={() => {
             setCurrentRow(record);
+            console.log('record', record)
             handleUpdateModalOpen(true);
           }}
         >
@@ -287,13 +311,13 @@ const UserList: React.FC = () => {
             orgIds: value.orgIds.map(str => Number(str))
           };
           const success = await handleUpdate(updatedValue);
-          // if (success) {
-          //   handleUpdateModalOpen(false);
-          //   setCurrentRow(undefined);
-          //   if (actionRef.current) {
-          //     actionRef.current.reload();
-          //   }
-          // }
+          if (success) {
+            handleUpdateModalOpen(false);
+            setCurrentRow(undefined);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
         }}
         onCancel={() => {
           handleUpdateModalOpen(false);

@@ -27,11 +27,10 @@ export async function getInitialState(): Promise<{
       const userInfo = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      console.log('getInitialState>>')
-      console.log(userInfo)
+      console.log('getInitialState>>', userInfo)
       return userInfo;
     } catch (error) {
-      console.log('fetchUserInfo内重定向至主页>>')
+      console.log('fetchUserInfo内重定向至主页>>', loginPath)
       history.push(loginPath);
     }
     return undefined;
@@ -166,19 +165,16 @@ const responseHandler = (response: Response, options: RequestConfig) => {
   }
 
   if(response.data.errorCode !== 0){
-    console.log("响应异常>>")
-    console.log(response.data)
+    console.log("响应异常>>", response.data)
     throw response;
   }
 
   //响应拦截器内获取token并设置到本地
   if(response.data.data?.token){
-    console.log("设置token>>")
-    console.log(response.data.data.token)
+    console.log("设置token>>", response.data.data.token)
     localStorage.setItem('token', response.data.data.token);
   }
-  console.log("response.data")
-  console.log(response.data)
+  console.log("response.data", response.data)
 
   //返回data
   return response.data;

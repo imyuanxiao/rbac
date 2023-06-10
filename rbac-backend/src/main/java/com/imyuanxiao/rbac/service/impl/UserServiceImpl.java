@@ -24,16 +24,12 @@ import com.imyuanxiao.rbac.model.entity.User;
 import com.imyuanxiao.rbac.mapper.UserMapper;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
 * @author Administrator
@@ -241,9 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public void createUser(UserAddRequest userAddRequest) {
-        if (lambdaQuery().eq(User::getUsername, userAddRequest.getUsername()).one() != null) {
-            throw new ApiException(ResultCode.FAILED,"Account already exists.");
-        }
+        checkUsername(userAddRequest.getUsername());
         User user = new User();
         user.setUsername(userAddRequest.getUsername()).setUserPassword(passwordEncoder.encode(userAddRequest.getUsername()));
         save(user);
@@ -252,6 +246,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         // Add info in table [user-role]
         roleService.insertRolesByUserId(user.getId(), userAddRequest.getRoleIds());
+    }
+
+    private void checkUsername(String username) {
+        if (lambdaQuery().eq(User::getUsername, username).one() != null) {
+            throw new ApiException(ResultCode.FAILED,"Account already exists.");
+        }
     }
 
     @Override
@@ -270,7 +270,40 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public void update(UserAddRequest param) {
+
+        // 检查用户名是否存在（排除当前ID）
+        if (lambdaQuery().ne(User::getId, param.getId()).eq(User::getUsername, param.getUsername()).one() != null) {
+            throw new ApiException(ResultCode.FAILED,"Account already exists.");
+        }
+
+        // 提取User信息
+        User updateUser = BeanUtil.copyProperties(param, User.class);
+
+        // 更新基本信息
+        lambdaUpdate().eq(User::getId, updateUser.getId()).update(updateUser);
+
+//        // 更新资料
+//        UserProfile userProfile = BeanUtil.copyProperties(param, UserProfile.class);
+//        if (!Objects.isNull(userProfile)) {
+//            userProfileService.updateByUserId(userProfile);
+//        }
+
+        // 更新角色
         updateRoles(param);
+
+        // 更新组织
+        updateOrgs(param);
+    }
+
+    private void updateOrgs(UserAddRequest param) {
+        // Delete the original user role
+        organizationService.removeByUserId(param.getId());
+        // If roleIds is empty, delete all roles for this user
+        if (CollectionUtil.isEmpty(param.getOrgIds())) {
+            return;
+        }
+        // If orgIds not empty, add new roles for this user
+        organizationService.insertOrgsByUserId(param.getId(), param.getOrgIds());
     }
 
     private void updateRoles(UserAddRequest param) {
