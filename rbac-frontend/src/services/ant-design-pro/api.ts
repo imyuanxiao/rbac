@@ -39,6 +39,31 @@ export async function getNotices(options?: { [key: string]: any }) {
   });
 }
 
+/** 获取用户列表 POST /api/user/page */
+export async function getUserListConditional(
+  params: {
+    current?: number;
+    pageSize?: number;
+    username?: string;
+    userStatus?: number;
+    roleIds?: number[];
+  },
+  options?: { [key: string]: any },
+) {
+  const response = await request<API.UserList>(`/api/user/page`, {
+    method: 'POST',
+    data:{
+      ...params,
+      roleIds: params.roleIds?.map(id => Number(id))
+    },
+    ...(options || {}),
+  });
+  return {
+    ...response,
+    data: response.records,
+  };
+}
+
 /** 获取用户列表 GET /api/user/page */
 export async function getUserList(
   params: {

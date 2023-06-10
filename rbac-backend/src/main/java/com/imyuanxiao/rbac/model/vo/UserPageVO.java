@@ -1,5 +1,7 @@
 package com.imyuanxiao.rbac.model.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Set;
@@ -13,6 +15,7 @@ public class UserPageVO {
     private Long id;
     private String username;
     private int userStatus;
+
     private Set<Long> roleIds;
     private Set<Long> orgIds;
 }

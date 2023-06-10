@@ -1,5 +1,8 @@
 package com.imyuanxiao.rbac.controller.api;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
@@ -8,11 +11,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.annotation.Auth;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
+import com.imyuanxiao.rbac.model.dto.UserListPageRequest;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.service.PermissionService;
 import com.imyuanxiao.rbac.service.UserService;
+import com.imyuanxiao.rbac.util.SecurityContextUtil;
 import com.imyuanxiao.rbac.util.ValidationGroups;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +90,36 @@ public class UserController {
     public Set<Long> getPermissionsByUserId(@PathVariable("id") Long userId) {
         return permissionService.getIdsByUserId(userId);
     }
+
+    @PostMapping("/page")
+    @ApiOperation(value = "Page through user information")
+    public IPage<UserPageVO> getPageByConditions(@RequestBody UserListPageRequest userListPageRequest) {
+
+        // 设置分页参数
+        Page<UserPageVO> page = new Page<>();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setColumn("id");
+        page.setCurrent(userListPageRequest.getCurrent()).setSize(userListPageRequest.getPageSize()).addOrder(orderItem);
+
+        // 构建查询条件
+        Long myId = SecurityContextUtil.getCurrentUserId();
+
+        QueryWrapper<UserPageVO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(StrUtil.isNotBlank(userListPageRequest.getUsername()), "username", userListPageRequest.getUsername())
+                .eq(userListPageRequest.getUserStatus() != null, "user_status", userListPageRequest.getUserStatus())
+                .ne("id", myId);
+//                .apply(!CollUtil.isEmpty(userListPageRequest.getRoleIds()), "id IN (SELECT user_id FROM user_role WHERE role_id IN (" + CollUtil.join(userListPageRequest.getRoleIds(), ",") + "))");
+
+        Set<Long> roleIds = userListPageRequest.getRoleIds();
+        if (!CollUtil.isEmpty(roleIds)) {
+            String roleIdList = CollUtil.join(roleIds, ",");
+            String subQuery = "SELECT user_id FROM user_role WHERE role_id IN (" + roleIdList + ") GROUP BY user_id HAVING COUNT(DISTINCT role_id) = " + roleIds.size();
+            queryWrapper.apply("id IN (SELECT id FROM user WHERE id IN (" + subQuery + ") AND (SELECT COUNT(*) FROM user_role WHERE user_id = user.id AND role_id IN (" + roleIdList + ")) = " + roleIds.size() + ")");
+        }
+
+        return userService.selectPageByConditions(page, queryWrapper);
+    }
+
 
     @GetMapping("/page/{current}&{pageSize}")
 //    @Auth(id = 6, name = "分页查询用户信息")

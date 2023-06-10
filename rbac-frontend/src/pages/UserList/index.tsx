@@ -1,7 +1,7 @@
 import {
   addRule,
   addUser,
-  getUserList,
+  getUserList, getUserListConditional,
   removeRule,
   removeUser,
   rule,
@@ -117,6 +117,7 @@ const UserList: React.FC = () => {
       title: 'ID',
       dataIndex: 'id',
       hideInTable: true, // 隐藏该列
+      hideInSearch: true, // 隐藏搜索条件
     },
     {
       title: (
@@ -172,26 +173,15 @@ const UserList: React.FC = () => {
       },
     },
     {
-      title: 'Role IDs',
+      title: '角色',
       dataIndex: 'roleIds',
-      render: (roleIds: number[]) => {
-        const displayRoleIds = roleIds.slice(0, 2);
-        const ellipsis = roleIds.length > 2 ? '...' : '';
-        const roleLabels = {
-          1: '管理员',
-          2: '用户',
-        };
-        return (
-          <>
-            {displayRoleIds.map(roleId => (
-              <Tag
-                key={roleId}
-                style={{ display: 'inline-block', marginRight: '8px' }}
-              >{roleLabels[roleId]}</Tag>
-            ))}
-            {ellipsis}
-          </>
-        );
+      valueType: 'select',
+      valueEnum: {
+        1: '管理员',
+        2: '用户',
+      },
+      fieldProps: {
+        mode: 'multiple',
       },
     },
     {
@@ -218,7 +208,7 @@ const UserList: React.FC = () => {
       <ProTable<API.UserListItem, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'pages.searchTable.title',
-          defaultMessage: 'Enquiry form',
+          defaultMessage: '查询表格',
         })}
         actionRef={actionRef}
         rowKey="key"
@@ -236,7 +226,8 @@ const UserList: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
           </Button>,
         ]}
-        request={getUserList}
+        request={getUserListConditional}
+        // request={getUserList}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -346,7 +337,7 @@ const UserList: React.FC = () => {
               data: currentRow || {},
             })}
             params={{
-              id: currentRow?.username,
+              id: currentRow?.id,
             }}
             columns={columns as ProDescriptionsItemProps<API.UserListItem>[]}
           />

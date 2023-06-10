@@ -5,9 +5,12 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.imyuanxiao.rbac.model.dto.LoginResponse;
+import com.imyuanxiao.rbac.model.dto.TokenResponse;
 import com.imyuanxiao.rbac.model.entity.UserLoginHistory;
 import com.imyuanxiao.rbac.model.entity.UserProfile;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
@@ -223,6 +226,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
 
+
+
     @Override
     public Set<Long> myPermission() {
         Long currentUserId = SecurityContextUtil.getCurrentUserId();
@@ -315,6 +320,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         // If roleIds not empty, add new roles for this user
         roleService.insertRolesByUserId(param.getId(), param.getRoleIds());
+    }
+
+    @Override
+    public IPage<UserPageVO> selectPageByConditions(Page<UserPageVO> page, QueryWrapper<UserPageVO> queryWrapper) {
+        IPage<UserPageVO> pages = baseMapper.selectPage(page, queryWrapper);
+        // Get roles and organizations for all users
+        for (UserPageVO vo : pages.getRecords()) {
+            vo.setRoleIds(roleService.getIdsByUserId(vo.getId()));
+            vo.setOrgIds(organizationService.getIdsByUserId(vo.getId()));
+        }
+        return pages;
     }
 
     @Override

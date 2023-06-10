@@ -1,5 +1,6 @@
-package com.imyuanxiao.rbac.model.vo;
+package com.imyuanxiao.rbac.model.dto;
 
+import com.imyuanxiao.rbac.model.vo.UserVO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

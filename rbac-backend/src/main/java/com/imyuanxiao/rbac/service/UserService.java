@@ -1,15 +1,16 @@
 package com.imyuanxiao.rbac.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.imyuanxiao.rbac.model.dto.LoginRequest;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
-import com.imyuanxiao.rbac.model.vo.LoginResponse;
-import com.imyuanxiao.rbac.model.vo.TokenResponse;
+import com.imyuanxiao.rbac.model.dto.LoginResponse;
+import com.imyuanxiao.rbac.model.dto.TokenResponse;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
-import com.imyuanxiao.rbac.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
@@ -70,4 +71,5 @@ public interface UserService extends IService<User> {
 
     void logout(HttpServletRequest request);
 
+    IPage<UserPageVO> selectPageByConditions(Page<UserPageVO> page, QueryWrapper<UserPageVO> queryWrapper);
 }
