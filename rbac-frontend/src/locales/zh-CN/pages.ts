@@ -63,4 +63,24 @@ export default {
   'pages.searchTable.tenThousand': '万',
   'pages.searchTable.batchDeletion': '批量删除',
   'pages.searchTable.batchApproval': '批量审批',
+
+
+  'pages.searchTable.updateForm.userName.nameLabel' : '用户名',
+  'pages.searchTable.nameStatus.inUse': '正常',
+  'pages.searchTable.nameStatus.disabled': '停用',
+  'pages.searchTable.nameStatus.deleted' : '注销',
+  'pages.searchTable.edit' : '编辑',
+  'pages.searchTable.createForm.new' : '新建',
+  'pages.searchTable.updateForm.userProps.userStatus' : '状态',
+  'pages.searchTable.updateForm.userProps.roleIds' : '角色',
+  'pages.searchTable.updateForm.userProps.orgIds' : '组织',
+  'pages.searchTable.updateForm.edit' : '编辑',
+  'pages.searchTable.roleIds' : '角色',
+  'pages.searchTable.role.admin' : '管理员',
+  'pages.searchTable.role.user' : '用户',
+
+  'pages.searchTable.org.org1' : '总公司',
+  'pages.searchTable.org.org2' : '分公司1',
+  'pages.searchTable.org.org3' : '分公司2',
+
 };

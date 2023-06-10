@@ -20,6 +20,7 @@ import {Button, Drawer, Input, message, Tag} from 'antd';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
+import {orgEnum, roleEnum, userStatusEnum, userStatusOptions} from "@/utils/comonValue";
 
 /**
  * @en-US Add node
@@ -141,44 +142,16 @@ const UserList: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
+      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status"/>,
       dataIndex: 'userStatus',
       hideInForm: true,
-      valueEnum: {
-        0: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.success"
-              defaultMessage="正常"
-            />
-          ),
-          status: 'Success',
-        },
-        1: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.disabled"
-              defaultMessage="停用" />
-          ),
-          status: 'Error',
-        },
-        2: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.deleted"
-                              defaultMessage="注销" />
-          ),
-          status: 'Default',
-        },
-      },
+      valueEnum: userStatusEnum
     },
     {
-      title: '角色',
+      title: <FormattedMessage id="pages.searchTable.roleIds" defaultMessage="角色" />,
       dataIndex: 'roleIds',
       valueType: 'select',
-      valueEnum: {
-        1: '管理员',
-        2: '用户',
-      },
+      valueEnum: roleEnum,
       fieldProps: {
         mode: 'multiple',
       },
@@ -207,7 +180,7 @@ const UserList: React.FC = () => {
       <ProTable<API.UserListItem, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'pages.searchTable.title',
-          defaultMessage: '查询表格',
+          defaultMessage: '查询信息',
         })}
         actionRef={actionRef}
         rowKey="id"
@@ -261,8 +234,8 @@ const UserList: React.FC = () => {
       )}
       <ModalForm
         title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.newUser',
-          defaultMessage: '新增用户',
+          id: 'pages.searchTable.createForm.new',
+          defaultMessage: '新增',
         })}
         width="400px"
         formRef={restFormRef}
@@ -318,14 +291,10 @@ const UserList: React.FC = () => {
             width="md"
             label={intl.formatMessage({
               id: 'pages.searchTable.updateForm.userProps.userStatus',
-              defaultMessage: '用户状态',
+              defaultMessage: '状态',
             })}
             initialValue={0}
-            options={[
-              { label: '正常', value: 0 },
-              { label: '停用', value: 1 },
-              { label: '注销', value: 2},
-            ]}
+            options={userStatusOptions}
           />
           <ProFormSelect
             name="roleIds"
@@ -335,10 +304,7 @@ const UserList: React.FC = () => {
               id: 'pages.searchTable.updateForm.userProps.roleIds',
               defaultMessage: '角色',
             })}
-            valueEnum={{
-              1: '管理员',
-              2: '用户'
-            }}
+            valueEnum={roleEnum}
           />
           <ProFormSelect
             name="orgIds"
@@ -348,11 +314,7 @@ const UserList: React.FC = () => {
               id: 'pages.searchTable.updateForm.userProps.orgIds',
               defaultMessage: '组织',
             })}
-            valueEnum={{
-              1: 'Head Co.',
-              2: 'Branch1 Co.',
-              3: 'Branch2 Co.'
-            }}
+            valueEnum={orgEnum}
           />
       </ModalForm>
       <UpdateForm

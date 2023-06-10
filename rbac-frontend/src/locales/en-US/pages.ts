@@ -66,4 +66,19 @@ export default {
   'pages.searchTable.tenThousand': '0000',
   'pages.searchTable.batchDeletion': 'batch deletion',
   'pages.searchTable.batchApproval': 'batch approval',
+
+  'pages.searchTable.updateForm.userName.nameLabel' : 'Username',
+  'pages.searchTable.nameStatus.inUse': 'Normal',
+  'pages.searchTable.nameStatus.disabled': 'Disabled',
+  'pages.searchTable.nameStatus.deleted' : 'Deleted',
+  'pages.searchTable.edit' : 'Edit',
+  'pages.searchTable.createForm.new' : 'New',
+  'pages.searchTable.updateForm.userProps.userStatus' : 'Status',
+  'pages.searchTable.updateForm.userProps.roleIds' : 'Role',
+  'pages.searchTable.updateForm.userProps.orgIds' : 'Organization',
+  'pages.searchTable.updateForm.edit' : 'Edit',
+  'pages.searchTable.roleIds' : 'Role',
+  'pages.searchTable.role.admin' : 'Admin',
+  'pages.searchTable.role.user' : 'User'
+
 };

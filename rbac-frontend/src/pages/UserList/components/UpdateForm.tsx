@@ -10,6 +10,7 @@ import {
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Modal, Tag} from 'antd';
 import React from 'react';
+import {orgEnum, roleEnum, userStatusOptions} from "@/utils/comonValue";
 
 export type FormValueType = {
   target?: string;
@@ -34,8 +35,8 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
       bodyStyle={{ padding: '32px 40px 48px' }}
       destroyOnClose
       title={intl.formatMessage({
-        id: 'pages.searchTable.updateForm.editUser',
-        defaultMessage: '编辑用户',
+        id: 'pages.searchTable.updateForm.edit',
+        defaultMessage: '编辑',
       })}
       open={props.updateModalOpen}
       onCancel={() => {
@@ -85,11 +86,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
               id: 'pages.searchTable.updateForm.userProps.userStatus',
               defaultMessage: '用户状态',
             })}
-            options={[
-              { label: '正常', value: 0 },
-              { label: '停用', value: 1 },
-              { label: '注销', value: 2},
-            ]}
+            options={userStatusOptions}
           />
           <ProFormSelect
             name="roleIds"
@@ -99,10 +96,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
               id: 'pages.searchTable.updateForm.userProps.roleIds',
               defaultMessage: '角色',
             })}
-            valueEnum={{
-              1: '管理员',
-              2: '用户'
-            }}
+            valueEnum={roleEnum}
           />
         <ProFormSelect
           name="orgIds"
@@ -112,11 +106,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             id: 'pages.searchTable.updateForm.userProps.orgIds',
             defaultMessage: '组织',
           })}
-          valueEnum={{
-            1: 'Head Co.',
-            2: 'Branch1 Co.',
-            3: 'Branch2 Co.'
-          }}
+          valueEnum={orgEnum}
         />
       </ProForm>
     </Modal>
