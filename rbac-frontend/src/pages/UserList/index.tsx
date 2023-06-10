@@ -1,11 +1,7 @@
 import {
-  addRule,
   addUser,
-  getUserList, getUserListConditional,
-  removeRule,
+  getUserListByConditions,
   removeUser,
-  rule,
-  updateRule,
   updateUser
 } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
@@ -14,7 +10,7 @@ import {
   FooterToolbar,
   ModalForm,
   PageContainer,
-  ProDescriptions, ProFormSelect,
+  ProDescriptions,
   ProFormText,
   ProFormTextArea,
   ProTable,
@@ -75,9 +71,7 @@ const handleRemove = async (selectedRows: API.UserListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    await removeUser({
-      key: selectedRows.map((row) => row.id),
-    });
+    await removeUser(selectedRows.map((row) => row.id));
     hide();
     message.success('Deleted successfully and will refresh soon');
     return true;
@@ -211,7 +205,7 @@ const UserList: React.FC = () => {
           defaultMessage: '查询表格',
         })}
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         search={{
           labelWidth: 120,
         }}
@@ -226,7 +220,7 @@ const UserList: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
           </Button>,
         ]}
-        request={getUserListConditional}
+        request={getUserListByConditions}
         // request={getUserList}
         columns={columns}
         rowSelection={{
@@ -251,6 +245,7 @@ const UserList: React.FC = () => {
               setSelectedRows([]);
               actionRef.current?.reloadAndRest?.();
             }}
+            danger={true}
           >
             <FormattedMessage
               id="pages.searchTable.batchDeletion"

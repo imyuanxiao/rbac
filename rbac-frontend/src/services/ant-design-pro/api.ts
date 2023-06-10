@@ -40,7 +40,7 @@ export async function getNotices(options?: { [key: string]: any }) {
 }
 
 /** 获取用户列表 POST /api/user/page */
-export async function getUserListConditional(
+export async function getUserListByConditions(
   params: {
     current?: number;
     pageSize?: number;
@@ -64,23 +64,23 @@ export async function getUserListConditional(
   };
 }
 
-/** 获取用户列表 GET /api/user/page */
-export async function getUserList(
-  params: {
-    current?: number;
-    pageSize?: number;
-  },
-  options?: { [key: string]: any },
-) {
-  const response = await request<API.UserList>(`/api/user/page/${params.current}&${params.pageSize}`, {
-    method: 'GET',
-    ...(options || {}),
-  });
-  return {
-    ...response,
-    data: response.records,
-  };
-}
+// /** 获取用户列表 GET /api/user/page */
+// export async function getUserList(
+//   params: {
+//     current?: number;
+//     pageSize?: number;
+//   },
+//   options?: { [key: string]: any },
+// ) {
+//   const response = await request<API.UserList>(`/api/user/page/${params.current}&${params.pageSize}`, {
+//     method: 'GET',
+//     ...(options || {}),
+//   });
+//   return {
+//     ...response,
+//     data: response.records,
+//   };
+// }
 
 /** 新建规则 PUT /api/rule */
 export async function updateUser(body: API.UserListItem, options?: { [key: string]: any }) {
@@ -100,9 +100,11 @@ export async function addUser(options?: { [key: string]: any }) {
 }
 
 /** 删除规则 DELETE /api/rule */
-export async function removeUser(options?: { [key: string]: any }) {
+export async function removeUser(ids: number[], options?: { [key: string]: any }) {
+  console.log('removeUser>>', options)
   return request<Record<string, any>>('/api/user/delete', {
     method: 'DELETE',
+    data: ids,
     ...(options || {}),
   });
 }
