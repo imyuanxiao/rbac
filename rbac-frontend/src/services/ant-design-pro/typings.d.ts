@@ -37,6 +37,19 @@ declare namespace API {
     success?: boolean;
   };
 
+  type DataListItem = {
+    id?: number;
+    dataName?: string;
+    orgId?: number;
+  };
+
+  type DataList = {
+    records?: DataListItem[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+  };
+
 
   type RuleListItem = {
     key?: number;

@@ -52,10 +52,28 @@ export default [
     component: './TableList',
   },
   {
-    name: 'list.user-list',
-    icon: 'table',
-    path: '/user/list',
-    component: './UserList',
+    path: '/user',
+    name: 'user',
+    icon: 'user',
+    access: 'canUserAdmin',
+    routes: [
+      {
+        path: '/user',
+        redirect: '/user/list',
+      },
+      {
+        path: '/user/list',
+        name: 'user-list',
+        component: './UserList',
+      },
+    ],
+  },
+  {
+    path: '/data',
+    name: 'data',
+    icon: 'database',
+    access: 'canDataAdmin',
+    component: './DataList',
   },
   {
     path: '/',

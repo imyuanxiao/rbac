@@ -83,4 +83,11 @@ export default {
   'pages.searchTable.org.org2' : '分公司1',
   'pages.searchTable.org.org3' : '分公司2',
 
+  'pages.searchTable.updateForm.dataName' : '数据',
+  'pages.searchTable.updateForm.orgId' : '组织',
+
+  'pages.searchTable.updateForm.index' : '序号',
+
+  'pages.dataDetail.title' : '数据详情',
+
 };

@@ -10,17 +10,16 @@ import {
   FooterToolbar,
   ModalForm,
   PageContainer,
-  ProDescriptions, ProForm, ProFormSelect,
+  ProDescriptions, ProFormSelect,
   ProFormText,
-  ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import {Button, Drawer, Input, message, Tag} from 'antd';
+import {Button, Drawer, message} from 'antd';
 import React, { useRef, useState } from 'react';
-import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
 import {orgEnum, roleEnum, userStatusEnum, userStatusOptions} from "@/utils/comonValue";
+import { useAccess, Access } from 'umi';
 
 /**
  * @en-US Add node
@@ -106,6 +105,7 @@ const UserList: React.FC = () => {
   const [selectedRowsState, setSelectedRows] = useState<API.UserListItem[]>([]);
   const restFormRef = useRef<ProFormInstance>();
 
+  const access = useAccess();
   /**
    * @en-US International configuration
    * @zh-CN 国际化配置
@@ -161,16 +161,20 @@ const UserList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <a
-          key="edit"
-          onClick={() => {
-            setCurrentRow(record);
-            console.log('record', record)
-            handleUpdateModalOpen(true);
-          }}
-        >
-          <FormattedMessage id="pages.searchTable.edit" defaultMessage="编辑" />
-        </a>
+        <Access
+          key="editUserOption"
+          accessible={access.canEditUser}>
+            <a
+              onClick={() => {
+                setCurrentRow(record);
+                console.log('record', record)
+                handleUpdateModalOpen(true);
+              }}
+            >
+                <FormattedMessage id="pages.searchTable.edit" defaultMessage="编辑" />
+            </a>
+        </Access>
+
       ],
     },
   ];
@@ -188,18 +192,20 @@ const UserList: React.FC = () => {
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              handleModalOpen(true);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
-          </Button>,
+          <Access
+            key="tableAddUser"
+            accessible={access.canAddUser}>
+            <Button
+              type="primary"
+              onClick={() => {
+                handleModalOpen(true);
+              }}
+            >
+              <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新增" />
+            </Button>
+          </Access>,
         ]}
         request={getUserListByConditions}
-        // request={getUserList}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -217,19 +223,21 @@ const UserList: React.FC = () => {
             </div>
           }
         >
-          <Button
-            onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-            danger={true}
-          >
-            <FormattedMessage
-              id="pages.searchTable.batchDeletion"
-              defaultMessage="Batch deletion"
-            />
-          </Button>
+          <Access accessible={access.canDeleteUser}>
+            <Button
+              onClick={async () => {
+                await handleRemove(selectedRowsState);
+                setSelectedRows([]);
+                actionRef.current?.reloadAndRest?.();
+              }}
+              danger={true}
+            >
+                <FormattedMessage
+                  id="pages.searchTable.batchDeletion"
+                  defaultMessage="Batch deletion"
+                />
+            </Button>
+        </Access>
         </FooterToolbar>
       )}
       <ModalForm

@@ -112,6 +112,25 @@ export async function removeUser(ids: number[], options?: { [key: string]: any }
 }
 
 
+/** 获取用户列表 GET /api/data/page */
+export async function getDataList(
+  params: {
+    current?: number;
+    pageSize?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  const response = await request<API.DataList>(`/api/data/page/${params.current}&${params.pageSize}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+  return {
+    ...response,
+    data: response.records,
+  };
+}
+
+
 
 /** 获取规则列表 GET /api/rule */
 export async function rule(

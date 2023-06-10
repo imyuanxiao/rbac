@@ -79,6 +79,18 @@ export default {
   'pages.searchTable.updateForm.edit' : 'Edit',
   'pages.searchTable.roleIds' : 'Role',
   'pages.searchTable.role.admin' : 'Admin',
-  'pages.searchTable.role.user' : 'User'
+  'pages.searchTable.role.user' : 'User',
+
+  'pages.searchTable.org.org1' : 'Head Co',
+  'pages.searchTable.org.org2' : 'Branch Co 1',
+  'pages.searchTable.org.org3' : 'Branch Co 2',
+
+
+  'pages.searchTable.updateForm.dataName' : 'Data',
+  'pages.searchTable.updateForm.orgId' : 'Organization',
+
+  'pages.searchTable.updateForm.index' : 'Index',
+
+  'pages.dataDetail.title' : 'Details',
 
 };
