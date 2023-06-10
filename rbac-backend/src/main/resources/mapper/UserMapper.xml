@@ -29,4 +29,15 @@
                 ${ew.customSqlSegment}
     </select>
 
+    <select id="selectLoginHistory" resultType="com.imyuanxiao.rbac.model.dto.LoginHistoryListResponse">
+        select ulh.id, u.username, ulh.type, ulh.created_time, ulh.ip_address, ulh.user_agent
+        from user_login_history ulh
+        join user u on u.id = ulh.user_id
+        <where>
+            <if test="username != null and username != ''">
+                and u.username like CONCAT('%', #{username}, '%')
+            </if>
+        </where>
+    </select>
+
 </mapper>

@@ -93,4 +93,11 @@ export default {
 
   'pages.dataDetail.title' : 'Details',
 
+  'pages.searchTable.updateForm.type' : 'Type',
+  'pages.searchTable.loginHistory.login' : 'Log In',
+  'pages.searchTable.loginHistory.logout' : 'Log Out',
+  'pages.searchTable.updateForm.createdTime': 'Time',
+  'pages.searchTable.updateForm.ipAddress': 'IP address',
+  'pages.searchTable.updateForm.userAgent': 'User-agent'
+
 };

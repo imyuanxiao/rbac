@@ -1,5 +1,5 @@
 import {
-  getDataList,
+  getLoginHistoryListByConditions,
 } from '@/services/ant-design-pro/api';
 import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
@@ -11,15 +11,15 @@ import {
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Drawer} from 'antd';
 import React, { useRef, useState } from 'react';
-import {orgEnum} from "@/utils/comonValue";
+import {loginHistoryEnum} from "@/utils/comonValue";
 
-const DataList: React.FC = () => {
+const LoginHistoryList: React.FC = () => {
 
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.DataListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.DataListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.LoginHistoryListItem>();
+  const [selectedRowsState, setSelectedRows] = useState<API.LoginHistoryListItem[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1); // 当前页码
   const [pageSize, setPageSize] = useState(10); // 每页显示的数据数量
@@ -30,11 +30,12 @@ const DataList: React.FC = () => {
    * */
   const intl = useIntl();
 
-  const columns: ProColumns<API.DataListItem>[] = [
+  const columns: ProColumns<API.LoginHistoryListItem>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
-      hideInTable: true, // 隐藏该列
+      hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: (
@@ -44,6 +45,7 @@ const DataList: React.FC = () => {
         />
       ),
       dataIndex: 'index',
+      hideInSearch: true,
       render: (dom, entity, index) => {
         const realIndex = (currentPage - 1) * pageSize + index + 1; // 计算真实的序号
         return realIndex;
@@ -52,11 +54,11 @@ const DataList: React.FC = () => {
     {
       title: (
         <FormattedMessage
-          id="pages.searchTable.updateForm.dataName"
-          defaultMessage="数据"
+          id="pages.searchTable.updateForm.userName.nameLabel"
+          defaultMessage="用户名"
         />
       ),
-      dataIndex: 'dataName',
+      dataIndex: 'username',
       render: (dom, entity) => {
         return (
           <a
@@ -71,29 +73,47 @@ const DataList: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.updateForm.orgId" defaultMessage="组织" />,
-      dataIndex: 'orgId',
+      title: <FormattedMessage id="pages.searchTable.updateForm.type" defaultMessage="类型" />,
+      dataIndex: 'type',
       valueType: 'select',
-      valueEnum: orgEnum,
+      valueEnum: loginHistoryEnum,
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.updateForm.createdTime" defaultMessage="时间"/>,
+      dataIndex: 'createdTime',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.updateForm.ipAddress" defaultMessage="IP地址"/>,
+      dataIndex: 'ipAddress',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.updateForm.userAgent" defaultMessage="用户代理"/>,
+      dataIndex: 'userAgent',
+      hideInSearch: true,
     },
   ];
 
   return (
     <PageContainer>
-      <ProTable<API.DataListItem, API.PageParams>
+      <ProTable<API.LoginHistoryListItem, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'pages.searchTable.title',
           defaultMessage: '查询信息',
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={false}
+        search={{
+          labelWidth: 120,
+        }}
         request={(params) => {
           // 更新当前页码和每页显示数量
           setCurrentPage(params.current || 1);
           setPageSize(params.pageSize || 10);
           // 调用实际的请求方法，传递 params 参数
-          return getDataList(params);
+          return getLoginHistoryListByConditions(params);
         }}
         columns={columns}
         rowSelection={{
@@ -130,7 +150,7 @@ const DataList: React.FC = () => {
         closable={false}
       >
         {currentRow?.id && (
-          <ProDescriptions<API.DataListItem>
+          <ProDescriptions<API.LoginHistoryListItem>
             column={2}
             title={
               <FormattedMessage id="pages.dataDetail.title" defaultMessage="数据详情" />
@@ -141,7 +161,7 @@ const DataList: React.FC = () => {
             params={{
               id: currentRow?.id,
             }}
-            columns={columns as ProDescriptionsItemProps<API.DataListItem>[]}
+            columns={columns as ProDescriptionsItemProps<API.LoginHistoryListItem>[]}
           />
         )}
       </Drawer>
@@ -149,4 +169,4 @@ const DataList: React.FC = () => {
   );
 };
 
-export default DataList;
+export default LoginHistoryList;

@@ -5,15 +5,13 @@ import lombok.Data;
 import java.util.Set;
 
 /**
- * @ClassName RolePageVO
- * @Description Role pagination object.
- * @Author imyuanxiao
- * @Date 2023/5/4 15:18
- * @Version 1.0
+ * @description  Role pagination object.
+ * @author  imyuanxiao
  **/
 @Data
 public class RolePageVO {
     private Long id;
-    private String name;
+    private String roleName;
+    private String description;
     private Set<Long> permissionIds;
 }

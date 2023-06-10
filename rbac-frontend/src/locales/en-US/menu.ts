@@ -55,5 +55,8 @@ export default {
   'menu.user.user-list': 'User List',
 
   'menu.data': 'Data',
+  'menu.role': 'Role',
+
+  'menu.user.loginHistory': 'Login History',
 
 };

@@ -22,6 +22,14 @@ declare namespace API {
     pageSize?: number;
   };
 
+
+  type ListData<T> = {
+    records?: T[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+  };
+
   type UserListItem = {
     id?: number;
     username?: string;
@@ -30,47 +38,27 @@ declare namespace API {
     orgIds?: number[];
   };
 
-  type UserList = {
-    records?: UserListItem[];
-    /** 列表的内容总数 */
-    total?: number;
-    success?: boolean;
-  };
-
   type DataListItem = {
     id?: number;
     dataName?: string;
     orgId?: number;
   };
 
-  type DataList = {
-    records?: DataListItem[];
-    /** 列表的内容总数 */
-    total?: number;
-    success?: boolean;
+  type RoleListItem = {
+    id?: number;
+    roleName?: string;
+    description?: string;
+    permissionIds?: number[];
   };
 
-
-  type RuleListItem = {
-    key?: number;
-    disabled?: boolean;
-    href?: string;
-    avatar?: string;
-    name?: string;
-    owner?: string;
-    desc?: string;
-    callNo?: number;
-    status?: number;
-    updatedAt?: string;
-    createdAt?: string;
-    progress?: number;
-  };
-
-  type RuleList = {
-    data?: RuleListItem[];
-    /** 列表的内容总数 */
-    total?: number;
-    success?: boolean;
+  type LoginHistoryListItem = {
+    id?: number;
+    user_id?: number;
+    username?: string;
+    type?: number;
+    createdTime?: Date;
+    ipAddress?: string;
+    userAgent?: string;
   };
 
   type CaptchaInfo = {

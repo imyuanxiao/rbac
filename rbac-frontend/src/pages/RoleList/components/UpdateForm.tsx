@@ -1,12 +1,12 @@
 import {
   ProForm,
   ProFormSelect,
-  ProFormText,
+  ProFormText, ProFormTextArea,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Modal} from 'antd';
 import React from 'react';
-import {orgEnum, roleEnum, userStatusOptions} from "@/utils/comonValue";
+import {orgEnum, permissionEnum, roleEnum, userStatusOptions} from "@/utils/comonValue";
 
 export type FormValueType = {
   target?: string;
@@ -20,7 +20,7 @@ export type UpdateFormProps = {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
   updateModalOpen: boolean;
-  values: Partial<API.UserListItem>;
+  values: Partial<API.RoleListItem>;
 };
 
 const UpdateForm: React.FC<UpdateFormProps> = (props) => {
@@ -44,10 +44,9 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
         onFinish={props.onSubmit}
         initialValues={{
           id: props.values.id,
-          username: props.values.username,
-          userStatus: props.values.userStatus,
-          roleIds: props.values.roleIds?.map(id => id.toString()),
-          orgIds: props.values.orgIds?.map(id => id.toString()),
+          roleName: props.values.roleName,
+          description: props.values.description,
+          permissionIds: props.values.permissionIds?.map(id => id.toString()),
         }}
       >
           <ProFormText
@@ -57,9 +56,9 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             disabled
           />
           <ProFormText
-            name="username"
+            name="roleName"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userName.nameLabel',
+              id: 'pages.searchTable.updateForm.roleName.nameLabel',
               defaultMessage: '用户名',
             })}
             width="md"
@@ -68,42 +67,31 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
                 required: true,
                 message: (
                   <FormattedMessage
-                    id="pages.searchTable.updateForm.userName.nameRules"
-                    defaultMessage="请输入用户名！"
+                    id="pages.searchTable.updateForm.roleName.nameRules"
+                    defaultMessage="请输入角色名！"
                   />
                 ),
               },
             ]}
           />
+        <ProFormTextArea
+          name="description"
+          width="md"
+          label={intl.formatMessage({
+            id: 'pages.searchTable.updateForm.roleProps.description',
+            defaultMessage: '描述',
+          })}
+        />
           <ProFormSelect
-            name="userStatus"
-            width="md"
-            label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.userStatus',
-              defaultMessage: '用户状态',
-            })}
-            options={userStatusOptions}
-          />
-          <ProFormSelect
-            name="roleIds"
+            name="permissionIds"
             mode="multiple"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.roleIds',
-              defaultMessage: '角色',
+              id: 'pages.searchTable.updateForm.roleProps.permissionIds',
+              defaultMessage: '权限',
             })}
-            valueEnum={roleEnum}
+            valueEnum={permissionEnum}
           />
-        <ProFormSelect
-          name="orgIds"
-          mode="multiple"
-          width="md"
-          label={intl.formatMessage({
-            id: 'pages.searchTable.updateForm.userProps.orgIds',
-            defaultMessage: '组织',
-          })}
-          valueEnum={orgEnum}
-        />
       </ProForm>
     </Modal>
   );

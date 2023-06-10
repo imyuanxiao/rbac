@@ -8,12 +8,11 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.imyuanxiao.rbac.model.dto.LoginResponse;
-import com.imyuanxiao.rbac.model.dto.TokenResponse;
+import com.imyuanxiao.rbac.model.dto.*;
 import com.imyuanxiao.rbac.model.entity.UserLoginHistory;
 import com.imyuanxiao.rbac.model.entity.UserProfile;
-import com.imyuanxiao.rbac.model.dto.UserAddRequest;
 import com.imyuanxiao.rbac.model.vo.*;
 import com.imyuanxiao.rbac.security.JwtManager;
 import com.imyuanxiao.rbac.service.*;
@@ -25,7 +24,6 @@ import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.imyuanxiao.rbac.mapper.UserMapper;
-import com.imyuanxiao.rbac.model.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -347,6 +345,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             vo.setOrgIds(organizationService.getIdsByUserId(vo.getId()));
         }
         return pages;
+    }
+
+    @Override
+    public IPage<LoginHistoryListResponse> getLoginHistoryByConditions(LoginHistoryListRequest loginHistoryListRequest) {
+
+        // 设置分页参数
+        Page<LoginHistoryListResponse> page = new Page<>();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setColumn("id");
+        page.setCurrent(loginHistoryListRequest.getCurrent()).setSize(loginHistoryListRequest.getPageSize()).addOrder(orderItem);
+
+        return baseMapper.selectLoginHistory(page, loginHistoryListRequest.getUsername());
     }
 
 }

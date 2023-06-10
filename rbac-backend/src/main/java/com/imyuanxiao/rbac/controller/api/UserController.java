@@ -11,7 +11,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.annotation.Auth;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
-import com.imyuanxiao.rbac.model.dto.UserListPageRequest;
+import com.imyuanxiao.rbac.model.dto.LoginHistoryListRequest;
+import com.imyuanxiao.rbac.model.dto.LoginHistoryListResponse;
+import com.imyuanxiao.rbac.model.dto.UserListRequest;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.imyuanxiao.rbac.model.dto.UserAddRequest;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
@@ -92,25 +94,25 @@ public class UserController {
     }
 
     @PostMapping("/page")
-    @ApiOperation(value = "Page through user information")
-    public IPage<UserPageVO> getPageByConditions(@RequestBody UserListPageRequest userListPageRequest) {
+    @ApiOperation(value = "Page through user information by conditions")
+    public IPage<UserPageVO> getPageByConditions(@RequestBody UserListRequest userListRequest) {
 
         // 设置分页参数
         Page<UserPageVO> page = new Page<>();
         OrderItem orderItem = new OrderItem();
         orderItem.setColumn("id");
-        page.setCurrent(userListPageRequest.getCurrent()).setSize(userListPageRequest.getPageSize()).addOrder(orderItem);
+        page.setCurrent(userListRequest.getCurrent()).setSize(userListRequest.getPageSize()).addOrder(orderItem);
 
         // 构建查询条件
         Long myId = SecurityContextUtil.getCurrentUserId();
 
         QueryWrapper<UserPageVO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(StrUtil.isNotBlank(userListPageRequest.getUsername()), "username", userListPageRequest.getUsername())
-                .eq(userListPageRequest.getUserStatus() != null, "user_status", userListPageRequest.getUserStatus())
+        queryWrapper.like(StrUtil.isNotBlank(userListRequest.getUsername()), "username", userListRequest.getUsername())
+                .eq(userListRequest.getUserStatus() != null, "user_status", userListRequest.getUserStatus())
                 .ne("id", myId);
 //                .apply(!CollUtil.isEmpty(userListPageRequest.getRoleIds()), "id IN (SELECT user_id FROM user_role WHERE role_id IN (" + CollUtil.join(userListPageRequest.getRoleIds(), ",") + "))");
 
-        Set<Long> roleIds = userListPageRequest.getRoleIds();
+        Set<Long> roleIds = userListRequest.getRoleIds();
         if (!CollUtil.isEmpty(roleIds)) {
             String roleIdList = CollUtil.join(roleIds, ",");
             String subQuery = "SELECT user_id FROM user_role WHERE role_id IN (" + roleIdList + ") GROUP BY user_id HAVING COUNT(DISTINCT role_id) = " + roleIds.size();
@@ -122,7 +124,6 @@ public class UserController {
 
 
     @GetMapping("/page/{current}&{pageSize}")
-//    @Auth(id = 6, name = "分页查询用户信息")
     @ApiOperation(value = "Page through user information")
     public IPage<UserPageVO> getPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
         // 设置分页参数
@@ -132,5 +133,13 @@ public class UserController {
         page.setCurrent(current).setSize(pageSize).addOrder(orderItem);
         return userService.selectPage(page);
     }
+
+    @PostMapping("/loginHistory")
+    @ApiOperation(value = "Page through login history by conditions")
+    public IPage<LoginHistoryListResponse> getLoginHistoryByConditions(@RequestBody LoginHistoryListRequest loginHistoryListRequest) {
+
+        return userService.getLoginHistoryByConditions(loginHistoryListRequest);
+    }
+
 
 }

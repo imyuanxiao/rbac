@@ -55,6 +55,9 @@ export default {
   'menu.user.user-list': '用户列表',
 
   'menu.data': '数据管理',
+  'menu.role': '角色管理',
+
+  'menu.user.loginHistory': '登录日志',
 
 
 };

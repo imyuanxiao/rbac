@@ -10,4 +10,10 @@ public interface ValidationGroups {
     public interface Mobile {}
     public interface UpdateUser {}
     public interface CreateUser{}
+
+    public interface CreateRole {
+    }
+
+    public interface UpdateResources {
+    }
 }

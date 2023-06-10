@@ -50,7 +50,7 @@ export async function getUserListByConditions(
   },
   options?: { [key: string]: any },
 ) {
-  const response = await request<API.UserList>(`/api/user/page`, {
+  const response = await request<API.ListData<API.UserListItem>>(`/api/user/page`, {
     method: 'POST',
     data:{
       ...params,
@@ -111,8 +111,7 @@ export async function removeUser(ids: number[], options?: { [key: string]: any }
   });
 }
 
-
-/** 获取用户列表 GET /api/data/page */
+/** 获取数据列表 GET /api/data/page */
 export async function getDataList(
   params: {
     current?: number;
@@ -120,7 +119,7 @@ export async function getDataList(
   },
   options?: { [key: string]: any },
 ) {
-  const response = await request<API.DataList>(`/api/data/page/${params.current}&${params.pageSize}`, {
+  const response = await request<API.ListData<API.DataListItem>>(`/api/data/page/${params.current}&${params.pageSize}`, {
     method: 'GET',
     ...(options || {}),
   });
@@ -130,7 +129,45 @@ export async function getDataList(
   };
 }
 
+/** 获取登录历史列表 GET /api/user/loginHistory */
+export async function getLoginHistoryListByConditions(
+  params: {
+    current?: number;
+    pageSize?: number;
+    username?: string;
+  },
+  options?: { [key: string]: any },
+) {
+  const response = await request<API.ListData<API.LoginHistoryListItem>>(`/api/user/loginHistory`, {
+    method: 'POST',
+    data:{
+      ...params
+    },
+    ...(options || {}),
+  });
+  return {
+    ...response,
+    data: response.records,
+  };
+}
 
+/** 获取用户列表 GET /api/role/page */
+export async function getRoleList(
+  params: {
+    current?: number;
+    pageSize?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  const response = await request<API.ListData<API.RoleListItem>>(`/api/role/page/${params.current}&${params.pageSize}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+  return {
+    ...response,
+    data: response.records,
+  };
+}
 
 /** 获取规则列表 GET /api/rule */
 export async function rule(

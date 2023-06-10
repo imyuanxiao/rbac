@@ -66,7 +66,19 @@ export default [
         name: 'user-list',
         component: './UserList',
       },
+      {
+        path: '/user/loginHistory',
+        name: 'loginHistory',
+        component: './LoginHistoryList',
+      },
     ],
+  },
+  {
+    path: '/role',
+    name: 'role',
+    icon: 'robot',
+    access: 'canRoleAdmin',
+    component: './RoleList',
   },
   {
     path: '/data',

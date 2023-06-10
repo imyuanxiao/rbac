@@ -9,6 +9,7 @@ import com.imyuanxiao.rbac.model.entity.Role;
 import com.imyuanxiao.rbac.model.dto.RoleParam;
 import com.imyuanxiao.rbac.model.vo.RolePageVO;
 import com.imyuanxiao.rbac.service.RoleService;
+import com.imyuanxiao.rbac.util.ValidationGroups;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class RoleController {
     @PostMapping("/add")
     @Auth(id = 1, name = "新增角色")
     @ApiOperation(value = "Add role")
-    public String createRole(@RequestBody @Validated(RoleParam.CreateRole.class) RoleParam param) {
+    public String createRole(@RequestBody @Validated(ValidationGroups.CreateRole.class) RoleParam param) {
         roleService.createRole(param);
         return ACTION_SUCCESSFUL;
     }
@@ -54,7 +55,7 @@ public class RoleController {
     @PutMapping("/update")
     @Auth(id = 3, name = "编辑角色")
     @ApiOperation(value = "Update role")
-    public String updateRole(@RequestBody @Validated(RoleParam.UpdateResources.class) RoleParam param) {
+    public String updateRole(@RequestBody @Validated(ValidationGroups.UpdateResources.class) RoleParam param) {
         roleService.updatePermissions(param);
         return ACTION_SUCCESSFUL;
     }

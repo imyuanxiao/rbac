@@ -1,6 +1,6 @@
 import {
-  addUser, getDataList,
-  getUserListByConditions,
+  addUser, getDataList, getRoleList,
+  getRoleListByConditions,
   removeUser,
   updateUser
 } from '@/services/ant-design-pro/api';
@@ -10,15 +10,15 @@ import {
   FooterToolbar,
   ModalForm,
   PageContainer,
-  ProDescriptions, ProFormSelect,
-  ProFormText,
+  ProDescriptions, ProForm, ProFormSelect,
+  ProFormText, ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Button, Drawer, message} from 'antd';
 import React, { useRef, useState } from 'react';
 import UpdateForm from './components/UpdateForm';
-import {orgEnum, roleEnum, userStatusEnum, userStatusOptions} from "@/utils/comonValue";
+import {orgEnum, permissionEnum, roleEnum, userStatusEnum, userStatusOptions} from "@/utils/comonValue";
 import { useAccess, Access } from 'umi';
 
 /**
@@ -26,13 +26,11 @@ import { useAccess, Access } from 'umi';
  * @zh-CN 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.UserListItem) => {
+const handleAdd = async (fields: API.RoleListItem) => {
   const hide = message.loading('正在添加');
   try {
     await addUser({
-      ...fields,
-      roleIds: fields.roleIds?.map(id => id.toString()),
-      orgIds: fields.orgIds?.map(id => id.toString())
+      ...fields
     });
     hide();
     message.success('Added successfully');
@@ -50,7 +48,7 @@ const handleAdd = async (fields: API.UserListItem) => {
  *
  * @param fields
  */
-const handleUpdate = async (fields: API.UserListItem) => {
+const handleUpdate = async (fields: API.RoleListItem) => {
   const hide = message.loading('Updating');
   try {
     console.log('fields', fields)
@@ -71,7 +69,7 @@ const handleUpdate = async (fields: API.UserListItem) => {
  *
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: API.UserListItem[]) => {
+const handleRemove = async (selectedRows: API.RoleListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
@@ -86,7 +84,7 @@ const handleRemove = async (selectedRows: API.UserListItem[]) => {
   }
 };
 
-const UserList: React.FC = () => {
+const RoleList: React.FC = () => {
   /**
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
@@ -101,8 +99,8 @@ const UserList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.UserListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.UserListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.RoleListItem>();
+  const [selectedRowsState, setSelectedRows] = useState<API.RoleListItem[]>([]);
   const restFormRef = useRef<ProFormInstance>();
 
   const access = useAccess();
@@ -117,7 +115,7 @@ const UserList: React.FC = () => {
    * */
   const intl = useIntl();
 
-  const columns: ProColumns<API.UserListItem>[] = [
+  const columns: ProColumns<API.RoleListItem>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -140,12 +138,11 @@ const UserList: React.FC = () => {
     {
       title: (
         <FormattedMessage
-          id="pages.searchTable.updateForm.userName.nameLabel"
-          defaultMessage="用户名"
+          id="pages.searchTable.updateForm.roleName.nameLabel"
+          defaultMessage="角色名"
         />
       ),
-      dataIndex: 'username',
-      tip: 'The username is the unique key',
+      dataIndex: 'roleName',
       render: (dom, entity) => {
         return (
           <a
@@ -160,16 +157,14 @@ const UserList: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status"/>,
-      dataIndex: 'userStatus',
-      hideInForm: true,
-      valueEnum: userStatusEnum
+      title: <FormattedMessage id="pages.searchTable.description" defaultMessage="描述"/>,
+      dataIndex: 'description',
     },
     {
-      title: <FormattedMessage id="pages.searchTable.roleIds" defaultMessage="角色" />,
-      dataIndex: 'roleIds',
+      title: <FormattedMessage id="pages.searchTable.permissionIds" defaultMessage="权限" />,
+      dataIndex: 'permissionIds',
       valueType: 'select',
-      valueEnum: roleEnum,
+      valueEnum: permissionEnum,
       fieldProps: {
         mode: 'multiple',
       },
@@ -180,7 +175,7 @@ const UserList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <Access
-          key="editUserOption"
+          key="editRoleOption"
           accessible={access.canEditUser}>
             <a
               onClick={() => {
@@ -199,16 +194,14 @@ const UserList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.UserListItem, API.PageParams>
+      <ProTable<API.RoleListItem, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'pages.searchTable.title',
           defaultMessage: '查询信息',
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={false}
         toolBarRender={() => [
           <Access
             key="tableAddUser"
@@ -228,7 +221,7 @@ const UserList: React.FC = () => {
           setCurrentPage(params.current || 1);
           setPageSize(params.pageSize || 10);
           // 调用实际的请求方法，传递 params 参数
-          return getUserListByConditions(params);
+          return getRoleList(params);
         }}
         columns={columns}
         rowSelection={{
@@ -279,7 +272,7 @@ const UserList: React.FC = () => {
         open={createModalOpen}
         onOpenChange={handleModalOpen}
         onFinish={async (value) => {
-          const success = await handleAdd(value as API.UserListItem);
+          const success = await handleAdd(value as API.RoleListItem);
           if (success) {
             handleModalOpen(false);
             if (actionRef.current) {
@@ -305,9 +298,9 @@ const UserList: React.FC = () => {
             disabled
           />
           <ProFormText
-            name="username"
+            name="roleName"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userName.nameLabel',
+              id: 'pages.searchTable.updateForm.roleName.nameLabel',
               defaultMessage: '用户名',
             })}
             width="md"
@@ -316,50 +309,37 @@ const UserList: React.FC = () => {
                 required: true,
                 message: (
                   <FormattedMessage
-                    id="pages.searchTable.updateForm.userName.nameRules"
-                    defaultMessage="请输入用户名！"
+                    id="pages.searchTable.updateForm.roleName.nameRules"
+                    defaultMessage="请输入角色名！"
                   />
                 ),
               },
             ]}
           />
-          <ProFormSelect
-            name="userStatus"
+          <ProFormTextArea
+            name="description"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.userStatus',
-              defaultMessage: '状态',
+              id: 'pages.searchTable.updateForm.roleProps.description',
+              defaultMessage: '描述',
             })}
-            initialValue={0}
-            options={userStatusOptions}
           />
           <ProFormSelect
-            name="roleIds"
+            name="permissionIds"
             mode="multiple"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.roleIds',
-              defaultMessage: '角色',
+              id: 'pages.searchTable.updateForm.roleProps.permissionIds',
+              defaultMessage: '权限',
             })}
-            valueEnum={roleEnum}
-          />
-          <ProFormSelect
-            name="orgIds"
-            mode="multiple"
-            width="md"
-            label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.orgIds',
-              defaultMessage: '组织',
-            })}
-            valueEnum={orgEnum}
+            valueEnum={permissionEnum}
           />
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
           const updatedValue = {
             ...value,
-            roleIds: value.roleIds.map(str => Number(str)),
-            orgIds: value.orgIds.map(str => Number(str))
+            permissionIds: value.permissionIds.map(str => Number(str))
           };
           const success = await handleUpdate(updatedValue);
           if (success) {
@@ -389,17 +369,19 @@ const UserList: React.FC = () => {
         }}
         closable={false}
       >
-        {currentRow?.username && (
-          <ProDescriptions<API.UserListItem>
+        {currentRow?.id && (
+          <ProDescriptions<API.RoleListItem>
             column={2}
-            title={currentRow?.username}
+            title={
+              <FormattedMessage id="pages.dataDetail.title" defaultMessage="详情" />
+            }
             request={async () => ({
               data: currentRow || {},
             })}
             params={{
               id: currentRow?.id,
             }}
-            columns={columns as ProDescriptionsItemProps<API.UserListItem>[]}
+            columns={columns as ProDescriptionsItemProps<API.RoleListItem>[]}
           />
         )}
       </Drawer>
@@ -407,4 +389,4 @@ const UserList: React.FC = () => {
   );
 };
 
-export default UserList;
+export default RoleList;

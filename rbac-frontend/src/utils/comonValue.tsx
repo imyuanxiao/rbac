@@ -103,3 +103,74 @@ export const userStatusOptions = [
     ),
   },
 ];
+
+
+export const loginHistoryEnum = {
+  0: {
+    text: (
+      <FormattedMessage
+        id="pages.searchTable.loginHistory.login"
+        defaultMessage="登录"
+      />
+    ),
+  },
+  1: {
+    text: (
+      <FormattedMessage
+        id="pages.searchTable.loginHistory.logout"
+        defaultMessage="登出"
+      />
+    ),
+  }
+}
+
+export const permissionEnum = {
+  1000: {
+    text: (
+      <FormattedMessage
+        id="type.permission.canUserAdmin"
+        defaultMessage="用户管理"
+      />
+    ),
+  },
+  1001: {
+    text: (
+      <FormattedMessage
+        id="type.permission.canAddUser"
+        defaultMessage="新增用户"
+      />
+    ),
+  },
+  1002: {
+    text: (
+      <FormattedMessage
+        id="type.permission.canDeleteUser"
+        defaultMessage="删除用户"
+      />
+    ),
+  },
+  1003: {
+    text: (
+      <FormattedMessage
+        id="type.permission.canEditUser"
+        defaultMessage="编辑用户"
+      />
+    ),
+  },
+  3000: {
+    text: (
+      <FormattedMessage
+        id="type.permission.canDataAdmin"
+        defaultMessage="数据管理"
+      />
+    ),
+  },
+  5000: {
+    text: (
+      <FormattedMessage
+        id="type.permission.canRoleAdmin"
+        defaultMessage="角色管理"
+      />
+    ),
+  },
+}

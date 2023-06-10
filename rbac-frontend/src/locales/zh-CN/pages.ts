@@ -88,6 +88,23 @@ export default {
 
   'pages.searchTable.updateForm.index' : '序号',
 
-  'pages.dataDetail.title' : '数据详情',
+  'pages.dataDetail.title' : '详情',
+
+  'pages.searchTable.updateForm.type' : '类型',
+  'pages.searchTable.loginHistory.login' : '登录',
+  'pages.searchTable.loginHistory.logout' : '登出',
+  'pages.searchTable.updateForm.createdTime': '时间',
+  'pages.searchTable.updateForm.ipAddress': 'IP地址',
+  'pages.searchTable.updateForm.userAgent': '用户代理',
+
+
+  'pages.searchTable.permissionIds': '权限',
+  'pages.searchTable.description': '描述',
+
+  'pages.searchTable.updateForm.roleName.nameLabel': '角色名',
+  'pages.searchTable.updateForm.roleName.nameRules':'请输入角色名',
+  'pages.searchTable.updateForm.roleProps.description':'描述',
+  'pages.searchTable.updateForm.roleProps.permissionIds': '权限',
+
 
 };

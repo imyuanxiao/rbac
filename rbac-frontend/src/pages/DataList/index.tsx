@@ -133,7 +133,7 @@ const DataList: React.FC = () => {
           <ProDescriptions<API.DataListItem>
             column={2}
             title={
-              <FormattedMessage id="pages.dataDetail.title" defaultMessage="数据详情" />
+              <FormattedMessage id="pages.dataDetail.title" defaultMessage="详情" />
             }
             request={async () => ({
               data: currentRow || {},
