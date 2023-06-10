@@ -47,7 +47,8 @@ const DataList: React.FC = () => {
       render: (dom, entity, index) => {
         const realIndex = (currentPage - 1) * pageSize + index + 1; // 计算真实的序号
         return realIndex;
-      },    },
+      },
+    },
     {
       title: (
         <FormattedMessage
@@ -103,6 +104,7 @@ const DataList: React.FC = () => {
         pagination={{
           pageSizeOptions: ['10', '20', '50'], // 自定义的每页显示数据数量选项
           defaultPageSize: 10, // 默认的每页显示数据数量
+          showSizeChanger: true,
         }}
       />
       {selectedRowsState?.length > 0 && (
