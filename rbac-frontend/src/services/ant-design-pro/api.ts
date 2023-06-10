@@ -92,9 +92,11 @@ export async function updateUser(body: API.UserListItem, options?: { [key: strin
 }
 
 /** 新建规则 POST /api/rule */
-export async function addUser(options?: { [key: string]: any }) {
+export async function addUser(user: API.UserListItem, options?: { [key: string]: any }) {
+  console.log('addUser', user)
   return request<API.UserListItem>('/api/user/add', {
     method: 'POST',
+    data: user,
     ...(options || {}),
   });
 }

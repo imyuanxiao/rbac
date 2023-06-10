@@ -5,12 +5,12 @@ import {
   updateUser
 } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import type {ActionType, ProColumns, ProDescriptionsItemProps, ProFormInstance} from '@ant-design/pro-components';
 import {
   FooterToolbar,
   ModalForm,
   PageContainer,
-  ProDescriptions,
+  ProDescriptions, ProForm, ProFormSelect,
   ProFormText,
   ProFormTextArea,
   ProTable,
@@ -29,7 +29,11 @@ import UpdateForm from './components/UpdateForm';
 const handleAdd = async (fields: API.UserListItem) => {
   const hide = message.loading('正在添加');
   try {
-    await addUser({ ...fields });
+    await addUser({
+      ...fields,
+      roleIds: fields.roleIds?.map(id => id.toString()),
+      orgIds: fields.orgIds?.map(id => id.toString())
+    });
     hide();
     message.success('Added successfully');
     return true;
@@ -99,6 +103,7 @@ const UserList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.UserListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.UserListItem[]>([]);
+  const restFormRef = useRef<ProFormInstance>();
 
   /**
    * @en-US International configuration
@@ -257,9 +262,10 @@ const UserList: React.FC = () => {
       <ModalForm
         title={intl.formatMessage({
           id: 'pages.searchTable.createForm.newUser',
-          defaultMessage: 'New user',
+          defaultMessage: '新增用户',
         })}
         width="400px"
+        formRef={restFormRef}
         open={createModalOpen}
         onOpenChange={handleModalOpen}
         onFinish={async (value) => {
@@ -271,23 +277,83 @@ const UserList: React.FC = () => {
             }
           }
         }}
-      >
-        <ProFormText
-          rules={[
-            {
-              required: true,
-              message: (
-                <FormattedMessage
-                  id="pages.searchTable.userName"
-                  defaultMessage="User name is required"
-                />
-              ),
+        submitter={{
+          searchConfig: {
+            resetText: '重置',
+          },
+          resetButtonProps: {
+            onClick: () => {
+              restFormRef.current?.resetFields();
             },
-          ]}
-          width="md"
-          name="username"
-        />
-        <ProFormTextArea width="md" name="desc" />
+          },
+        }}
+      >
+          <ProFormText
+            name="id"
+            label="ID"
+            hidden
+            disabled
+          />
+          <ProFormText
+            name="username"
+            label={intl.formatMessage({
+              id: 'pages.searchTable.updateForm.userName.nameLabel',
+              defaultMessage: '用户名',
+            })}
+            width="md"
+            rules={[
+              {
+                required: true,
+                message: (
+                  <FormattedMessage
+                    id="pages.searchTable.updateForm.userName.nameRules"
+                    defaultMessage="请输入用户名！"
+                  />
+                ),
+              },
+            ]}
+          />
+          <ProFormSelect
+            name="userStatus"
+            width="md"
+            label={intl.formatMessage({
+              id: 'pages.searchTable.updateForm.userProps.userStatus',
+              defaultMessage: '用户状态',
+            })}
+            initialValue={0}
+            options={[
+              { label: '正常', value: 0 },
+              { label: '停用', value: 1 },
+              { label: '注销', value: 2},
+            ]}
+          />
+          <ProFormSelect
+            name="roleIds"
+            mode="multiple"
+            width="md"
+            label={intl.formatMessage({
+              id: 'pages.searchTable.updateForm.userProps.roleIds',
+              defaultMessage: '角色',
+            })}
+            valueEnum={{
+              1: '管理员',
+              2: '用户'
+            }}
+          />
+          <ProFormSelect
+            name="orgIds"
+            mode="multiple"
+            width="md"
+            label={intl.formatMessage({
+              id: 'pages.searchTable.updateForm.userProps.orgIds',
+              defaultMessage: '组织',
+            })}
+            valueEnum={{
+              1: 'Head Co.',
+              2: 'Branch1 Co.',
+              3: 'Branch2 Co.'
+            }}
+          />
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
