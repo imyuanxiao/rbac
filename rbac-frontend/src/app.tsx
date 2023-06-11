@@ -8,6 +8,7 @@ import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import React from 'react';
 import {checkTokenExpiration} from "@/utils/TokenUtil";
+import {message} from "antd";
 
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -160,7 +161,9 @@ const responseHandler = (response: Response, options: RequestConfig) => {
     localStorage.removeItem('token');
   }
 
+
   if(response.data.errorCode !== 0){
+    message.error(response.data.data)
     throw response;
   }
 
@@ -187,19 +190,23 @@ export const request: RequestConfig = {
     // 错误处理
     errorThrower: (resData: any) => {
       console.log('errorThrower拦截错误>>>', resData);
-
     },
     // 错误处理
     errorHandler: (error: any, opts: any) => {
       if (opts?.skipErrorHandler) throw error;
-      console.log('errorHandler处理错误>>>', { error, opts });
+      console.log('errorHandler处理错误>>>', error);
 
       const { response } = error;
 
       if(response && response.status === 500){
+        console.log('response.data>>>', response.data);
+        if(response.data.data){
+            message.error(response.data.data)
+          }
           localStorage.removeItem('token');
           history.push(loginPath);
       }
+      
     },
   },
   // 全局接口异常处理
