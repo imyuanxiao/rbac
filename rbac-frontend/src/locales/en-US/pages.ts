@@ -97,6 +97,15 @@ export default {
   'pages.searchTable.updateForm.ipAddress': 'IP address',
   'pages.searchTable.updateForm.userAgent': 'User-agent',
 
+  'pages.searchTable.permissionIds': 'Permission',
+  'pages.searchTable.description': 'Description',
+
+  'pages.searchTable.updateForm.roleName.nameLabel': 'Role Name',
+  'pages.searchTable.updateForm.roleName.nameRules':'Please enter a role name',
+  'pages.searchTable.updateForm.roleProps.description':'Description',
+  'pages.searchTable.updateForm.roleProps.permissionIds': 'Permission',
+
+
   'pages.searchTable.roleIds' : 'Role',
   'pages.searchTable.role.admin' : 'Admin',
   'pages.searchTable.role.user' : 'User',

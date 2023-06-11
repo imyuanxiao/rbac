@@ -121,7 +121,6 @@ const Login: React.FC = () => {
       // 登录
 
      const loginResponse = await login({ ...values, type });
-     console.log('handleSubmit>>')
       const { userVO } = loginResponse;
       const defaultLoginSuccessMessage = intl.formatMessage({
         id: 'pages.login.success',

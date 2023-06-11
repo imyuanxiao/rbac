@@ -88,7 +88,6 @@ const handleRemove = async (selectedRows: API.UserListItem[]) => {
 export async function fetchRoleOptions() {
   // 异步获取角色列表
   const res = await getRoleList();
-  console.log('fetchRoleOptions>>roles', res);
   const roleOptions = res.response.map((role) => ({
     label: (
       <FormattedMessage
@@ -98,7 +97,6 @@ export async function fetchRoleOptions() {
     ),
     value: role.id.toString(),
   }));
-  console.log('fetchRoleOptions>>roleOptions', roleOptions);
   return roleOptions;
 }
 
@@ -204,7 +202,6 @@ const UserList: React.FC = () => {
             <a
               onClick={() => {
                 setCurrentRow(record);
-                console.log('record', record)
                 handleUpdateModalOpen(true);
               }}
             >

@@ -110,6 +110,7 @@ public class AuthController {
     @GetMapping("/updateToken")
     @ApiOperation(value = "Update token in redis")
     public TokenResponse updateToken(){
+        log.debug("更新token");
         return userService.updateToken();
     }
 

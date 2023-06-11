@@ -176,7 +176,6 @@ const RoleList: React.FC = () => {
             <a
               onClick={() => {
                 setCurrentRow(record);
-                console.log('record', record)
                 handleUpdateModalOpen(true);
               }}
             >

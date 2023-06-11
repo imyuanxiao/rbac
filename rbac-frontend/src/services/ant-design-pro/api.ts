@@ -191,7 +191,6 @@ export async function addRole(body: API.RoleListItem, options?: { [key: string]:
 
 /** 删除角色 DELETE /api/role/delete */
 export async function removeRole(body: number[], options?: { [key: string]: any }) {
-  console.log('removeUser>>', options)
   return request<Record<string, any>>('/api/role/delete', {
     method: 'DELETE',
     data: body,
