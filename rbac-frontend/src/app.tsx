@@ -5,13 +5,15 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import {history, Link, RequestConfig} from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import React from 'react';
-import {useModel} from "@@/exports";
-import {message} from "antd";
+import {checkTokenExpiration} from "@/utils/TokenUtil";
+
+
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+
+checkTokenExpiration();
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -27,10 +29,8 @@ export async function getInitialState(): Promise<{
       const userInfo = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      console.log('getInitialState>>', userInfo)
       return userInfo;
     } catch (error) {
-      console.log('fetchUserInfo内重定向至主页>>', loginPath)
       history.push(loginPath);
     }
     return undefined;
@@ -70,7 +70,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
-        console.log('layout内重定向至主页>>')
         history.push(loginPath);
       }
     },
@@ -137,10 +136,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * @param options
  */
 const requestHandler = (url: string, options: RequestConfig) => {
-  console.log("requestHandler请求拦截器>>")
   const token = localStorage.getItem('token');
   if (token !== null) {
-    console.log("token加入header")
     return {
       url: `${url}`,
       options: { ...options, interceptors: true, headers: { Authorization: token } },
@@ -156,7 +153,6 @@ const requestHandler = (url: string, options: RequestConfig) => {
  * @param options
  */
 const responseHandler = (response: Response, options: RequestConfig) => {
-  console.log("responseHandler响应拦截器>>")
 
   if(response.status === 500){
     // 500 意味着token出错，删除本地token
@@ -165,16 +161,13 @@ const responseHandler = (response: Response, options: RequestConfig) => {
   }
 
   if(response.data.errorCode !== 0){
-    console.log("响应异常>>", response.data)
     throw response;
   }
 
   //响应拦截器内获取token并设置到本地
   if(response.data.data?.token){
-    // console.log("设置token>>", response.data.data.token)
     localStorage.setItem('token', response.data.data.token);
   }
-  // console.log("response.data", response.data)
 
   //返回data
   return response.data;
@@ -204,20 +197,9 @@ export const request: RequestConfig = {
       const { response } = error;
 
       if(response && response.status === 500){
-          console.log("删除本地token>>")
           localStorage.removeItem('token');
           history.push(loginPath);
       }
-
-      // if (error.data && error.data.data) {
-      //   message.error(error.data.data)
-      // }else{
-      //   message.error('请求异常');
-      //   // console.log("删除本地token>>")
-      //   // localStorage.removeItem('token');
-      //   // history.push(loginPath);
-      // }
-
     },
   },
   // 全局接口异常处理

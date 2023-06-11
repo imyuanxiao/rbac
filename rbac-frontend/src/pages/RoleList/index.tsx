@@ -1,7 +1,7 @@
 import {
   addRole,
-  addUser, getRolePage, removeRole,
-  removeUser, updateRole,
+  getRolePage, removeRole,
+  updateRole,
 } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
 import type {ActionType, ProColumns, ProDescriptionsItemProps, ProFormInstance} from '@ant-design/pro-components';
@@ -9,7 +9,7 @@ import {
   FooterToolbar,
   ModalForm,
   PageContainer,
-  ProDescriptions, ProFormSelect,
+  ProDescriptions,
   ProFormText, ProFormTextArea, ProFormTreeSelect,
   ProTable,
 } from '@ant-design/pro-components';
