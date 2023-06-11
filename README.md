@@ -8,6 +8,14 @@
 
 ![image-20230611230304066](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230611230304066.png)
 
+该项目的旧版仓库：
+
+前端：https://github.com/imyuanxiao/rbac-frontend-old
+
+旧版前端项目未使用脚手架，使用 React 原生项目 + Ant Design 进行搭建。
+
+后端：https://github.com/imyuanxiao/rbac-backend-old
+
 # 技术选型
 
 ## 前端
