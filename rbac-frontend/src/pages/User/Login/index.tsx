@@ -210,7 +210,7 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
+          title="Role Master"
           subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{
             autoLogin: true,
@@ -409,13 +409,13 @@ const Login: React.FC = () => {
             <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
             </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
-            </a>
+            {/*<a*/}
+            {/*  style={{*/}
+            {/*    float: 'right',*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />*/}
+            {/*</a>*/}
           </div>
         </LoginForm>
       </div>

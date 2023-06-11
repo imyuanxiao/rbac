@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Ant Design Pro",
+    "title": "Role Master",
     "version": "1.0.0"
   },
   "servers": [
@@ -13,9 +13,9 @@
     }
   ],
   "paths": {
-    "/api/currentUser": {
+    "/api/auth/currentUser": {
       "get": {
-        "tags": ["api"],
+        "tags": ["auth"],
         "description": "获取当前的用户",
         "operationId": "currentUser",
         "responses": {
@@ -40,43 +40,13 @@
             }
           }
         }
-      },
-      "x-swagger-router-controller": "api"
-    },
-    "/api/login/captcha": {
-      "post": {
-        "description": "发送验证码",
-        "operationId": "getFakeCaptcha",
-        "tags": ["login"],
-        "parameters": [
-          {
-            "name": "phone",
-            "in": "query",
-            "description": "手机号",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FakeCaptcha"
-                }
-              }
-            }
-          }
-        }
       }
     },
-    "/api/login/outLogin": {
+    "/api/auth/logout": {
       "post": {
-        "description": "登录接口",
+        "tags": ["auth"],
+        "description": "退出登录接口",
         "operationId": "outLogin",
-        "tags": ["login"],
         "responses": {
           "200": {
             "description": "Success",
@@ -99,32 +69,20 @@
             }
           }
         }
-      },
-      "x-swagger-router-controller": "api"
+      }
     },
-    "/api/login/account": {
+    "/api/auth/login": {
       "post": {
-        "tags": ["login"],
+        "tags": ["auth"],
         "description": "登录接口",
         "operationId": "login",
-        "requestBody": {
-          "description": "登录系统",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginParams"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResult"
+                  "$ref": "#/components/schemas/LoginResponse"
                 }
               }
             }
@@ -139,24 +97,40 @@
               }
             }
           }
-        },
-        "x-codegen-request-body-name": "body"
-      },
-      "x-swagger-router-controller": "api"
+        }
+      }
     },
-    "/api/notices": {
-      "summary": "getNotices",
-      "description": "NoticeIconItem",
-      "get": {
-        "tags": ["api"],
-        "operationId": "getNotices",
+    "/api/user/page": {
+      "post": {
+        "tags": ["user"],
+        "description": "获取用户列表",
+        "operationId": "getUserListByConditions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserListRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NoticeIconList"
+                  "$ref": "#/components/schemas/UserListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -164,11 +138,125 @@
         }
       }
     },
-    "/api/rule": {
+    "/api/user/update": {
+      "put": {
+        "tags": ["user"],
+        "description": "更新用户",
+        "operationId": "updateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserListItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListItem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/add": {
+      "post": {
+        "tags": ["user"],
+        "description": "新建用户",
+        "operationId": "addUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserListItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListItem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/delete": {
+      "delete": {
+        "tags": ["user"],
+        "description": "删除用户",
+        "operationId": "removeUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDeleteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/data/page": {
       "get": {
-        "tags": ["rule"],
-        "description": "获取规则列表",
-        "operationId": "rule",
+        "tags": ["data"],
+        "description": "获取数据列表",
+        "operationId": "getDataList",
         "parameters": [
           {
             "name": "current",
@@ -193,7 +281,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RuleList"
+                  "$ref": "#/components/schemas/DataList"
                 }
               }
             }
@@ -209,18 +297,29 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/user/loginHistory": {
       "post": {
-        "tags": ["rule"],
-        "description": "新建规则",
-        "operationId": "addRule",
+        "tags": ["user"],
+        "description": "获取登录历史列表",
+        "operationId": "getLoginHistoryListByConditions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginHistoryListRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RuleListItem"
+                  "$ref": "#/components/schemas/LoginHistoryList"
                 }
               }
             }
@@ -236,18 +335,107 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/role/list": {
+      "get": {
+        "tags": ["role"],
+        "description": "获取所有角色信息",
+        "operationId": "getRoleList",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/role/page/{current}&{pageSize}": {
+      "get": {
+        "tags": ["role"],
+        "description": "获取角色列表",
+        "operationId": "getRolePage",
+        "parameters": [
+          {
+            "name": "current",
+            "in": "path",
+            "description": "当前的页码",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "path",
+            "description": "页面的容量",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/role/update": {
       "put": {
-        "tags": ["rule"],
-        "description": "新建规则",
-        "operationId": "updateRule",
+        "tags": ["role"],
+        "description": "更新角色",
+        "operationId": "updateRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleListItem"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RuleListItem"
+                  "$ref": "#/components/schemas/UserListItem"
                 }
               }
             }
@@ -263,11 +451,60 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/role/add": {
+      "post": {
+        "tags": ["role"],
+        "description": "新建角色",
+        "operationId": "addRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleListItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListItem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/role/delete": {
       "delete": {
-        "tags": ["rule"],
-        "description": "删除规则",
-        "operationId": "removeRule",
+        "tags": ["role"],
+        "description": "删除角色",
+        "operationId": "removeRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleDeleteRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
@@ -290,304 +527,10 @@
             }
           }
         }
-      },
-      "x-swagger-router-controller": "api"
+      }
     },
     "/swagger": {
       "x-swagger-pipe": "swagger_raw"
-    }
-  },
-  "components": {
-    "schemas": {
-      "CurrentUser": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "avatar": {
-            "type": "string"
-          },
-          "userid": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "signature": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "group": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "key": {
-                  "type": "string"
-                },
-                "label": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "notifyCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "unreadCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "country": {
-            "type": "string"
-          },
-          "access": {
-            "type": "string"
-          },
-          "geographic": {
-            "type": "object",
-            "properties": {
-              "province": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "key": {
-                    "type": "string"
-                  }
-                }
-              },
-              "city": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "key": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "address": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string"
-          }
-        }
-      },
-      "LoginResult": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "currentAuthority": {
-            "type": "string"
-          }
-        }
-      },
-      "PageParams": {
-        "type": "object",
-        "properties": {
-          "current": {
-            "type": "number"
-          },
-          "pageSize": {
-            "type": "number"
-          }
-        }
-      },
-      "RuleListItem": {
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "disabled": {
-            "type": "boolean"
-          },
-          "href": {
-            "type": "string"
-          },
-          "avatar": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "owner": {
-            "type": "string"
-          },
-          "desc": {
-            "type": "string"
-          },
-          "callNo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "datetime"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "datetime"
-          },
-          "progress": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "RuleList": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RuleListItem"
-            }
-          },
-          "total": {
-            "type": "integer",
-            "description": "列表的内容总数",
-            "format": "int32"
-          },
-          "success": {
-            "type": "boolean"
-          }
-        }
-      },
-      "FakeCaptcha": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "status": {
-            "type": "string"
-          }
-        }
-      },
-      "LoginParams": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "autoLogin": {
-            "type": "boolean"
-          },
-          "type": {
-            "type": "string"
-          }
-        }
-      },
-      "ErrorResponse": {
-        "required": ["errorCode"],
-        "type": "object",
-        "properties": {
-          "errorCode": {
-            "type": "string",
-            "description": "业务约定的错误码"
-          },
-          "errorMessage": {
-            "type": "string",
-            "description": "业务上的错误信息"
-          },
-          "success": {
-            "type": "boolean",
-            "description": "业务上的请求是否成功"
-          }
-        }
-      },
-      "NoticeIconList": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NoticeIconItem"
-            }
-          },
-          "total": {
-            "type": "integer",
-            "description": "列表的内容总数",
-            "format": "int32"
-          },
-          "success": {
-            "type": "boolean"
-          }
-        }
-      },
-      "NoticeIconItemType": {
-        "title": "NoticeIconItemType",
-        "description": "已读未读列表的枚举",
-        "type": "string",
-        "properties": {},
-        "enum": ["notification", "message", "event"]
-      },
-      "NoticeIconItem": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "extra": {
-            "type": "string",
-            "format": "any"
-          },
-          "key": { "type": "string" },
-          "read": {
-            "type": "boolean"
-          },
-          "avatar": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "datetime": {
-            "type": "string",
-            "format": "date"
-          },
-          "description": {
-            "type": "string"
-          },
-          "type": {
-            "extensions": {
-              "x-is-enum": true
-            },
-            "$ref": "#/components/schemas/NoticeIconItemType"
-          }
-        }
-      }
     }
   }
 }

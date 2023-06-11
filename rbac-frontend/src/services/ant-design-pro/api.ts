@@ -30,14 +30,14 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
   });
 }
 
-
-/** 此处后端没有提供注释 GET /api/notices */
-export async function getNotices(options?: { [key: string]: any }) {
-  return request<API.NoticeIconList>('/api/notices', {
-    method: 'GET',
-    ...(options || {}),
-  });
-}
+//
+// /** 此处后端没有提供注释 GET /api/notices */
+// export async function getNotices(options?: { [key: string]: any }) {
+//   return request<API.NoticeIconList>('/api/notices', {
+//     method: 'GET',
+//     ...(options || {}),
+//   });
+// }
 
 /** 获取用户列表 POST /api/user/page */
 export async function getUserListByConditions(
@@ -135,7 +135,7 @@ export async function getLoginHistoryListByConditions(
   };
 }
 
-/** 获取用户列表 GET /api/role/list */
+/** 获取所有角色信息 GET /api/role/list */
 export async function getRoleList(options?: { [key: string]: any },) {
   const response = await request<API.ListData<API.RoleListItem>>('/api/role/list', {
     method: 'GET',
@@ -146,7 +146,7 @@ export async function getRoleList(options?: { [key: string]: any },) {
   };
 }
 
-/** 获取角色分页数据 GET /api/role/page */
+/** 获取角色列表 GET /api/role/page */
 export async function getRolePage(
   params: {
     current?: number;

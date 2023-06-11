@@ -206,7 +206,7 @@ export const request: RequestConfig = {
           localStorage.removeItem('token');
           history.push(loginPath);
       }
-      
+
     },
   },
   // 全局接口异常处理
