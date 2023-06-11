@@ -71,4 +71,6 @@ public interface UserService extends IService<User> {
     IPage<UserPageVO> selectPageByConditions(Page<UserPageVO> page, QueryWrapper<UserPageVO> queryWrapper);
 
     IPage<LoginHistoryListResponse> getLoginHistoryByConditions(LoginHistoryListRequest loginHistoryListRequest);
+
+    void removeUsersFromRedis(Long[] ids);
 }

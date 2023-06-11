@@ -156,8 +156,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         // If state is abnormal
-        if(userResult.getUserStatus() != 0){
-            throw new ApiException(userResult.getUserStatus() == 1 ?
+        if(userResult.getUserStatus() != CommonConst.USER_STATUS_NORMAL){
+            throw new ApiException(userResult.getUserStatus() == CommonConst.USER_STATUS_DISABLED ?
                     ResultCode.ACCOUNT_STATE_DISABLED :
                     ResultCode.ACCOUNT_STATE_DELETED);
         }
@@ -357,6 +357,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         page.setCurrent(loginHistoryListRequest.getCurrent()).setSize(loginHistoryListRequest.getPageSize()).addOrder(orderItem);
 
         return baseMapper.selectLoginHistory(page, loginHistoryListRequest.getUsername());
+    }
+
+    @Override
+    public void removeUsersFromRedis(Long[] ids) {
+        for (Long id : ids ) {
+            String username = lambdaQuery().eq(User::getId, id).one().getUsername();
+            redisUtil.removeUserMapByUsername(username);
+        }
     }
 
 }

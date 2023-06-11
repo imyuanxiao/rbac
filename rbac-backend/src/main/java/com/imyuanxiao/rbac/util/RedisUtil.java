@@ -62,6 +62,9 @@ public class RedisUtil {
         // Delete token from redis
         stringRedisTemplate.delete(LOGIN_USER_KEY + username);
     }
+    public void removeUserMapByUsername(String username) {
+        stringRedisTemplate.delete(LOGIN_USER_KEY + username);
+    }
 
     public String refreshToken(){
 
@@ -80,5 +83,6 @@ public class RedisUtil {
 
         return newToken;
     }
+
 
 }

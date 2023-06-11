@@ -12,6 +12,12 @@
 
 
 
+## swagger
+
+[Swagger UI](http://localhost:8080/swagger-ui/index.html)
+
+
+
 ## 登录
 
 登录
@@ -162,3 +168,10 @@ public class UserController {
 
 [ProTable - 高级表格 - ProComponents (ant.design)](https://procomponents.ant.design/components/table)
 
+
+
+# 待优化
+
+## 状态监听
+
+使用心跳机制或者WebStock监听用户在线、离线状态

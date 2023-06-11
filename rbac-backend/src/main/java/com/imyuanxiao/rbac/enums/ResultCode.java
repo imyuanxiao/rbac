@@ -35,6 +35,8 @@ public enum ResultCode {
     // 账号相关
     ACCOUNT_STATE_DISABLED(1011, "账号已禁用"),
     ACCOUNT_STATE_DELETED(1012, "账号已注销"),
+
+
     CODE_EXISTS(1013, "验证码已发送，请稍后再试"),
     REGISTER_SUCCESS(1014, "Register successful"),
     ACCOUNT_TAKEOVER(1015, "Account takeover by another user"),

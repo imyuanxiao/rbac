@@ -8,7 +8,11 @@ public class CommonConst {
     public static final int LOG_IN = 0;
     public static final int LOG_OUT = 1;
 
+    public static final int USER_STATUS_NORMAL = 0;
+    public static final int USER_STATUS_DISABLED = 1;
+
     public static final String MOBILE = "mobile";
     public static final String ACCOUNT = "account";
+
 
 }
