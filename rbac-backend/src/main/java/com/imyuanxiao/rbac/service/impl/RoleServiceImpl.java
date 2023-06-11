@@ -1,5 +1,7 @@
 package com.imyuanxiao.rbac.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -10,6 +12,7 @@ import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.mapper.PermissionMapper;
 import com.imyuanxiao.rbac.model.entity.Role;
 import com.imyuanxiao.rbac.model.dto.RoleParam;
+import com.imyuanxiao.rbac.model.entity.User;
 import com.imyuanxiao.rbac.model.vo.RolePageVO;
 import com.imyuanxiao.rbac.service.RoleService;
 import com.imyuanxiao.rbac.mapper.RoleMapper;
@@ -75,7 +78,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
         // 先删除原有角色对应的权限数据
         permissionMapper.deleteByRoleId(param.getId());
         // 如果新的权限ID为空就代表删除所有权限，不用后面新增流程了
-        if (CollectionUtil.isEmpty(param.getPermissionIds())) {
+        if (CollUtil.isEmpty(param.getPermissionIds())) {
             return;
         }
         // 新增权限ID
@@ -83,22 +86,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
     }
 
     @Override
-    public void createRole(RoleParam param) {
+    public void addRole(RoleParam param) {
         if (lambdaQuery().eq(Role::getRoleName, param.getRoleName()).one() != null) {
             throw new ApiException(ResultCode.FAILED, "角色名重复");
         }
         // 新增角色
-        Role role = new Role().setRoleName(param.getRoleName());
-        save(role);
-        if (CollectionUtil.isEmpty(param.getPermissionIds())) {
+        Role newRole = BeanUtil.copyProperties(param, Role.class);
+        // 保存对象时，会将新增的id赋予该对象
+        save(newRole);
+        if (CollUtil.isEmpty(param.getPermissionIds())) {
             return;
         }
         // 再新增权限数据
-        permissionMapper.insertPermissionsByRoleId(role.getId(), param.getPermissionIds());
+        permissionMapper.insertPermissionsByRoleId(newRole.getId(), param.getPermissionIds());
     }
 
     public boolean removeRolesByIds(Collection<?> idList) {
-        if (CollectionUtil.isEmpty(idList)) {
+        if (CollUtil.isEmpty(idList)) {
             return false;
         }
         // 删除角色下所属的权限
@@ -108,6 +112,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
         // 删除角色
         baseMapper.deleteBatchIds(idList);
         return true;
+    }
+
+    @Override
+    public void updateRole(RoleParam param) {
+        // 提取Role信息
+        Role updateRole = BeanUtil.copyProperties(param, Role.class);
+        // 更新Role基本资料
+        lambdaUpdate().eq(Role::getId, updateRole.getId()).update(updateRole);
+        // 更新Role对应权限
+        this.updatePermissions(param);
     }
 
 }

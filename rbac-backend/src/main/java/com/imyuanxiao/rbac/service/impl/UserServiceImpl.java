@@ -198,7 +198,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // Initialize user profile if new user
         if (userProfile == null) {
             userProfile = new UserProfile()
-                    .setNickName(RandomUtil.randomString(4))
+                    .setNickName(user.getUsername())
                     .setAvatar("https://i.328888.xyz/2023/05/15/VZpOIx.png");
             userProfile.setUserId(user.getId());
             userProfileService.save(userProfile);
@@ -360,7 +360,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 设置分页参数
         Page<LoginHistoryListResponse> page = new Page<>();
         OrderItem orderItem = new OrderItem();
-        orderItem.setColumn("id");
+        orderItem.setColumn("created_time");
+        orderItem.setAsc(false);
         page.setCurrent(loginHistoryListRequest.getCurrent()).setSize(loginHistoryListRequest.getPageSize()).addOrder(orderItem);
 
         return baseMapper.selectLoginHistory(page, loginHistoryListRequest.getUsername());

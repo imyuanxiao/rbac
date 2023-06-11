@@ -29,33 +29,10 @@ export default [
     component: './Welcome',
   },
   {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    routes: [
-      {
-        path: '/admin',
-        redirect: '/admin/sub-page',
-      },
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
-      },
-    ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
     path: '/user',
     name: 'user',
     icon: 'user',
-    access: 'canUserAdmin',
+    access: 'canAdminUser',
     routes: [
       {
         path: '/user',
@@ -64,11 +41,13 @@ export default [
       {
         path: '/user/list',
         name: 'user-list',
+        access: 'canUserPage',
         component: './UserList',
       },
       {
         path: '/user/loginHistory',
         name: 'loginHistory',
+        access: 'canLoginHistoryPage',
         component: './LoginHistoryList',
       },
     ],
@@ -77,14 +56,14 @@ export default [
     path: '/role',
     name: 'role',
     icon: 'robot',
-    access: 'canRoleAdmin',
+    access: 'canAdminRole',
     component: './RoleList',
   },
   {
     path: '/data',
     name: 'data',
     icon: 'database',
-    access: 'canDataAdmin',
+    access: 'canAdminData',
     component: './DataList',
   },
   {

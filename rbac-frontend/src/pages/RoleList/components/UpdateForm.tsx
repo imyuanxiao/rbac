@@ -1,12 +1,11 @@
 import {
   ProForm,
-  ProFormSelect,
-  ProFormText, ProFormTextArea,
+  ProFormText, ProFormTextArea, ProFormTreeSelect,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Modal} from 'antd';
 import React from 'react';
-import {orgEnum, permissionEnum, roleEnum, userStatusOptions} from "@/utils/comonValue";
+import { permissionTreeEnum } from "@/utils/comonValue";
 
 export type FormValueType = {
   target?: string;
@@ -14,7 +13,7 @@ export type FormValueType = {
   type?: string;
   time?: string;
   frequency?: string;
-} & Partial<API.RuleListItem>;
+} & Partial<API.RoleListItem>;
 
 export type UpdateFormProps = {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
@@ -46,7 +45,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           id: props.values.id,
           roleName: props.values.roleName,
           description: props.values.description,
-          permissionIds: props.values.permissionIds?.map(id => id.toString()),
+          permissionIds: props.values.permissionIds,
         }}
       >
           <ProFormText
@@ -82,16 +81,35 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             defaultMessage: '描述',
           })}
         />
-          <ProFormSelect
-            name="permissionIds"
-            mode="multiple"
-            width="md"
-            label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.roleProps.permissionIds',
-              defaultMessage: '权限',
-            })}
-            valueEnum={permissionEnum}
-          />
+        <ProFormTreeSelect
+          name="permissionIds"
+          placeholder="Please select"
+          allowClear
+          width={330}
+          secondary
+          label={intl.formatMessage({
+            id: 'pages.searchTable.updateForm.roleProps.permissionIds',
+            defaultMessage: '权限',
+          })}
+          request={async () => {
+            return permissionTreeEnum;
+          }}
+          // tree-select args
+          fieldProps={{
+            showArrow: false,
+            filterTreeNode: true,
+            showSearch: true,
+            popupMatchSelectWidth: false,
+            labelInValue: true,
+            autoClearSearchValue: true,
+            multiple: true,
+            treeNodeFilterProp: 'title',
+            fieldNames: {
+              label: 'title',
+            },
+            treeCheckable: true,
+          }}
+        />
       </ProForm>
     </Modal>
   );

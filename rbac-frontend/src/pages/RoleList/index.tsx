@@ -1,8 +1,7 @@
 import {
-  addUser, getDataList, getRoleList,
-  getRoleListByConditions,
-  removeUser,
-  updateUser
+  addRole,
+  addUser, getRolePage, removeRole,
+  removeUser, updateRole,
 } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
 import type {ActionType, ProColumns, ProDescriptionsItemProps, ProFormInstance} from '@ant-design/pro-components';
@@ -10,15 +9,15 @@ import {
   FooterToolbar,
   ModalForm,
   PageContainer,
-  ProDescriptions, ProForm, ProFormSelect,
-  ProFormText, ProFormTextArea,
+  ProDescriptions, ProFormSelect,
+  ProFormText, ProFormTextArea, ProFormTreeSelect,
   ProTable,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Button, Drawer, message} from 'antd';
 import React, { useRef, useState } from 'react';
 import UpdateForm from './components/UpdateForm';
-import {orgEnum, permissionEnum, roleEnum, userStatusEnum, userStatusOptions} from "@/utils/comonValue";
+import {permissionEnum, permissionTreeEnum} from "@/utils/comonValue";
 import { useAccess, Access } from 'umi';
 
 /**
@@ -29,9 +28,7 @@ import { useAccess, Access } from 'umi';
 const handleAdd = async (fields: API.RoleListItem) => {
   const hide = message.loading('正在添加');
   try {
-    await addUser({
-      ...fields
-    });
+    await addRole(fields);
     hide();
     message.success('Added successfully');
     return true;
@@ -51,8 +48,7 @@ const handleAdd = async (fields: API.RoleListItem) => {
 const handleUpdate = async (fields: API.RoleListItem) => {
   const hide = message.loading('Updating');
   try {
-    console.log('fields', fields)
-    await updateUser(fields);
+    await updateRole(fields);
     hide();
     message.success('Update is successful');
     return true;
@@ -73,7 +69,7 @@ const handleRemove = async (selectedRows: API.RoleListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    await removeUser(selectedRows.map((row) => row.id));
+    await removeRole(selectedRows.map((row) => row.id));
     hide();
     message.success('Deleted successfully and will refresh soon');
     return true;
@@ -176,7 +172,7 @@ const RoleList: React.FC = () => {
       render: (_, record) => [
         <Access
           key="editRoleOption"
-          accessible={access.canEditUser}>
+          accessible={access.canEditRole}>
             <a
               onClick={() => {
                 setCurrentRow(record);
@@ -205,7 +201,7 @@ const RoleList: React.FC = () => {
         toolBarRender={() => [
           <Access
             key="tableAddUser"
-            accessible={access.canAddUser}>
+            accessible={access.canAddRole}>
             <Button
               type="primary"
               onClick={() => {
@@ -221,7 +217,7 @@ const RoleList: React.FC = () => {
           setCurrentPage(params.current || 1);
           setPageSize(params.pageSize || 10);
           // 调用实际的请求方法，传递 params 参数
-          return getRoleList(params);
+          return getRolePage(params);
         }}
         columns={columns}
         rowSelection={{
@@ -245,7 +241,7 @@ const RoleList: React.FC = () => {
             </div>
           }
         >
-          <Access accessible={access.canDeleteUser}>
+          <Access accessible={access.canDeleteRole}>
             <Button
               onClick={async () => {
                 await handleRemove(selectedRowsState);
@@ -324,24 +320,39 @@ const RoleList: React.FC = () => {
               defaultMessage: '描述',
             })}
           />
-          <ProFormSelect
-            name="permissionIds"
-            mode="multiple"
-            width="md"
-            label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.roleProps.permissionIds',
-              defaultMessage: '权限',
-            })}
-            valueEnum={permissionEnum}
-          />
+        <ProFormTreeSelect
+          name="permissionIds"
+          placeholder="Please select"
+          allowClear
+          width={330}
+          secondary
+          label={intl.formatMessage({
+            id: 'pages.searchTable.updateForm.roleProps.permissionIds',
+            defaultMessage: '权限',
+          })}
+          request={async () => {
+            return permissionTreeEnum;
+          }}
+          // tree-select args
+          fieldProps={{
+            showArrow: false,
+            filterTreeNode: true,
+            showSearch: true,
+            popupMatchSelectWidth: false,
+            labelInValue: true,
+            autoClearSearchValue: true,
+            multiple: true,
+            treeNodeFilterProp: 'title',
+            fieldNames: {
+              label: 'title',
+            },
+            treeCheckable: true,
+          }}
+        />
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
-          const updatedValue = {
-            ...value,
-            permissionIds: value.permissionIds.map(str => Number(str))
-          };
-          const success = await handleUpdate(updatedValue);
+          const success = await handleUpdate(value);
           if (success) {
             handleUpdateModalOpen(false);
             setCurrentRow(undefined);

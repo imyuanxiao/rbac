@@ -110,8 +110,7 @@ public class AuthController {
     @GetMapping("/updateToken")
     @ApiOperation(value = "Update token in redis")
     public TokenResponse updateToken(){
-        TokenResponse tokenResponse = userService.updateToken();
-        return tokenResponse;
+        return userService.updateToken();
     }
 
     @GetMapping("/logout")

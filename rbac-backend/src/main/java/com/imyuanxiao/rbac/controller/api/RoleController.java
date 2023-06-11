@@ -2,9 +2,12 @@ package com.imyuanxiao.rbac.controller.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.imyuanxiao.rbac.annotation.Auth;
+import com.imyuanxiao.rbac.enums.ResultCode;
+import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.entity.Role;
 import com.imyuanxiao.rbac.model.dto.RoleParam;
 import com.imyuanxiao.rbac.model.vo.RolePageVO;
@@ -39,8 +42,8 @@ public class RoleController {
     @PostMapping("/add")
     @Auth(id = 1, name = "新增角色")
     @ApiOperation(value = "Add role")
-    public String createRole(@RequestBody @Validated(ValidationGroups.CreateRole.class) RoleParam param) {
-        roleService.createRole(param);
+    public String addRole(@RequestBody @Validated(ValidationGroups.AddRole.class) RoleParam param) {
+        roleService.addRole(param);
         return ACTION_SUCCESSFUL;
     }
 
@@ -48,6 +51,9 @@ public class RoleController {
     @Auth(id = 2, name = "删除角色")
     @ApiOperation(value = "Delete role")
     public String deleteRole(@RequestBody Long[] ids) {
+        if (ArrayUtils.isEmpty(ids)) {
+            throw new ApiException(ResultCode.PARAMS_ERROR);
+        }
         roleService.removeRolesByIds(Arrays.asList(ids));
         return ACTION_SUCCESSFUL;
     }
@@ -56,7 +62,7 @@ public class RoleController {
     @Auth(id = 3, name = "编辑角色")
     @ApiOperation(value = "Update role")
     public String updateRole(@RequestBody @Validated(ValidationGroups.UpdateResources.class) RoleParam param) {
-        roleService.updatePermissions(param);
+        roleService.updateRole(param);
         return ACTION_SUCCESSFUL;
     }
 
@@ -67,7 +73,7 @@ public class RoleController {
     }
 
     @GetMapping("/page/{current}&{pageSize}")
-//    @Auth(id = 4, name = "角色分页信息")
+    @Auth(id = 4, name = "查看角色分页信息")
     @ApiOperation(value = "Page through role information")
     public IPage<RolePageVO> getRolePage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
         // Set pagination parameters

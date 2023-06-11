@@ -77,9 +77,6 @@ export default {
   'pages.searchTable.updateForm.userProps.roleIds' : 'Role',
   'pages.searchTable.updateForm.userProps.orgIds' : 'Organization',
   'pages.searchTable.updateForm.edit' : 'Edit',
-  'pages.searchTable.roleIds' : 'Role',
-  'pages.searchTable.role.admin' : 'Admin',
-  'pages.searchTable.role.user' : 'User',
 
   'pages.searchTable.org.org1' : 'Head Co',
   'pages.searchTable.org.org2' : 'Branch Co 1',
@@ -98,6 +95,11 @@ export default {
   'pages.searchTable.loginHistory.logout' : 'Log Out',
   'pages.searchTable.updateForm.createdTime': 'Time',
   'pages.searchTable.updateForm.ipAddress': 'IP address',
-  'pages.searchTable.updateForm.userAgent': 'User-agent'
+  'pages.searchTable.updateForm.userAgent': 'User-agent',
+
+  'pages.searchTable.roleIds' : 'Role',
+  'pages.searchTable.role.admin' : 'Admin',
+  'pages.searchTable.role.user' : 'User',
+
 
 };

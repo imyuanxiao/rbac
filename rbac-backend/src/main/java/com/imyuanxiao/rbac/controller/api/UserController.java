@@ -66,9 +66,7 @@ public class UserController {
         if (ArrayUtils.isEmpty(ids)) {
             throw new ApiException(ResultCode.PARAMS_ERROR);
         }
-
         userService.removeUserByIds(Arrays.asList(ids));
-
         return ACTION_SUCCESSFUL;
     }
 
@@ -97,7 +95,8 @@ public class UserController {
 
     @PostMapping("/page")
     @ApiOperation(value = "Page through user information by conditions")
-    public IPage<UserPageVO> getPageByConditions(@RequestBody UserListRequest userListRequest) {
+    @Auth(id = 6, name = "查看用户分页信息")
+    public IPage<UserPageVO> getUserPageByConditions(@RequestBody UserListRequest userListRequest) {
 
         // 设置分页参数
         Page<UserPageVO> page = new Page<>();
@@ -138,8 +137,8 @@ public class UserController {
 
     @PostMapping("/loginHistory")
     @ApiOperation(value = "Page through login history by conditions")
+    @Auth(id = 7, name = "查看登录历史分页信息")
     public IPage<LoginHistoryListResponse> getLoginHistoryByConditions(@RequestBody LoginHistoryListRequest loginHistoryListRequest) {
-
         return userService.getLoginHistoryByConditions(loginHistoryListRequest);
     }
 

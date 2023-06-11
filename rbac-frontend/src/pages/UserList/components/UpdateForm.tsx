@@ -6,7 +6,8 @@ import {
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Modal} from 'antd';
 import React from 'react';
-import {orgEnum, roleEnum, userStatusOptions} from "@/utils/comonValue";
+import {orgEnum, userStatusOptions} from "@/utils/comonValue";
+import {fetchRoleOptions} from "@/pages/UserList";
 
 export type FormValueType = {
   target?: string;
@@ -14,7 +15,7 @@ export type FormValueType = {
   type?: string;
   time?: string;
   frequency?: string;
-} & Partial<API.RuleListItem>;
+} & Partial<API.UserListItem>;
 
 export type UpdateFormProps = {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
@@ -92,7 +93,8 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
               id: 'pages.searchTable.updateForm.userProps.roleIds',
               defaultMessage: '角色',
             })}
-            valueEnum={roleEnum}
+            request={fetchRoleOptions}
+            // valueEnum={roleEnum}
           />
         <ProFormSelect
           name="orgIds"

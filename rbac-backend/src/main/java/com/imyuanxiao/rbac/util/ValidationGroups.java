@@ -11,7 +11,7 @@ public interface ValidationGroups {
     public interface UpdateUser {}
     public interface CreateUser{}
 
-    public interface CreateRole {
+    public interface AddRole {
     }
 
     public interface UpdateResources {

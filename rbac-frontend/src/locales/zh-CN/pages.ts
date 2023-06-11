@@ -75,9 +75,6 @@ export default {
   'pages.searchTable.updateForm.userProps.roleIds' : '角色',
   'pages.searchTable.updateForm.userProps.orgIds' : '组织',
   'pages.searchTable.updateForm.edit' : '编辑',
-  'pages.searchTable.roleIds' : '角色',
-  'pages.searchTable.role.admin' : '管理员',
-  'pages.searchTable.role.user' : '用户',
 
   'pages.searchTable.org.org1' : '总公司',
   'pages.searchTable.org.org2' : '分公司1',
@@ -106,5 +103,9 @@ export default {
   'pages.searchTable.updateForm.roleProps.description':'描述',
   'pages.searchTable.updateForm.roleProps.permissionIds': '权限',
 
+
+  'pages.searchTable.roleIds' : '角色',
+  'pages.searchTable.role.admin' : '管理员',
+  'pages.searchTable.role.user' : '用户',
 
 };

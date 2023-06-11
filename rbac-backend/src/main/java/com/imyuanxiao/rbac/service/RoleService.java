@@ -24,7 +24,7 @@ public interface RoleService extends IService<Role> {
      * @date 15:14 2023/5/7
      * @param param Role-related parameters
      **/
-    void createRole(RoleParam param);
+    void addRole(RoleParam param);
 
     /**
      * Batch add roles based on user ID.
@@ -80,4 +80,5 @@ public interface RoleService extends IService<Role> {
 
     boolean removeRolesByIds(Collection<?> idList);
 
+    void updateRole(RoleParam param);
 }

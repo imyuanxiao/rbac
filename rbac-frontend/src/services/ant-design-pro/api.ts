@@ -64,49 +64,33 @@ export async function getUserListByConditions(
   };
 }
 
-// /** 获取用户列表 GET /api/user/page */
-// export async function getUserList(
-//   params: {
-//     current?: number;
-//     pageSize?: number;
-//   },
-//   options?: { [key: string]: any },
-// ) {
-//   const response = await request<API.UserList>(`/api/user/page/${params.current}&${params.pageSize}`, {
-//     method: 'GET',
-//     ...(options || {}),
-//   });
-//   return {
-//     ...response,
-//     data: response.records,
-//   };
-// }
-
-/** 新建规则 PUT /api/rule */
+/** 更新用户 PUT /api/user/update */
 export async function updateUser(body: API.UserListItem, options?: { [key: string]: any }) {
   return request<API.UserListItem>('/api/user/update', {
     method: 'PUT',
+    data: {
+      ...body,
+      roleIds: body.roleIds.map(id => Number(id)),
+      orgIds: body.orgIds.map(id => Number(id))
+    },
+    ...(options || {}),
+  });
+}
+
+/** 新建用户 POST /api/user/add */
+export async function addUser(body: API.UserListItem, options?: { [key: string]: any }) {
+  return request<API.UserListItem>('/api/user/add', {
+    method: 'POST',
     data: body,
     ...(options || {}),
   });
 }
 
-/** 新建规则 POST /api/rule */
-export async function addUser(user: API.UserListItem, options?: { [key: string]: any }) {
-  console.log('addUser', user)
-  return request<API.UserListItem>('/api/user/add', {
-    method: 'POST',
-    data: user,
-    ...(options || {}),
-  });
-}
-
-/** 删除规则 DELETE /api/rule */
-export async function removeUser(ids: number[], options?: { [key: string]: any }) {
-  console.log('removeUser>>', options)
+/** 删除用户 DELETE /api/user/delete */
+export async function removeUser(body: number[], options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/user/delete', {
     method: 'DELETE',
-    data: ids,
+    data: body,
     ...(options || {}),
   });
 }
@@ -151,8 +135,19 @@ export async function getLoginHistoryListByConditions(
   };
 }
 
-/** 获取用户列表 GET /api/role/page */
-export async function getRoleList(
+/** 获取用户列表 GET /api/role/list */
+export async function getRoleList(options?: { [key: string]: any },) {
+  const response = await request<API.ListData<API.RoleListItem>>('/api/role/list', {
+    method: 'GET',
+    ...(options || {}),
+  });
+  return {
+    response
+  };
+}
+
+/** 获取角色分页数据 GET /api/role/page */
+export async function getRolePage(
   params: {
     current?: number;
     pageSize?: number;
@@ -167,6 +162,41 @@ export async function getRoleList(
     ...response,
     data: response.records,
   };
+}
+
+/** 更新角色 PUT /api/role/update */
+export async function updateRole(body: API.RoleListItem, options?: { [key: string]: any }) {
+
+  return request<API.UserListItem>('/api/role/update', {
+    method: 'PUT',
+    data: {
+      ...body,
+      permissionIds: body.permissionIds?.map(item => item.value),
+    },
+    ...(options || {}),
+  });
+}
+
+/** 新建角色 POST /api/role/add */
+export async function addRole(body: API.RoleListItem, options?: { [key: string]: any }) {
+  return request<API.UserListItem>('/api/role/add', {
+    method: 'POST',
+    data: {
+      ...body,
+      permissionIds: body.permissionIds?.map(item => item.value),
+    },
+    ...(options || {}),
+  });
+}
+
+/** 删除角色 DELETE /api/role/delete */
+export async function removeRole(body: number[], options?: { [key: string]: any }) {
+  console.log('removeUser>>', options)
+  return request<Record<string, any>>('/api/role/delete', {
+    method: 'DELETE',
+    data: body,
+    ...(options || {}),
+  });
 }
 
 /** 获取规则列表 GET /api/rule */

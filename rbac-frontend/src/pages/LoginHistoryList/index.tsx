@@ -93,6 +93,7 @@ const LoginHistoryList: React.FC = () => {
       title: <FormattedMessage id="pages.searchTable.updateForm.userAgent" defaultMessage="用户代理"/>,
       dataIndex: 'userAgent',
       hideInSearch: true,
+      hideInTable: true,
     },
   ];
 

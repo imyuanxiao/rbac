@@ -1,5 +1,5 @@
 import {
-  addUser, getDataList,
+  addUser, getRoleList,
   getUserListByConditions,
   removeUser,
   updateUser
@@ -18,7 +18,7 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import {Button, Drawer, message} from 'antd';
 import React, { useRef, useState } from 'react';
 import UpdateForm from './components/UpdateForm';
-import {orgEnum, roleEnum, userStatusEnum, userStatusOptions} from "@/utils/comonValue";
+import {orgEnum, userStatusEnum, userStatusOptions} from "@/utils/comonValue";
 import { useAccess, Access } from 'umi';
 
 /**
@@ -53,7 +53,6 @@ const handleAdd = async (fields: API.UserListItem) => {
 const handleUpdate = async (fields: API.UserListItem) => {
   const hide = message.loading('Updating');
   try {
-    console.log('fields', fields)
     await updateUser(fields);
     hide();
     message.success('Update is successful');
@@ -85,6 +84,24 @@ const handleRemove = async (selectedRows: API.UserListItem[]) => {
     return false;
   }
 };
+
+export async function fetchRoleOptions() {
+  // 异步获取角色列表
+  const res = await getRoleList();
+  console.log('fetchRoleOptions>>roles', res);
+  const roleOptions = res.response.map((role) => ({
+    label: (
+      <FormattedMessage
+        id={`pages.searchTable.role.${role.roleName}`}
+        defaultMessage={role.roleName}
+      />
+    ),
+    value: role.id.toString(),
+  }));
+  console.log('fetchRoleOptions>>roleOptions', roleOptions);
+  return roleOptions;
+}
+
 
 const UserList: React.FC = () => {
   /**
@@ -170,7 +187,8 @@ const UserList: React.FC = () => {
       title: <FormattedMessage id="pages.searchTable.roleIds" defaultMessage="角色" />,
       dataIndex: 'roleIds',
       valueType: 'select',
-      valueEnum: roleEnum,
+      request: fetchRoleOptions,
+      // valueEnum: roleEnum,
       fieldProps: {
         mode: 'multiple',
       },
@@ -342,7 +360,17 @@ const UserList: React.FC = () => {
               id: 'pages.searchTable.updateForm.userProps.roleIds',
               defaultMessage: '角色',
             })}
-            valueEnum={roleEnum}
+            request={fetchRoleOptions}
+            // request={async () => {
+            //   // 异步获取角色列表
+            //   const roles = await getRoleList();
+            //   console.log('getRoleList>>roles', roles);
+            //   // 将角色列表转换为所需的格式
+            //   const result = generateRoleEnum(roles);
+            //   console.log('generateRoleEnum>>result', result);
+            //   return result;
+            // }}
+            // valueEnum={roleEnum}
           />
           <ProFormSelect
             name="orgIds"
@@ -357,12 +385,7 @@ const UserList: React.FC = () => {
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
-          const updatedValue = {
-            ...value,
-            roleIds: value.roleIds.map(str => Number(str)),
-            orgIds: value.orgIds.map(str => Number(str))
-          };
-          const success = await handleUpdate(updatedValue);
+          const success = await handleUpdate(value);
           if (success) {
             handleUpdateModalOpen(false);
             setCurrentRow(undefined);
