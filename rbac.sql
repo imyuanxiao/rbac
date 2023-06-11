@@ -109,7 +109,7 @@ TRUNCATE TABLE user_role;
 
 INSERT INTO `user` (`username`, `user_phone`, `user_email`, `user_password`, `user_status`) VALUES
   ('admin', '13111111111', 'admin@example.com', '$2a$10$BLYxyDMlacAaAapo4D5Ar.OQ9sVhsxvvDINO0JzM9Q6Q5f7e4LUBa', 0),
-  ('user', '13222222222', 'user@example.com', '$2a$10$RNST4TsduOnaPAEhyqWi2', 0);
+  ('user', '13222222222', 'user@example.com', '$2a$10$RPDCWuAXoYPMfZJ7bhqv4O2T8PI5Od2t.4GPIMJHTCrCa2TqOMtFi', 0);
 
 
 INSERT INTO `role` (`role_name`, `description`) VALUES
@@ -118,25 +118,25 @@ INSERT INTO `role` (`role_name`, `description`) VALUES
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
   (1, 1),
-  (2, 2),
+  (2, 2);
 
 INSERT INTO `role_permission` (`role_id`, `perm_id`)
 VALUES
-    (1,1000),
     (1,1001),
     (1,1002),
     (1,1003),
     (1,1004),
     (1,1005),
-    (1,3000),
+    (1,1006),
+    (1,1007),
     (1,3001),
     (1,3002),
     (1,3003),
+    (1,3004),
     (1,4000),
     (1,5000),
-    (2,1000),
-    (2,3000),
-    (2,4000),
+    (2,1006),
+    (2,3004),
     (2,5000);
 
 INSERT INTO `organization` (`org_name`) VALUES
@@ -156,4 +156,5 @@ VALUES
 
 INSERT INTO `user_organization` (`user_id`, `org_id`) VALUES
   (1, 1),
-  (2, 2),
+  (1, 2),
+  (2, 2);
