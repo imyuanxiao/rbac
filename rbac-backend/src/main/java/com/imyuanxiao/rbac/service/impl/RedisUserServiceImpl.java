@@ -29,9 +29,9 @@ public class RedisUserServiceImpl  implements UserDetailsService {
     private RedisUtil redisUtil;
 
     @Override
-    public UserDetailsVO loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetailsVO loadUserByUsername(String key) throws UsernameNotFoundException {
 
-        Map<Object, Object> userMap = redisUtil.getUserMap(username);
+        Map<Object, Object> userMap = redisUtil.getUserMap(key);
 
         UserVO userVO = BeanUtil.mapToBean(userMap, UserVO.class, true, CopyOptions.create().setIgnoreNullValue(true));
 

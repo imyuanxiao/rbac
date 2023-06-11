@@ -39,7 +39,7 @@ public final class JwtManager {
      * @param username account
      * @return jwt token
      **/
-    public static String generate(String username) {
+    public static String generate(String username, Long userId) {
         DateTime now = DateUtil.date();
         DateTime ddl = DateUtil.offsetMinute(now, EXPIRATION);
         Map<String, Object> map = new HashMap<String, Object>() {
@@ -48,6 +48,7 @@ public final class JwtManager {
                 put(JWTPayload.EXPIRES_AT, ddl);
                 put(JWTPayload.NOT_BEFORE, now);
                 put(JWTPayload.SUBJECT, username); //put account in 'sub'
+                put(JWTPayload.JWT_ID, userId);
             }
         };
         return "Bearer " + JWTUtil.createToken(map, secretKeyBytes);
@@ -103,6 +104,11 @@ public final class JwtManager {
     public static String extractUsername(String token) {
         Claims claims = extractAllClaims(token);
         return String.valueOf(claims.getClaim(JWTPayload.SUBJECT));
+    }
+
+    public static String extractUserID(String token) {
+        Claims claims = extractAllClaims(token);
+        return String.valueOf(claims.getClaim(JWTPayload.JWT_ID));
     }
 
 }

@@ -132,6 +132,7 @@ const UserList: React.FC = () => {
         />
       ),
       dataIndex: 'index',
+      hideInSearch: true,
       render: (dom, entity, index) => {
         const realIndex = (currentPage - 1) * pageSize + index + 1; // 计算真实的序号
         return realIndex;

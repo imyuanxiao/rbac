@@ -33,8 +33,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SpringSecurityConfig {
 
-//    @Autowired
-//    private UserServiceImpl userDetailsService;
      @Autowired
     private RedisUserServiceImpl redisUserService;
 
@@ -58,6 +56,7 @@ public class SpringSecurityConfig {
                 // Specifies that certain endpoints can be accessed without authentication.
                 .antMatchers(
                         "/auth/login",
+                        "/auth/logout",
                         "/auth/captcha",
                         "/auth/register",
                         "/swagger-ui/**",

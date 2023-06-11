@@ -42,7 +42,6 @@ public class LoginFilter  extends OncePerRequestFilter {
             @NotNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String username;
 
         // 如果token为空或没有以”Bearer "开头，跳过本层过滤
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -53,12 +52,13 @@ public class LoginFilter  extends OncePerRequestFilter {
 
         // 提取用户名，查询数据库
         // 在提取时会验证token是否有效
-        username = JwtManager.extractUsername(jwt);
+        String username = JwtManager.extractUsername(jwt);
+        String userId = JwtManager.extractUserID(jwt);
 
         // username有效，并且上下文对象中没有配置用户
-        if (StrUtil.isNotBlank(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (StrUtil.isNotBlank(username) && StrUtil.isNotBlank(userId) && SecurityContextHolder.getContext().getAuthentication() == null) {
             // Get user info from redis
-            Map<Object, Object> userMap = redisUtil.getUserMap(username);
+            Map<Object, Object> userMap = redisUtil.getUserMap(userId);
             // 如果userMap不存在，说明该token登录信息已失效
             if(userMap.isEmpty()){
                 filterChain.doFilter(request, response);
@@ -71,7 +71,7 @@ public class LoginFilter  extends OncePerRequestFilter {
             }
 
             // 从数据库中获取用户信息、密码、角色信息等，返回一个包含用户详细信息的 UserDetailsVO 对象
-            UserDetailsVO userDetails = redisUserService.loadUserByUsername(username);
+            UserDetailsVO userDetails = redisUserService.loadUserByUsername(userId);
             // 创建一个包含了用户的认证信息、凭证信息（之前验证过jwt，不需要凭证）、用户的授权信息的对象
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,

@@ -67,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // Save email and code in redis
         redisUtil.saveCode(phone, code);
         // TODO send code to email
-        return  "Verification code has been sent: " + code;
+        return "Verification code has been sent: " + code;
     }
 
     @Override
@@ -77,11 +77,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String type = registerRequest.getType();
 
         // 1. 手机号注册
-        if(CommonConst.MOBILE.equals(type) && registerByPhone(registerRequest.getMobile(), registerRequest.getCaptcha())){
+        if (CommonConst.MOBILE.equals(type) && registerByPhone(registerRequest.getMobile(), registerRequest.getCaptcha())) {
             return "Register successfully";
         }
         // 2. 密码注册
-        if(StrUtil.isBlank(registerRequest.getPassword())){
+        if (StrUtil.isBlank(registerRequest.getPassword())) {
             throw new ApiException(ResultCode.PARAMS_ERROR, "密码格式错误！");
         }
         // 3. 普通用户名密码注册
@@ -99,7 +99,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
     }
 
-    public boolean registerByPhone(String phone, String captcha){
+    public boolean registerByPhone(String phone, String captcha) {
         // Get captcha from redis
         redisUtil.getCaptcha(phone, captcha);
         User user = new User()
@@ -124,20 +124,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         User userResult = null;
         // 如果登录类型为手机号验证码
-        if(CommonConst.MOBILE.equals(loginRequest.getType())){
+        if (CommonConst.MOBILE.equals(loginRequest.getType())) {
             String phone = loginRequest.getMobile();
             // Get user by phone from database
             userResult = this.lambdaQuery()
                     .eq(StrUtil.isNotBlank(phone), User::getUserPhone, phone)
                     .one();
             // 用户不存在，且则自动注册新账号
-            if(userResult == null){
+            if (userResult == null) {
                 registerByPhone(phone, loginRequest.getCaptcha());
                 // 注册成功，重新查询用户信息
                 userResult = this.lambdaQuery()
                         .eq(StrUtil.isNotBlank(phone), User::getUserPhone, phone)
                         .one();
-            }else{
+            } else {
                 // 用户存在，表示正在使用验证码登录
                 // 从redis验证手机号和验证码
                 redisUtil.getCaptcha(phone, loginRequest.getCaptcha());
@@ -145,18 +145,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 redisUtil.removeCaptcha(phone);
                 // 下一步，验证账户有效性，需要返回token
             }
-        }else {
+        } else {
             String username = loginRequest.getUsername();
             userResult = this.lambdaQuery()
                     .eq(StrUtil.isNotBlank(username), User::getUsername, username)
                     .one();
-            if(userResult == null || !passwordEncoder.matches(loginRequest.getPassword(), userResult.getUserPassword())){
+            if (userResult == null || !passwordEncoder.matches(loginRequest.getPassword(), userResult.getUserPassword())) {
                 throw new ApiException(ResultCode.VALIDATE_FAILED, "Username or password is incorrect！");
             }
         }
 
         // If state is abnormal
-        if(userResult.getUserStatus() != CommonConst.USER_STATUS_NORMAL){
+        if (userResult.getUserStatus() != CommonConst.USER_STATUS_NORMAL) {
             throw new ApiException(userResult.getUserStatus() == CommonConst.USER_STATUS_DISABLED ?
                     ResultCode.ACCOUNT_STATE_DISABLED :
                     ResultCode.ACCOUNT_STATE_DELETED);
@@ -179,7 +179,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                         setIgnoreNullValue(true)
                         .setFieldValueEditor((fieldName, fieldValue) -> fieldValue != null ? fieldValue.toString() : null));
         // Generate token
-        String token = JwtManager.generate(userResult.getUsername());
+        String token = JwtManager.generate(userResult.getUsername(), userResult.getId());
         // Add token to userMap
         userMap.put("token", token);
         // Save user info and token in redis
@@ -196,8 +196,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // Copy user profile
         UserProfile userProfile = userProfileService.getByUserId(user.getId());
         // Initialize user profile if new user
-        if(userProfile == null){
-            userProfile =  new UserProfile()
+        if (userProfile == null) {
+            userProfile = new UserProfile()
                     .setNickName(RandomUtil.randomString(4))
                     .setAvatar("https://i.328888.xyz/2023/05/15/VZpOIx.png");
             userProfile.setUserId(user.getId());
@@ -212,7 +212,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
 
-
     @Override
     public void logout(HttpServletRequest request) {
         loginHistoryService.save(new UserLoginHistory()
@@ -222,8 +221,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .setIpAddress(request.getRemoteAddr()));
         redisUtil.removeUserMap();
     }
-
-
 
 
     @Override
@@ -253,19 +250,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     private void checkUsername(String username) {
         if (lambdaQuery().eq(User::getUsername, username).one() != null) {
-            throw new ApiException(ResultCode.FAILED,"Account already exists.");
+            throw new ApiException(ResultCode.FAILED, "Account already exists.");
         }
     }
 
-    @Override
-    public boolean removeByIds(Collection<?> idList) {
+    public boolean removeUserByIds(Collection<?> idList) {
         if (CollectionUtil.isEmpty(idList)) {
             return false;
         }
-        // Delete info from table [user-role]
+
         for (Object userId : idList) {
-            roleService.removeByUserId((Long)userId);
+            // Delete info from table [user-role]
+            roleService.removeByUserId((Long) userId);
+
+            // Delete user history from user_login_history
+            loginHistoryService.removeByUserId((Long) userId);
+
+            // Delete user from redis
+            String username = lambdaQuery().eq(User::getId, userId).one().getUsername();
+            redisUtil.removeUserMapByUsername(username);
+
         }
+
+
         // Delete user
         baseMapper.deleteBatchIds(idList);
         return true;
@@ -276,7 +283,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 检查用户名是否存在（排除当前ID）
         if (lambdaQuery().ne(User::getId, param.getId()).eq(User::getUsername, param.getUsername()).one() != null) {
-            throw new ApiException(ResultCode.FAILED,"Account already exists.");
+            throw new ApiException(ResultCode.FAILED, "Account already exists.");
         }
 
         // 提取User信息
@@ -359,16 +366,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return baseMapper.selectLoginHistory(page, loginHistoryListRequest.getUsername());
     }
 
-    @Override
-    public void removeUsersFromRedis(Long[] ids) {
-        for (Long id : ids ) {
-            String username = lambdaQuery().eq(User::getId, id).one().getUsername();
-            redisUtil.removeUserMapByUsername(username);
-        }
-    }
 
 }
-
-
 
 

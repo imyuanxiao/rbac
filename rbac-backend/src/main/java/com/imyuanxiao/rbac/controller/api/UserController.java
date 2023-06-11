@@ -67,9 +67,7 @@ public class UserController {
             throw new ApiException(ResultCode.PARAMS_ERROR);
         }
 
-        userService.removeUsersFromRedis(ids);
-
-        userService.removeByIds(Arrays.asList(ids));
+        userService.removeUserByIds(Arrays.asList(ids));
 
         return ACTION_SUCCESSFUL;
     }

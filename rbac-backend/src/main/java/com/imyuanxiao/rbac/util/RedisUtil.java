@@ -2,6 +2,7 @@ package com.imyuanxiao.rbac.util;
 
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
+import com.imyuanxiao.rbac.model.vo.UserVO;
 import com.imyuanxiao.rbac.security.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -46,21 +47,21 @@ public class RedisUtil {
     }
 
     public void saveUserMap(Map<String, Object> userMap){
-        String key = LOGIN_USER_KEY + userMap.get("username");
-        stringRedisTemplate.opsForHash().putAll(key, userMap);
+        String redisKey = LOGIN_USER_KEY + userMap.get("id");
+        stringRedisTemplate.opsForHash().putAll(redisKey, userMap);
         // Set token expire time, which is consistent with jwt token expire time
-        stringRedisTemplate.expire(key, LOGIN_USER_TTL, TimeUnit.MINUTES);
+        stringRedisTemplate.expire(redisKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
     }
 
-    public Map<Object, Object> getUserMap(String username){
-        String key = LOGIN_USER_KEY + username;
-        return stringRedisTemplate.opsForHash().entries(key);
+    public Map<Object, Object> getUserMap(String key){
+        String redisKey = LOGIN_USER_KEY + key;
+        return stringRedisTemplate.opsForHash().entries(redisKey);
     }
 
     public void removeUserMap(){
-        String username = SecurityContextUtil.getCurrentUserDetailsVO().getUser().getUsername();
+        Long key = SecurityContextUtil.getCurrentUserDetailsVO().getUser().getId();
         // Delete token from redis
-        stringRedisTemplate.delete(LOGIN_USER_KEY + username);
+        stringRedisTemplate.delete(LOGIN_USER_KEY + key);
     }
     public void removeUserMapByUsername(String username) {
         stringRedisTemplate.delete(LOGIN_USER_KEY + username);
@@ -68,12 +69,13 @@ public class RedisUtil {
 
     public String refreshToken(){
 
-        String username = SecurityContextUtil.getCurrentUserDetailsVO().getUser().getUsername();
+        UserVO user = SecurityContextUtil.getCurrentUserDetailsVO().getUser();
+        Long userId = user.getId();
+        String username = user.getUsername();
         // Rename oldKey newKey
-        String oldKey = LOGIN_USER_KEY + username;
-
-        String newToken = JwtManager.generate(username);
-        String newKey = LOGIN_USER_KEY + username;
+        String oldKey = LOGIN_USER_KEY + userId;
+        String newToken = JwtManager.generate(username, userId);
+        String newKey = LOGIN_USER_KEY + userId;
 
         stringRedisTemplate.rename(oldKey, newKey);
         stringRedisTemplate.opsForHash().put(newKey, "token", newToken);

@@ -1,6 +1,5 @@
 package com.imyuanxiao.rbac.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -10,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -72,5 +72,6 @@ public interface UserService extends IService<User> {
 
     IPage<LoginHistoryListResponse> getLoginHistoryByConditions(LoginHistoryListRequest loginHistoryListRequest);
 
-    void removeUsersFromRedis(Long[] ids);
+    boolean removeUserByIds(Collection<?> idList);
+
 }
