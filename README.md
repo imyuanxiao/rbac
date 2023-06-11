@@ -6,7 +6,8 @@
 
 一个基于RBAC（Role-Based Access Control）模型的通用权限控制系统。管理员可以编辑角色、权限和用户信息，查看登录情况。用户可以使用无权限要求或权限较低的管理模块，更新个人资料。
 
-![image-20230611230304066](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230611230304066.png)
+![项目截图](https://img1.imgtp.com/2023/06/12/2fS6fxzd.png)
+
 
 该项目的旧版仓库：
 
