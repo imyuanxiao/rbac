@@ -111,7 +111,6 @@ public class UserController {
         queryWrapper.like(StrUtil.isNotBlank(param.getUsername()), "username", param.getUsername())
                 .eq(param.getUserStatus() != null, "user_status", param.getUserStatus())
                 .ne("id", myId);
-//                .apply(!CollUtil.isEmpty(userListPageRequest.getRoleIds()), "id IN (SELECT user_id FROM user_role WHERE role_id IN (" + CollUtil.join(userListPageRequest.getRoleIds(), ",") + "))");
 
         Set<Long> roleIds = param.getRoleIds();
         if (!CollUtil.isEmpty(roleIds)) {
@@ -126,7 +125,7 @@ public class UserController {
 
     @GetMapping("/page/{current}&{pageSize}")
     @ApiOperation(value = "Page through user information")
-    public IPage<UserPageVO> getPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
+    public IPage<UserPageVO> getUserPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
         // 设置分页参数
         Page<UserPageVO> page = new Page<>();
         OrderItem orderItem = new OrderItem();

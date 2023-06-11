@@ -30,9 +30,8 @@ public class DataController {
     DataService dataService;
 
     @GetMapping("/page/{current}&{pageSize}")
-//    @Auth(id = 1, name = "查询所有测试数据")
     @ApiOperation(value = "Get data based on current page")
-    public IPage<DataPageVO> getPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
+    public IPage<DataPageVO> getDataPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
         // 设置分页参数
         Page<DataPageVO> page = new Page<>();
         // 设置按id升序
