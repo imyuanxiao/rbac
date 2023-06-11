@@ -7,8 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * @description  Used to bypass the unified response body.
- * @author : imyuanxiao
- * @date : 2023/5/3 10:25
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

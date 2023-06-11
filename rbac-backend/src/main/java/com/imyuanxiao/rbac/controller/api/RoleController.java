@@ -9,7 +9,7 @@ import com.imyuanxiao.rbac.annotation.Auth;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.entity.Role;
-import com.imyuanxiao.rbac.model.dto.RoleParam;
+import com.imyuanxiao.rbac.model.param.RoleParam;
 import com.imyuanxiao.rbac.model.vo.RolePageVO;
 import com.imyuanxiao.rbac.service.RoleService;
 import com.imyuanxiao.rbac.util.ValidationGroups;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.imyuanxiao.rbac.util.CommonUtil.ACTION_SUCCESSFUL;
+import static com.imyuanxiao.rbac.util.CommonConst.ACTION_SUCCESSFUL;
 
 /**
  * @description  Role Management Interface

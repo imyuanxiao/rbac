@@ -11,11 +11,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.annotation.Auth;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
-import com.imyuanxiao.rbac.model.dto.LoginHistoryListRequest;
-import com.imyuanxiao.rbac.model.dto.LoginHistoryListResponse;
-import com.imyuanxiao.rbac.model.dto.UserListRequest;
+import com.imyuanxiao.rbac.model.param.LoginHistoryPageParam;
+import com.imyuanxiao.rbac.model.vo.LoginHistoryPageVO;
+import com.imyuanxiao.rbac.model.param.UserPageParam;
 import com.imyuanxiao.rbac.model.entity.User;
-import com.imyuanxiao.rbac.model.dto.UserAddRequest;
+import com.imyuanxiao.rbac.model.param.UserParam;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.service.PermissionService;
 import com.imyuanxiao.rbac.service.UserService;
@@ -32,11 +32,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.Set;
 
-import static com.imyuanxiao.rbac.util.CommonUtil.ACTION_SUCCESSFUL;
+import static com.imyuanxiao.rbac.util.CommonConst.ACTION_SUCCESSFUL;
 
 /**
  * @description  User Management Interface
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 @RestController
@@ -54,8 +54,8 @@ public class UserController {
     @PostMapping("/add")
     @Auth(id = 1, name = "新增用户")
     @ApiOperation(value = "Add user")
-    public String createUser(@RequestBody @Validated(ValidationGroups.CreateUser.class) UserAddRequest userAddRequest) {
-        userService.createUser(userAddRequest);
+    public String createUser(@RequestBody @Validated(ValidationGroups.AddUser.class) UserParam param) {
+        userService.createUser(param);
         return ACTION_SUCCESSFUL;
     }
 
@@ -73,7 +73,7 @@ public class UserController {
     @PutMapping("/update")
     @Auth(id = 3, name = "编辑用户")
     @ApiOperation(value = "Update user")
-    public String updateUser(@RequestBody @Validated(ValidationGroups.UpdateUser.class) UserAddRequest param) {
+    public String updateUser(@RequestBody @Validated(ValidationGroups.UpdateUser.class) UserParam param) {
         userService.update(param);
         return ACTION_SUCCESSFUL;
     }
@@ -96,24 +96,24 @@ public class UserController {
     @PostMapping("/page")
     @ApiOperation(value = "Page through user information by conditions")
     @Auth(id = 6, name = "查看用户分页信息")
-    public IPage<UserPageVO> getUserPageByConditions(@RequestBody UserListRequest userListRequest) {
+    public IPage<UserPageVO> getUserPageByConditions(@RequestBody UserPageParam param) {
 
         // 设置分页参数
         Page<UserPageVO> page = new Page<>();
         OrderItem orderItem = new OrderItem();
         orderItem.setColumn("id");
-        page.setCurrent(userListRequest.getCurrent()).setSize(userListRequest.getPageSize()).addOrder(orderItem);
+        page.setCurrent(param.getCurrent()).setSize(param.getPageSize()).addOrder(orderItem);
 
         // 构建查询条件
         Long myId = SecurityContextUtil.getCurrentUserId();
 
         QueryWrapper<UserPageVO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(StrUtil.isNotBlank(userListRequest.getUsername()), "username", userListRequest.getUsername())
-                .eq(userListRequest.getUserStatus() != null, "user_status", userListRequest.getUserStatus())
+        queryWrapper.like(StrUtil.isNotBlank(param.getUsername()), "username", param.getUsername())
+                .eq(param.getUserStatus() != null, "user_status", param.getUserStatus())
                 .ne("id", myId);
 //                .apply(!CollUtil.isEmpty(userListPageRequest.getRoleIds()), "id IN (SELECT user_id FROM user_role WHERE role_id IN (" + CollUtil.join(userListPageRequest.getRoleIds(), ",") + "))");
 
-        Set<Long> roleIds = userListRequest.getRoleIds();
+        Set<Long> roleIds = param.getRoleIds();
         if (!CollUtil.isEmpty(roleIds)) {
             String roleIdList = CollUtil.join(roleIds, ",");
             String subQuery = "SELECT user_id FROM user_role WHERE role_id IN (" + roleIdList + ") GROUP BY user_id HAVING COUNT(DISTINCT role_id) = " + roleIds.size();
@@ -138,8 +138,8 @@ public class UserController {
     @PostMapping("/loginHistory")
     @ApiOperation(value = "Page through login history by conditions")
     @Auth(id = 7, name = "查看登录历史分页信息")
-    public IPage<LoginHistoryListResponse> getLoginHistoryByConditions(@RequestBody LoginHistoryListRequest loginHistoryListRequest) {
-        return userService.getLoginHistoryByConditions(loginHistoryListRequest);
+    public IPage<LoginHistoryPageVO> getLoginHistoryByConditions(@RequestBody LoginHistoryPageParam param) {
+        return userService.getLoginHistoryByConditions(param);
     }
 
 

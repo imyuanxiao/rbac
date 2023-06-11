@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
-import java.util.Date;
-
+/**
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
+ */
 @Data
 public class DataPageVO {
     /**

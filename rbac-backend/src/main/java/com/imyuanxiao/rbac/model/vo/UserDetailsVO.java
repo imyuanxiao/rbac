@@ -11,7 +11,6 @@ import java.util.Collection;
 /**
  * @description  UserDetails object used for spring security
  * @author  imyuanxiao
- * @date  2023/5/4 22:44
  **/
 @Getter
 @Setter

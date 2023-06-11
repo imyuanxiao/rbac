@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @description Data Management Interface
  * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
- * @date: 2023/6/7 23:17
  **/
 @Slf4j
 @RestController

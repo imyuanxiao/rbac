@@ -6,7 +6,6 @@ import com.imyuanxiao.rbac.annotation.NotResponseBody;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.model.vo.ResultVO;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -17,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
  * @description  全局统一响应
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @RestControllerAdvice(basePackages = {"com.imyuanxiao.rbac.controller"})
 public class ResponseControllerAdvice implements ResponseBodyAdvice<Object> {

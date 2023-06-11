@@ -17,11 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * @ClassName MySecurityMetadataSource
- * @Description 鉴权规则源SecurityMetadataSource,获取当前请求的鉴权规则
- * @Author imyuanxiao
- * @Date 2023/5/6 21:27
- * @Version 1.0
+ * @description  鉴权规则源SecurityMetadataSource,获取当前请求的鉴权规则
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 @Component("mySecurityMetadataSource")

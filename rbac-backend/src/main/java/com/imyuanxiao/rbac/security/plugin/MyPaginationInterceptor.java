@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * @description 该拦截器用于数据权限控制，拦截查询数据语句，增加筛选条件org_id
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 public class MyPaginationInterceptor implements InnerInterceptor {

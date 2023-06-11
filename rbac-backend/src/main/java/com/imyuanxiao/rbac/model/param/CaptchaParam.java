@@ -1,4 +1,4 @@
-package com.imyuanxiao.rbac.model.dto;
+package com.imyuanxiao.rbac.model.param;
 
 import com.imyuanxiao.rbac.annotation.ExceptionCode;
 import lombok.Data;
@@ -8,11 +8,10 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * @description receive phone or email
- * @author: imyuanxiao
- * @date: 2023/6/7 21:07
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Data
-public class CaptchaRequest {
+public class CaptchaParam {
     @NotBlank(message = "Phone is required.")
     @Length(min = 4, max = 20, message = "Account must be between 4-20 characters in length.")
     @ExceptionCode(value = 100002, message = "Invalid phone.")

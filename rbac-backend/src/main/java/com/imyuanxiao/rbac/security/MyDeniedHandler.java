@@ -12,11 +12,8 @@ import java.io.PrintWriter;
 
 
 /**
- * @ClassName MyDeniedHandler
- * @Description 返回无权限信息
- * @Author imyuanxiao
- * @Date 2023/5/6 11:18
- * @Version 1.0
+ * @description  返回无权限信息
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 public class MyDeniedHandler implements AccessDeniedHandler {
     @Override

@@ -1,11 +1,10 @@
 package com.imyuanxiao.rbac.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.imyuanxiao.rbac.model.dto.LoginHistoryListResponse;
+import com.imyuanxiao.rbac.model.vo.LoginHistoryPageVO;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
@@ -33,7 +32,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param username 查询条件
      * @return 分页对象
      */
-    IPage<LoginHistoryListResponse> selectLoginHistory(Page<LoginHistoryListResponse> page, String username);
+    IPage<LoginHistoryPageVO> selectLoginHistory(Page<LoginHistoryPageVO> page, String username);
 
 }
 

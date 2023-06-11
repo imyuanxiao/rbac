@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * @description Configuration for swagger
- * @author imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  * <a href="http://localhost:8080/swagger-ui/index.html">swagger</a>
  **/
 @Configuration

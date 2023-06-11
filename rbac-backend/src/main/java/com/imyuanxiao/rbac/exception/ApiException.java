@@ -4,7 +4,7 @@ import com.imyuanxiao.rbac.enums.ResultCode;
 import lombok.Getter;
 
 /**
- * @Author: imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  */
 @Getter
 public class ApiException extends RuntimeException{

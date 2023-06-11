@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * @description  Customize unified response body. 和umiJs最佳实践统一
  * @author  imyuanxiao
- * @date  2023/5/3 1:07
  **/
 @Getter
 public class ResultVO<T> {

@@ -5,12 +5,11 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.imyuanxiao.rbac.model.dto.*;
+import com.imyuanxiao.rbac.model.param.*;
 import com.imyuanxiao.rbac.model.entity.UserLoginHistory;
 import com.imyuanxiao.rbac.model.entity.UserProfile;
 import com.imyuanxiao.rbac.model.vo.*;
@@ -71,24 +70,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public String register(LoginRequest registerRequest) {
+    public String register(LoginRequestParam param) {
 
         // 通过注册类型判断应该采用哪种注册方式
-        String type = registerRequest.getType();
+        String type = param.getType();
 
         // 1. 手机号注册
-        if (CommonConst.MOBILE.equals(type) && registerByPhone(registerRequest.getMobile(), registerRequest.getCaptcha())) {
+        if (CommonConst.MOBILE.equals(type) && registerByPhone(param.getMobile(), param.getCaptcha())) {
             return "Register successfully";
         }
         // 2. 密码注册
-        if (StrUtil.isBlank(registerRequest.getPassword())) {
+        if (StrUtil.isBlank(param.getPassword())) {
             throw new ApiException(ResultCode.PARAMS_ERROR, "密码格式错误！");
         }
         // 3. 普通用户名密码注册
         User user = new User()
-                .setUsername(registerRequest.getUsername())
+                .setUsername(param.getUsername())
                 .setUserStatus(0)
-                .setUserPassword(passwordEncoder.encode(registerRequest.getPassword()));
+                .setUserPassword(passwordEncoder.encode(param.getPassword()));
         try {
             this.save(user);
             // Add default user role - 2L user
@@ -120,19 +119,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request) {
+    public LoginResponseVO login(LoginRequestParam param, HttpServletRequest request) {
 
         User userResult = null;
         // 如果登录类型为手机号验证码
-        if (CommonConst.MOBILE.equals(loginRequest.getType())) {
-            String phone = loginRequest.getMobile();
+        if (CommonConst.MOBILE.equals(param.getType())) {
+            String phone = param.getMobile();
             // Get user by phone from database
             userResult = this.lambdaQuery()
                     .eq(StrUtil.isNotBlank(phone), User::getUserPhone, phone)
                     .one();
             // 用户不存在，且则自动注册新账号
             if (userResult == null) {
-                registerByPhone(phone, loginRequest.getCaptcha());
+                registerByPhone(phone, param.getCaptcha());
                 // 注册成功，重新查询用户信息
                 userResult = this.lambdaQuery()
                         .eq(StrUtil.isNotBlank(phone), User::getUserPhone, phone)
@@ -140,17 +139,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             } else {
                 // 用户存在，表示正在使用验证码登录
                 // 从redis验证手机号和验证码
-                redisUtil.getCaptcha(phone, loginRequest.getCaptcha());
+                redisUtil.getCaptcha(phone, param.getCaptcha());
                 // 移除手机号和验证码，登录成功
                 redisUtil.removeCaptcha(phone);
                 // 下一步，验证账户有效性，需要返回token
             }
         } else {
-            String username = loginRequest.getUsername();
+            String username = param.getUsername();
             userResult = this.lambdaQuery()
                     .eq(StrUtil.isNotBlank(username), User::getUsername, username)
                     .one();
-            if (userResult == null || !passwordEncoder.matches(loginRequest.getPassword(), userResult.getUserPassword())) {
+            if (userResult == null || !passwordEncoder.matches(param.getPassword(), userResult.getUserPassword())) {
                 throw new ApiException(ResultCode.VALIDATE_FAILED, "Username or password is incorrect！");
             }
         }
@@ -186,7 +185,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         redisUtil.saveUserMap(userMap);
 
         // return loginResponse
-        return new LoginResponse().setUserVO(userVO).setToken(token);
+        return new LoginResponseVO().setUserVO(userVO).setToken(token);
     }
 
     private UserVO getUserVO(User user) {
@@ -230,22 +229,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public TokenResponse updateToken() {
+    public TokenResponseVO updateToken() {
         String newToken = redisUtil.refreshToken();
-        return new TokenResponse().setToken(newToken);
+        return new TokenResponseVO().setToken(newToken);
     }
 
     @Override
-    public void createUser(UserAddRequest userAddRequest) {
-        checkUsername(userAddRequest.getUsername());
+    public void createUser(UserParam param) {
+        checkUsername(param.getUsername());
         User user = new User();
-        user.setUsername(userAddRequest.getUsername()).setUserPassword(passwordEncoder.encode(userAddRequest.getUsername()));
+        user.setUsername(param.getUsername()).setUserPassword(passwordEncoder.encode(param.getUsername()));
         save(user);
-        if (CollectionUtil.isEmpty(userAddRequest.getRoleIds())) {
+        if (CollectionUtil.isEmpty(param.getRoleIds())) {
             return;
         }
         // Add info in table [user-role]
-        roleService.insertRolesByUserId(user.getId(), userAddRequest.getRoleIds());
+        roleService.insertRolesByUserId(user.getId(), param.getRoleIds());
     }
 
     private void checkUsername(String username) {
@@ -279,7 +278,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public void update(UserAddRequest param) {
+    public void update(UserParam param) {
 
         // 检查用户名是否存在（排除当前ID）
         if (lambdaQuery().ne(User::getId, param.getId()).eq(User::getUsername, param.getUsername()).one() != null) {
@@ -305,7 +304,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         updateOrgs(param);
     }
 
-    private void updateOrgs(UserAddRequest param) {
+    private void updateOrgs(UserParam param) {
         // Delete the original user role
         organizationService.removeByUserId(param.getId());
         // If roleIds is empty, delete all roles for this user
@@ -316,7 +315,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         organizationService.insertOrgsByUserId(param.getId(), param.getOrgIds());
     }
 
-    private void updateRoles(UserAddRequest param) {
+    private void updateRoles(UserParam param) {
         // Delete the original user role
         roleService.removeByUserId(param.getId());
         // If roleIds is empty, delete all roles for this user
@@ -355,16 +354,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public IPage<LoginHistoryListResponse> getLoginHistoryByConditions(LoginHistoryListRequest loginHistoryListRequest) {
+    public IPage<LoginHistoryPageVO> getLoginHistoryByConditions(LoginHistoryPageParam param) {
 
         // 设置分页参数
-        Page<LoginHistoryListResponse> page = new Page<>();
+        Page<LoginHistoryPageVO> page = new Page<>();
         OrderItem orderItem = new OrderItem();
         orderItem.setColumn("created_time");
         orderItem.setAsc(false);
-        page.setCurrent(loginHistoryListRequest.getCurrent()).setSize(loginHistoryListRequest.getPageSize()).addOrder(orderItem);
+        page.setCurrent(param.getCurrent()).setSize(param.getPageSize()).addOrder(orderItem);
 
-        return baseMapper.selectLoginHistory(page, loginHistoryListRequest.getUsername());
+        return baseMapper.selectLoginHistory(page, param.getUsername());
     }
 
 

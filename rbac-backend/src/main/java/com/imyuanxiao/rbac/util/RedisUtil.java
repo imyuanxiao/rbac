@@ -14,10 +14,8 @@ import java.util.concurrent.TimeUnit;
 import static com.imyuanxiao.rbac.util.RedisConst.*;
 
 /**
- * @version 1.0
  * @description Quick use of redistemplate
- * @author: imyuanxiao
- * @date: 2023/5/27 12:24
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Component
 public class RedisUtil {

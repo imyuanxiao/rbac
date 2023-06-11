@@ -16,8 +16,8 @@ public interface DataService extends IService<Data> {
     /**
      * @description Get pagination
      * @author imyuanxiao
-     * @param page pagination parameters
+     * @param vo pagination parameters
      * @return Pagination Object
      **/
-    IPage<DataPageVO> selectPage(Page<DataPageVO> page);
+    IPage<DataPageVO> selectPage(Page<DataPageVO> vo);
 }

@@ -1,4 +1,4 @@
-package com.imyuanxiao.rbac.model.dto;
+package com.imyuanxiao.rbac.model.param;
 
 import com.imyuanxiao.rbac.annotation.ExceptionCode;
 import com.imyuanxiao.rbac.util.ValidationGroups;
@@ -10,10 +10,10 @@ import javax.validation.constraints.Pattern;
 
 /**
  * @description  Receive login-related parameters.
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Data
-public class LoginRequest {
+public class LoginRequestParam {
 
     @NotBlank
     @Pattern(regexp = "^(account|mobile)$", message = "Invalid request.")

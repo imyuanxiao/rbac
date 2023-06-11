@@ -3,10 +3,10 @@ package com.imyuanxiao.rbac.controller.api;
 import cn.hutool.core.util.PhoneUtil;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
-import com.imyuanxiao.rbac.model.dto.CaptchaRequest;
-import com.imyuanxiao.rbac.model.dto.LoginRequest;
-import com.imyuanxiao.rbac.model.dto.LoginResponse;
-import com.imyuanxiao.rbac.model.dto.TokenResponse;
+import com.imyuanxiao.rbac.model.param.CaptchaParam;
+import com.imyuanxiao.rbac.model.param.LoginRequestParam;
+import com.imyuanxiao.rbac.model.vo.LoginResponseVO;
+import com.imyuanxiao.rbac.model.vo.TokenResponseVO;
 import com.imyuanxiao.rbac.model.vo.UserVO;
 import com.imyuanxiao.rbac.service.UserService;
 import com.imyuanxiao.rbac.util.CommonConst;
@@ -43,13 +43,13 @@ public class AuthController {
 
     /**
     * @description: show captcha in frontend (actually should be void)
-    * @param request phone
+    * @param param phone
     * @author imyuanxiao
     */
     @PostMapping("/captcha")
     @ApiOperation(value = "Get Captcha")
-    public String sendCaptcha(@RequestBody CaptchaRequest request){
-        String phone = request.getPhone();
+    public String sendCaptcha(@RequestBody CaptchaParam param){
+        String phone = param.getPhone();
         if(!PhoneUtil.isPhone(phone)){
             throw new ApiException(ResultCode.PARAMS_ERROR,"手机号格式错误！");
         }
@@ -58,28 +58,28 @@ public class AuthController {
 
     /**
     * @description: register
-    * @param registerRequest register-related parameters
+    * @param param register-related parameters
     * @author imyuanxiao
     */
     @PostMapping("/register")
     @ApiOperation(value = "Register")
-    public String register(@RequestBody @Validated LoginRequest registerRequest){
-        dataValidation(registerRequest);
-        return userService.register(registerRequest);
+    public String register(@RequestBody @Validated LoginRequestParam param){
+        dataValidation(param);
+        return userService.register(param);
     }
 
-    private void dataValidation(LoginRequest request) {
+    private void dataValidation(LoginRequestParam request) {
         String type = request.getType();
         if (CommonConst.ACCOUNT.equals(type)) {
             // 执行账号登录的验证逻辑
-            Set<ConstraintViolation<LoginRequest>> validate = validator.validate(request, ValidationGroups.Account.class);
+            Set<ConstraintViolation<LoginRequestParam>> validate = validator.validate(request, ValidationGroups.Account.class);
             if(!validate.isEmpty()){
                 String errorMessage = validate.iterator().next().getMessage();
                 throw new ApiException(ResultCode.PARAMS_ERROR, errorMessage);
             }
         } else if (CommonConst.MOBILE.equals(type)) {
             // 执行手机号登录的验证逻辑
-            Set<ConstraintViolation<LoginRequest>> validate = validator.validate(request, ValidationGroups.Mobile.class);
+            Set<ConstraintViolation<LoginRequestParam>> validate = validator.validate(request, ValidationGroups.Mobile.class);
             if(!validate.isEmpty()){
                 String errorMessage = validate.iterator().next().getMessage();
                 throw new ApiException(ResultCode.PARAMS_ERROR, errorMessage);
@@ -91,14 +91,14 @@ public class AuthController {
 
     /**
     * @description: login
-    * @param loginRequest login-related parameters
+    * @param param login-related parameters
     * @author imyuanxiao
     */
     @PostMapping("/login")
     @ApiOperation(value = "Login")
-    public LoginResponse login(@RequestBody @Validated LoginRequest loginRequest, HttpServletRequest request){
-        dataValidation(loginRequest);
-        return userService.login(loginRequest, request);
+    public LoginResponseVO login(@RequestBody @Validated LoginRequestParam param, HttpServletRequest request){
+        dataValidation(param);
+        return userService.login(param, request);
     }
 
     @GetMapping("/currentUser")
@@ -109,7 +109,7 @@ public class AuthController {
 
     @GetMapping("/updateToken")
     @ApiOperation(value = "Update token in redis")
-    public TokenResponse updateToken(){
+    public TokenResponseVO updateToken(){
         log.debug("更新token");
         return userService.updateToken();
     }
@@ -118,10 +118,10 @@ public class AuthController {
     @ApiOperation(value = "Logout")
     public void logout(HttpServletRequest request){ userService.logout(request);}
 
-    @GetMapping("/my-permission")
-    @ApiOperation(value = "Get UserVO every time route changes")
-    public Set<Long> myPermission(){
-        return userService.myPermission();
-    }
+//    @GetMapping("/my-permission")
+//    @ApiOperation(value = "Get UserVO every time route changes")
+//    public Set<Long> myPermission(){
+//        return userService.myPermission();
+//    }
 
 }

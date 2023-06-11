@@ -27,7 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * @description  Configuration for spring security
- * @author imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Configuration
 @EnableWebSecurity

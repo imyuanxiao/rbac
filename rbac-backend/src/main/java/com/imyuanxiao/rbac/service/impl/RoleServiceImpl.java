@@ -2,7 +2,6 @@ package com.imyuanxiao.rbac.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,8 +10,7 @@ import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
 import com.imyuanxiao.rbac.mapper.PermissionMapper;
 import com.imyuanxiao.rbac.model.entity.Role;
-import com.imyuanxiao.rbac.model.dto.RoleParam;
-import com.imyuanxiao.rbac.model.entity.User;
+import com.imyuanxiao.rbac.model.param.RoleParam;
 import com.imyuanxiao.rbac.model.vo.RolePageVO;
 import com.imyuanxiao.rbac.service.RoleService;
 import com.imyuanxiao.rbac.mapper.RoleMapper;

@@ -3,9 +3,12 @@ package com.imyuanxiao.rbac.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.imyuanxiao.rbac.model.dto.*;
+import com.imyuanxiao.rbac.model.param.*;
 import com.imyuanxiao.rbac.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.imyuanxiao.rbac.model.vo.LoginHistoryPageVO;
+import com.imyuanxiao.rbac.model.vo.LoginResponseVO;
+import com.imyuanxiao.rbac.model.vo.TokenResponseVO;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,30 +27,30 @@ public interface UserService extends IService<User> {
     /**
      * @description Register
      * @author imyuanxiao
-     * @param registerRequest Register form parameters
+     * @param param Register form parameters
      **/
-    String register(LoginRequest registerRequest);
+    String register(LoginRequestParam param);
 
     /**
      * @description Log in
      * @author imyuanxiao
-     * @param loginRequest Login form parameters
+     * @param param Login form parameters
      **/
-    LoginResponse login(LoginRequest loginRequest, HttpServletRequest request);
+    LoginResponseVO login(LoginRequestParam param, HttpServletRequest request);
 
     /**
      * @description Add new user
      * @author imyuanxiao
      * @param param user form parameters
      **/
-    void createUser(UserAddRequest param);
+    void createUser(UserParam param);
 
     /**
      * @description Update user information
      * @author imyuanxiao
      * @param param user form parameters
      **/
-    void update(UserAddRequest param);
+    void update(UserParam param);
 
     /**
      * @description Get pagination information
@@ -62,7 +65,7 @@ public interface UserService extends IService<User> {
      **/
     Set<Long> myPermission();
 
-    TokenResponse updateToken();
+    TokenResponseVO updateToken();
 
     String sendCaptcha(String phone);
 
@@ -70,7 +73,7 @@ public interface UserService extends IService<User> {
 
     IPage<UserPageVO> selectPageByConditions(Page<UserPageVO> page, QueryWrapper<UserPageVO> queryWrapper);
 
-    IPage<LoginHistoryListResponse> getLoginHistoryByConditions(LoginHistoryListRequest loginHistoryListRequest);
+    IPage<LoginHistoryPageVO> getLoginHistoryByConditions(LoginHistoryPageParam param);
 
     boolean removeUserByIds(Collection<?> idList);
 

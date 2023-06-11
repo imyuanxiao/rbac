@@ -6,11 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @ClassName NotResponseBody
- * @Description Custom annotation for field validation.
- * @Author: imyuanxiao
- * @Date: 2023/5/3 9:57
- * @Version 1.0
+ * @description  Custom annotation for field validation.
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

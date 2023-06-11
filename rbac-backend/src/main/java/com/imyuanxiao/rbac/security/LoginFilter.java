@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * @description  Authentication filter
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 @Component

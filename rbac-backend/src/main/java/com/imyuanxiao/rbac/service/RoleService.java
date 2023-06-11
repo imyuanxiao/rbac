@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.model.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.imyuanxiao.rbac.model.dto.RoleParam;
+import com.imyuanxiao.rbac.model.param.RoleParam;
 import com.imyuanxiao.rbac.model.vo.RolePageVO;
 
 import java.io.Serializable;

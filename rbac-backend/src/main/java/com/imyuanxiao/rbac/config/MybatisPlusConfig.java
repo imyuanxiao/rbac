@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @description  MyBatis-Plus pagination plugin configuration.
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Configuration
 @MapperScan("com.imyuanxiao.rbac.mapper")

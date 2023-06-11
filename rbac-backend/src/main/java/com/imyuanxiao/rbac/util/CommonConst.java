@@ -14,5 +14,6 @@ public class CommonConst {
     public static final String MOBILE = "mobile";
     public static final String ACCOUNT = "account";
 
+    public static final String ACTION_SUCCESSFUL = "Action successful.";
 
 }

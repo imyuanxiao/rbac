@@ -172,7 +172,9 @@ public class UserController {
 
 ## Token更新
 
-
+```
+npm install jwt-decode
+```
 
 
 

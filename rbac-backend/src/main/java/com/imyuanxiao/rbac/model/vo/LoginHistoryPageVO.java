@@ -1,20 +1,15 @@
-package com.imyuanxiao.rbac.model.dto;
+package com.imyuanxiao.rbac.model.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * @description get user list by conditions
  * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
- * @date: 2023/6/10 13:02
  **/
 @Data
-public class LoginHistoryListResponse {
+public class LoginHistoryPageVO {
 
     private Long id;
 

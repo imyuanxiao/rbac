@@ -13,11 +13,8 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * @ClassName AuthFilter
- * @Description Authorization filter
- * @Author imyuanxiao
- * @Date 2023/5/4 22:22
- * @Version 1.0
+ * @description  Authorization filter
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 @Component

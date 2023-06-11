@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  * @description  Scan @auth on interface and add permissions to database.
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Component
 public class ApplicationStartup implements ApplicationRunner {

@@ -13,11 +13,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * @ClassName MyDecisionManager
- * @Description Determine if the current user has permission to access the requested permission.
- * @Author imyuanxiao
- * @Date 2023/5/6 11:15
- * @Version 1.0
+ * @description  Determine if the current user has permission to access the requested permission.
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 @Component

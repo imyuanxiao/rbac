@@ -1,10 +1,8 @@
 package com.imyuanxiao.rbac.exception;
 
 /**
- * @version 1.0
  * @description AccountTakeoverException
- * @author: imyuanxiao
- * @date: 2023/5/27 15:10
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 public class AccountTakeoverException extends RuntimeException {
     private String msg;

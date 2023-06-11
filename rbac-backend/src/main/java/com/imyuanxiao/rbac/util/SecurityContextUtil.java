@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @description  获取上下文对象中保存的用户信息
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 public class SecurityContextUtil {
 

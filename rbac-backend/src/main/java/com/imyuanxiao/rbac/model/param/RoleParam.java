@@ -1,4 +1,4 @@
-package com.imyuanxiao.rbac.model.dto;
+package com.imyuanxiao.rbac.model.param;
 
 import com.imyuanxiao.rbac.util.ValidationGroups;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * @description  Receive role-related parameters.
- * @author  imyuanxiao
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Data
 public class RoleParam {

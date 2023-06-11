@@ -12,11 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * @ClassName MyEntryPoint
- * @Description 认证异常处理
- * @Author imyuanxiao
- * @Date 2023/5/6 11:19
- * @Version 1.0
+ * @description  认证异常处理
+ * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Slf4j
 public class MyEntryPoint implements AuthenticationEntryPoint {
