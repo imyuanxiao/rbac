@@ -52,6 +52,11 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           roleIds: props.values.roleIds?.map(id => id.toString()),
           orgIds: props.values.orgIds?.map(id => id.toString()),
         }}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '16px',
+        }}
       >
           <ProFormText
             name="id"
@@ -68,7 +73,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
               id: 'typings.UserListItem.username',
               defaultMessage: 'Username',
             })}
-            width="md"
+            width="sm"
             rules={[
               {
                 required: true,
@@ -83,7 +88,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           />
           <ProFormSelect
             name="userStatus"
-            width="md"
+            width="sm"
             label={intl.formatMessage({
               id: 'typings.UserListItem.userStatus',
               defaultMessage: 'Status',
@@ -93,7 +98,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           <ProFormSelect
             name="roleIds"
             mode="multiple"
-            width="md"
+            width="sm"
             label={intl.formatMessage({
               id: 'typings.UserListItem.roleIds',
               defaultMessage: 'Role',
@@ -106,7 +111,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             id: 'typings.UserListItem.userPhone',
             defaultMessage: 'Phone',
           })}
-          width="md"
+          width="sm"
         />
         <ProFormText
           name="userEmail"
@@ -114,12 +119,12 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             id: 'typings.UserListItem.userEmail',
             defaultMessage: 'Email',
           })}
-          width="md"
+          width="sm"
         />
         <ProFormSelect
           name="orgIds"
           mode="multiple"
-          width="md"
+          width="sm"
           label={intl.formatMessage({
             id: 'typings.UserListItem.orgIds',
             defaultMessage: 'Organization',
@@ -127,6 +132,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           valueEnum={orgEnum}
         />
       </ProForm>
+
     </Modal>
   );
 };

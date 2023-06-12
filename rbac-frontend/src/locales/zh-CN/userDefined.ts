@@ -56,6 +56,11 @@ export default {
   'typings.LoginHistoryListItem.ipAddress' : 'IP地址',
   'typings.LoginHistoryListItem.userAgent' : '用户代理',
 
+  'typings.UserPasswordParam.oldPassword' : '旧密码',
+
+  'typings.UserPasswordParam.newPassword' : '新密码',
+
+  'typings.UserPasswordParam.checkNewPassword' : '确认密码',
 
 
 }

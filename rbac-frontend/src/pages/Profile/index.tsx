@@ -1,10 +1,12 @@
 import { fetchRoleOptions } from "@/pages/UserList";
-import { FormattedMessage } from "@@/exports";
+import {FormattedMessage, useIntl} from "@@/exports";
 import { AntDesignOutlined } from '@ant-design/icons';
-import {PageContainer, ProField, ProForm, ProFormSelect, ProFormText} from '@ant-design/pro-components';
+import {PageContainer, ProField, ProForm, ProFormText} from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import {Avatar, Card, Descriptions, Tabs, theme} from 'antd';
+import {Avatar, Card, Descriptions, message, Tabs, theme} from 'antd';
 import React from 'react';
+import {updatePassword, updateUserProfile} from "@/services/ant-design-pro/api";
+import {flushSync} from "react-dom";
 
 
 /**
@@ -113,57 +115,139 @@ const MyInfoCard: React.FC<{
   );
 }
 
-
-
 const UpdateInfoCard: React.FC<{
   userInfo: API.CurrentUser;
 }> = ({ userInfo }) => {
 
-  const handleUpdateInfo = async (values: any) => {
-    // 发送更新基础资料的请求
+  const { initialState, setInitialState } = useModel('@@initialState');
+
+  const {currentUser} = initialState;
+
+  const handleUpdateProfile = async (fields: API.UserProfileParam) => {
+    const hide = message.loading('Updating');
     try {
-      await API.updateUserInfo(values);
-      // 更新成功的处理
+      await updateUserProfile(fields);
+      hide();
+      message.success('Update is successful');
+      return true;
     } catch (error) {
-      // 更新失败的处理
+      hide();
+      message.error('Update failed, please try again!');
+      return false;
     }
   };
 
-  const handleUpdatePassword = async (values: any) => {
-    // 发送更新密码的请求
+  const fetchUserInfo = async () => {
+    const userInfo = await initialState?.fetchUserInfo?.();
+    if (userInfo) {
+      flushSync(() => {
+        setInitialState((s) => ({
+          ...s,
+          currentUser: userInfo,
+        }));
+      });
+    }
+  };
+
+  const handleUpdatePassword = async (values: API.UserPasswordParam) => {
+    const hide = message.loading('Updating');
     try {
-      await API.updatePassword(values);
-      // 更新成功的处理
+      await updatePassword(values);
+      hide();
+      message.success('Update is successful');
+      return true;
     } catch (error) {
-      // 更新失败的处理
+      hide();
+      message.error('Update failed, please try again!');
+      return false;
     }
   };
 
   const BasicInfoTab: React.FC<{
     userInfo: API.CurrentUser;
   }> = ({userInfo}) => {
+    const intl = useIntl();
+
     return (
       <ProForm
+        onFinish={
+          async (value) => {
+            const success = await handleUpdateProfile(value);
+            if(success){
+                //重新获取currentUser
+              await fetchUserInfo();
+            }
+          }
+        }
         initialValues={{
-
+          nickName: userInfo.nickName,
+          userPhone: userInfo.userPhone,
+          userEmail: userInfo.userEmail
         }}
       >
         <ProFormText
-
+          name="nickName"
+          label={intl.formatMessage({
+            id: 'typings.CurrentUser.nickName',
+            defaultMessage: 'Nick name',
+          })}
         />
-
-
+        <ProFormText
+          name="userPhone"
+          label={intl.formatMessage({
+            id: 'typings.UserListItem.userPhone',
+            defaultMessage: 'Phone',
+          })}
+        />
+        <ProFormText
+          name="userEmail"
+          label={intl.formatMessage({
+            id: 'typings.UserListItem.userEmail',
+            defaultMessage: 'Email',
+          })}
+        />
       </ProForm>
     );
   };
 
   const PasswordTab: React.FC = () => {
+
+    const intl = useIntl();
+
     return (
-      <div>
-        {/* 在这里放置修改密码的表单或组件 */}
-        <h2>修改密码</h2>
-        <p>这是修改密码的内容</p>
-      </div>
+      <ProForm
+        onFinish={
+          async (value) => {
+            const success = await handleUpdatePassword(value);
+            if(success){
+              //重新获取currentUser
+              await fetchUserInfo();
+            }
+          }
+        }
+      >
+        <ProFormText
+          name="oldPassword"
+          label={intl.formatMessage({
+            id: 'typings.UserPasswordParam.oldPassword',
+            defaultMessage: 'Old Password',
+          })}
+        />
+        <ProFormText
+          name="newPassword"
+          label={intl.formatMessage({
+            id: 'typings.UserPasswordParam.newPassword',
+            defaultMessage: 'New Password',
+          })}
+        />
+        <ProFormText
+          name="checkNewPassword"
+          label={intl.formatMessage({
+            id: 'typings.UserPasswordParam.checkNewPassword',
+            defaultMessage: 'Check New Password',
+          })}
+        />
+      </ProForm>
     );
   };
 
@@ -176,7 +260,7 @@ const UpdateInfoCard: React.FC<{
           {
             key: 'basic',
             label: `基础资料`,
-            children: <BasicInfoTab />,
+            children: <BasicInfoTab userInfo={userInfo}/>,
           },
           {
             key: 'password',
@@ -192,7 +276,6 @@ const UpdateInfoCard: React.FC<{
 const Profile: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
-
   const { currentUser } = initialState;
 
   return (

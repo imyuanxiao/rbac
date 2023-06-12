@@ -18,7 +18,6 @@ public class UserProfileParam{
     @NotBlank(message = "Nickname is required.")
     private String nickName;
 
-    @NotBlank(message = "Avatar is required.")
-    private String avatar;
+//    private String avatar;
 
 }

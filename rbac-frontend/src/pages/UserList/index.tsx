@@ -302,11 +302,11 @@ const UserList: React.FC = () => {
         </FooterToolbar>
       )}
       <ModalForm
+        layout="horizontal"
         title={intl.formatMessage({
           id: 'common.operation.add',
           defaultMessage: '新增',
         })}
-        width="400px"
         formRef={restFormRef}
         open={createModalOpen}
         onOpenChange={handleModalOpen}
@@ -329,6 +329,9 @@ const UserList: React.FC = () => {
             },
           },
         }}
+        style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px'
+        }}
       >
           <ProFormText
             name="id"
@@ -345,7 +348,7 @@ const UserList: React.FC = () => {
               id: 'typings.UserListItem.username',
               defaultMessage: 'Username',
             })}
-            width="md"
+            width="sm"
             rules={[
               {
                 required: true,
@@ -360,7 +363,7 @@ const UserList: React.FC = () => {
           />
           <ProFormSelect
             name="userStatus"
-            width="md"
+            width="sm"
             label={intl.formatMessage({
               id: 'typings.UserListItem.userStatus',
               defaultMessage: 'Status',
@@ -371,7 +374,7 @@ const UserList: React.FC = () => {
           <ProFormSelect
             name="roleIds"
             mode="multiple"
-            width="md"
+            width="sm"
             label={intl.formatMessage({
               id: 'typings.UserListItem.roleIds',
               defaultMessage: 'Role',
@@ -384,7 +387,7 @@ const UserList: React.FC = () => {
               id: 'typings.UserListItem.userPhone',
               defaultMessage: 'Phone',
             })}
-            width="md"
+            width="sm"
           />
           <ProFormText
             name="userEmail"
@@ -392,12 +395,12 @@ const UserList: React.FC = () => {
               id: 'typings.UserListItem.userEmail',
               defaultMessage: 'Email',
             })}
-            width="md"
+            width="sm"
           />
           <ProFormSelect
             name="orgIds"
             mode="multiple"
-            width="md"
+            width="sm"
             label={intl.formatMessage({
               id: 'typings.UserListItem.orgIds',
               defaultMessage: 'Organization',

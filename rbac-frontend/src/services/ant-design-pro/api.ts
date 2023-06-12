@@ -205,3 +205,27 @@ export async function updateToken(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+
+/** 更新用户资料 PUT /api/user/profile */
+export async function updateUserProfile(body: API.UserProfileParam, options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/user/profile', {
+    method: 'PUT',
+    data: {
+      ...body
+    },
+    ...(options || {}),
+  });
+}
+
+
+/** 更新密码 PUT /api/user/profile/password */
+export async function updatePassword(body: API.UserPasswordParam, options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/user/profile/password', {
+    method: 'PUT',
+    data: {
+      ...body
+    },
+    ...(options || {}),
+  });
+}

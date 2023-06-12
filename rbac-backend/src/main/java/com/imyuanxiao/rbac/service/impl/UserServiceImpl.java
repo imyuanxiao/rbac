@@ -293,6 +293,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userProfile.setUserId(currentUserId);
         userProfileService.updateByUserId(userProfile);
 
+        // 更新redis内用户资料
+        User userResult = this.lambdaQuery()
+                .eq(User::getId, currentUserId)
+                .one();
+        // Put user basic info, profile, token, permissions in UserVO object
+        UserVO userVO = getUserVO(userResult);
+        // save UserMap to redis
+        // Manually handle or use util to convert id 'long' to 'string'.
+        Map<String, Object> userMap = BeanUtil.beanToMap(userVO, new HashMap<>(),
+                CopyOptions.create().
+                        setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue != null ? fieldValue.toString() : null));
+        // Save user info and token in redis
+        redisUtil.saveUserMap(userMap);
+
     }
 
     @Override

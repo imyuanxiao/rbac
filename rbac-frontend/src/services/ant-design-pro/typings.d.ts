@@ -8,6 +8,17 @@ declare namespace API {
     token?: string;
   };
 
+  type UserProfileParam = {
+    userPhone? : string;
+    userEmail? :string;
+    nickName? : string;
+  };
+
+  type UserPasswordParam = {
+    oldPassword? : string;
+    newPassword? :string;
+  };
+
   type CurrentUser = {
     id?: string;
     username?: string;
