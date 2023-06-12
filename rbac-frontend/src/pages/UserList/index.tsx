@@ -91,7 +91,7 @@ export async function fetchRoleOptions() {
   const roleOptions = res.response.map((role) => ({
     label: (
       <FormattedMessage
-        id={`pages.searchTable.role.${role.roleName}`}
+        id={`type.role.${role.roleName}`}
         defaultMessage={role.roleName}
       />
     ),
@@ -134,7 +134,12 @@ const UserList: React.FC = () => {
 
   const columns: ProColumns<API.UserListItem>[] = [
     {
-      title: 'ID',
+      title: (
+        <FormattedMessage
+          id="typings.UserListItem.id"
+          defaultMessage="User ID"
+        />
+      ),
       dataIndex: 'id',
       hideInTable: true, // 隐藏该列
       hideInSearch: true, // 隐藏搜索条件
@@ -142,7 +147,7 @@ const UserList: React.FC = () => {
     {
       title: (
         <FormattedMessage
-          id="pages.searchTable.updateForm.index"
+          id="common.index"
           defaultMessage="序号"
         />
       ),
@@ -156,7 +161,7 @@ const UserList: React.FC = () => {
     {
       title: (
         <FormattedMessage
-          id="pages.searchTable.updateForm.userName.nameLabel"
+          id="typings.UserListItem.username"
           defaultMessage="用户名"
         />
       ),
@@ -176,23 +181,34 @@ const UserList: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status"/>,
+      title: <FormattedMessage id="typings.UserListItem.userStatus" defaultMessage="Status"/>,
       dataIndex: 'userStatus',
       hideInForm: true,
       valueEnum: userStatusEnum
     },
     {
-      title: <FormattedMessage id="pages.searchTable.roleIds" defaultMessage="角色" />,
+      title: <FormattedMessage id="typings.UserListItem.roleIds" defaultMessage="角色" />,
       dataIndex: 'roleIds',
       valueType: 'select',
       request: fetchRoleOptions,
-      // valueEnum: roleEnum,
       fieldProps: {
         mode: 'multiple',
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,
+      title: <FormattedMessage id="typings.UserListItem.userPhone" defaultMessage="Phone"/>,
+      dataIndex: 'userPhone',
+      hideInTable: true,
+      hideInForm: true,
+    },
+    {
+      title: <FormattedMessage id="typings.UserListItem.userEmail" defaultMessage="Email"/>,
+      dataIndex: 'userEmail',
+      hideInForm: true,
+      hideInTable: true,
+    },
+    {
+      title: <FormattedMessage id="common.operation" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
@@ -205,7 +221,7 @@ const UserList: React.FC = () => {
                 handleUpdateModalOpen(true);
               }}
             >
-                <FormattedMessage id="pages.searchTable.edit" defaultMessage="编辑" />
+                <FormattedMessage id="common.operation.edit" defaultMessage="编辑" />
             </a>
         </Access>
 
@@ -235,7 +251,7 @@ const UserList: React.FC = () => {
                 handleModalOpen(true);
               }}
             >
-              <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新增" />
+              <PlusOutlined /> <FormattedMessage id="common.operation.add" defaultMessage="新增" />
             </Button>
           </Access>,
         ]}
@@ -287,7 +303,7 @@ const UserList: React.FC = () => {
       )}
       <ModalForm
         title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.new',
+          id: 'common.operation.add',
           defaultMessage: '新增',
         })}
         width="400px"
@@ -316,15 +332,18 @@ const UserList: React.FC = () => {
       >
           <ProFormText
             name="id"
-            label="ID"
+            label={intl.formatMessage({
+              id: 'typings.UserListItem.id',
+              defaultMessage: 'User ID',
+            })}
             hidden
             disabled
           />
           <ProFormText
             name="username"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userName.nameLabel',
-              defaultMessage: '用户名',
+              id: 'typings.UserListItem.username',
+              defaultMessage: 'Username',
             })}
             width="md"
             rules={[
@@ -343,8 +362,8 @@ const UserList: React.FC = () => {
             name="userStatus"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.userStatus',
-              defaultMessage: '状态',
+              id: 'typings.UserListItem.userStatus',
+              defaultMessage: 'Status',
             })}
             initialValue={0}
             options={userStatusOptions}
@@ -354,28 +373,34 @@ const UserList: React.FC = () => {
             mode="multiple"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.roleIds',
-              defaultMessage: '角色',
+              id: 'typings.UserListItem.roleIds',
+              defaultMessage: 'Role',
             })}
             request={fetchRoleOptions}
-            // request={async () => {
-            //   // 异步获取角色列表
-            //   const roles = await getRoleList();
-            //   console.log('getRoleList>>roles', roles);
-            //   // 将角色列表转换为所需的格式
-            //   const result = generateRoleEnum(roles);
-            //   console.log('generateRoleEnum>>result', result);
-            //   return result;
-            // }}
-            // valueEnum={roleEnum}
+          />
+          <ProFormText
+            name="userPhone"
+            label={intl.formatMessage({
+              id: 'typings.UserListItem.userPhone',
+              defaultMessage: 'Phone',
+            })}
+            width="md"
+          />
+          <ProFormText
+            name="userEmail"
+            label={intl.formatMessage({
+              id: 'typings.UserListItem.userEmail',
+              defaultMessage: 'Email',
+            })}
+            width="md"
           />
           <ProFormSelect
             name="orgIds"
             mode="multiple"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.orgIds',
-              defaultMessage: '组织',
+              id: 'typings.UserListItem.orgIds',
+              defaultMessage: 'Organization',
             })}
             valueEnum={orgEnum}
           />
@@ -413,7 +438,9 @@ const UserList: React.FC = () => {
         {currentRow?.username && (
           <ProDescriptions<API.UserListItem>
             column={2}
-            title={currentRow?.username}
+            title={
+              <FormattedMessage id="pages.dataDetail.title" defaultMessage="Details" />
+            }
             request={async () => ({
               data: currentRow || {},
             })}

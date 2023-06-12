@@ -19,6 +19,10 @@ public class UserVO {
 
     private Integer userStatus;
 
+    private String userPhone;
+
+    private String userEmail;
+
     private String avatar;
 
     private String nickName;

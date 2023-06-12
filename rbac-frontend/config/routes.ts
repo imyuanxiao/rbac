@@ -67,6 +67,12 @@ export default [
     component: './DataList',
   },
   {
+    path: '/profile',
+    name: 'profile',
+    icon: 'solution',
+    component: './Profile',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

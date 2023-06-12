@@ -201,7 +201,7 @@ export async function removeRole(body: number[], options?: { [key: string]: any 
 /** 更新Token GET /api/auth/updateToken */
 export async function updateToken(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/auth/updateToken', {
-    method: 'DELETE',
+    method: 'GET',
     ...(options || {}),
   });
 }

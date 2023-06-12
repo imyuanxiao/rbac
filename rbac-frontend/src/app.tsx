@@ -32,6 +32,7 @@ export async function getInitialState(): Promise<{
       });
       return userInfo;
     } catch (error) {
+      localStorage.removeItem('token');
       history.push(loginPath);
     }
     return undefined;
@@ -71,6 +72,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
+        localStorage.removeItem('token');
         history.push(loginPath);
       }
     },

@@ -47,21 +47,26 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           id: props.values.id,
           username: props.values.username,
           userStatus: props.values.userStatus,
+          userPhone: props.values.userPhone,
+          userEmail: props.values.userEmail,
           roleIds: props.values.roleIds?.map(id => id.toString()),
           orgIds: props.values.orgIds?.map(id => id.toString()),
         }}
       >
           <ProFormText
             name="id"
-            label="ID"
+            label={intl.formatMessage({
+              id: 'typings.UserListItem.id',
+              defaultMessage: 'User ID',
+            })}
             hidden
             disabled
           />
           <ProFormText
             name="username"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userName.nameLabel',
-              defaultMessage: '用户名',
+              id: 'typings.UserListItem.username',
+              defaultMessage: 'Username',
             })}
             width="md"
             rules={[
@@ -80,8 +85,8 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             name="userStatus"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.userStatus',
-              defaultMessage: '用户状态',
+              id: 'typings.UserListItem.userStatus',
+              defaultMessage: 'Status',
             })}
             options={userStatusOptions}
           />
@@ -90,19 +95,34 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             mode="multiple"
             width="md"
             label={intl.formatMessage({
-              id: 'pages.searchTable.updateForm.userProps.roleIds',
-              defaultMessage: '角色',
+              id: 'typings.UserListItem.roleIds',
+              defaultMessage: 'Role',
             })}
             request={fetchRoleOptions}
-            // valueEnum={roleEnum}
           />
+        <ProFormText
+          name="userPhone"
+          label={intl.formatMessage({
+            id: 'typings.UserListItem.userPhone',
+            defaultMessage: 'Phone',
+          })}
+          width="md"
+        />
+        <ProFormText
+          name="userEmail"
+          label={intl.formatMessage({
+            id: 'typings.UserListItem.userEmail',
+            defaultMessage: 'Email',
+          })}
+          width="md"
+        />
         <ProFormSelect
           name="orgIds"
           mode="multiple"
           width="md"
           label={intl.formatMessage({
-            id: 'pages.searchTable.updateForm.userProps.orgIds',
-            defaultMessage: '组织',
+            id: 'typings.UserListItem.orgIds',
+            defaultMessage: 'Organization',
           })}
           valueEnum={orgEnum}
         />

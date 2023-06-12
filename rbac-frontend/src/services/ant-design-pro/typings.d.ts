@@ -11,6 +11,8 @@ declare namespace API {
   type CurrentUser = {
     id?: string;
     username?: string;
+    userPhone?: string;
+    userEmail?: string;
     avatar?: string;
     nickName?: string;
     roleIds?: number[];
@@ -28,6 +30,8 @@ declare namespace API {
     id?: number;
     username?: string;
     userStatus?: number;
+    userPhone? : string;
+    userEmail? :string;
     roleIds?: number[];
     orgIds?: number[];
   };
@@ -47,7 +51,6 @@ declare namespace API {
 
   type LoginHistoryListItem = {
     id?: number;
-    user_id?: number;
     username?: string;
     type?: number;
     createdTime?: Date;

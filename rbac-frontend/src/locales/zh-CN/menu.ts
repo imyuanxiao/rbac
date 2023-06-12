@@ -56,6 +56,7 @@ export default {
 
   'menu.data': '数据管理',
   'menu.role': '角色管理',
+  'menu.profile': '个人中心',
 
   'menu.user.loginHistory': '登录日志',
 

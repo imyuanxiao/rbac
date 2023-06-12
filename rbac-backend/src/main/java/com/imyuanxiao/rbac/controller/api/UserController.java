@@ -2,10 +2,12 @@ package com.imyuanxiao.rbac.controller.api;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.imyuanxiao.rbac.annotation.Auth;
@@ -126,7 +128,16 @@ public class UserController {
         QueryWrapper<UserPageVO> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StrUtil.isNotBlank(param.getUsername()), "username", param.getUsername())
                 .eq(param.getUserStatus() != null, "user_status", param.getUserStatus())
+                .like(StrUtil.isNotBlank(param.getUserPhone()), "user_phone", param.getUserPhone())
+                .like(StrUtil.isNotBlank(param.getUserEmail()), "user_email", param.getUserEmail())
                 .ne("id", myId);
+
+//        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.like(StrUtil.isNotBlank(param.getUsername()), User::getUsername, param.getUsername())
+//                .eq(param.getUserStatus() != null, User::getUserStatus, param.getUserStatus())
+//                .like(StrUtil.isNotBlank(param.getUserPhone()), User::getUserPhone, param.getUserPhone())
+//                .like(StrUtil.isNotBlank(param.getUserEmail()), User::getUserEmail, param.getUserEmail())
+//                .ne(User::getId, myId);
 
         Set<Long> roleIds = param.getRoleIds();
         if (!CollUtil.isEmpty(roleIds)) {
@@ -139,16 +150,16 @@ public class UserController {
     }
 
 
-    @GetMapping("/page/{current}&{pageSize}")
-    @ApiOperation(value = "Page through user information")
-    public IPage<UserPageVO> getUserPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
-        // 设置分页参数
-        Page<UserPageVO> page = new Page<>();
-        OrderItem orderItem = new OrderItem();
-        orderItem.setColumn("id");
-        page.setCurrent(current).setSize(pageSize).addOrder(orderItem);
-        return userService.selectPage(page);
-    }
+//    @GetMapping("/page/{current}&{pageSize}")
+//    @ApiOperation(value = "Page through user information")
+//    public IPage<UserPageVO> getUserPage(@PathVariable("current") int current, @PathVariable("pageSize") int pageSize) {
+//        // 设置分页参数
+//        Page<UserPageVO> page = new Page<>();
+//        OrderItem orderItem = new OrderItem();
+//        orderItem.setColumn("id");
+//        page.setCurrent(current).setSize(pageSize).addOrder(orderItem);
+//        return userService.selectPage(page);
+//    }
 
     @PostMapping("/loginHistory")
     @ApiOperation(value = "Page through login history by conditions")

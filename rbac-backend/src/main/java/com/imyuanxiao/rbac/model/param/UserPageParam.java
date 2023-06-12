@@ -19,6 +19,9 @@ public class UserPageParam {
     private Integer pageSize;
 
     private String username;
+    private String userPhone;
+    private String userEmail;
+
     private Integer userStatus;
     private Set<Long> roleIds;
 

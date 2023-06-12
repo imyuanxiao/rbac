@@ -15,6 +15,8 @@ public class UserPageVO {
     private Long id;
     private String username;
     private int userStatus;
+    private String userPhone;
+    private String userEmail;
 
     private Set<Long> roleIds;
     private Set<Long> orgIds;
