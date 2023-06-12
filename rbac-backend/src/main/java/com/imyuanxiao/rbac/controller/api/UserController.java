@@ -52,8 +52,6 @@ public class UserController {
     @Autowired
     private PermissionService permissionService;
 
-    @Autowired
-    private UserProfileService userProfileService;
 
     @PostMapping("/add")
     @Auth(id = 1, name = "新增用户")
@@ -130,7 +128,9 @@ public class UserController {
                 .eq(param.getUserStatus() != null, "user_status", param.getUserStatus())
                 .like(StrUtil.isNotBlank(param.getUserPhone()), "user_phone", param.getUserPhone())
                 .like(StrUtil.isNotBlank(param.getUserEmail()), "user_email", param.getUserEmail())
-                .ne("id", myId);
+                .ne("id", myId)
+                // 不返回id为1的用户信息
+                .ne("id", 1);
 
 //        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
 //        queryWrapper.like(StrUtil.isNotBlank(param.getUsername()), User::getUsername, param.getUsername())

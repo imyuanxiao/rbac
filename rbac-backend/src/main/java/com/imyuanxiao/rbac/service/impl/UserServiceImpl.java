@@ -198,7 +198,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (userProfile == null) {
             userProfile = new UserProfile()
                     .setNickName(user.getUsername())
-                    .setAvatar("https://i.328888.xyz/2023/05/15/VZpOIx.png");
+                    .setAvatar("https://img1.imgtp.com/2023/06/12/OMedYC4F.jpg");
             userProfile.setUserId(user.getId());
             userProfileService.save(userProfile);
         }
@@ -209,7 +209,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .setPermissionIds(permissionService.getIdsByUserId(user.getId()));
         return userVO;
     }
-
 
     @Override
     public void logout(HttpServletRequest request) {
@@ -314,6 +313,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public void updateUserPassword(UserPasswordParam param) {
 
         Long currentUserId = SecurityContextUtil.getCurrentUserId();
+
+        // 不允许id为1的用户修改密码
+        if(currentUserId.equals(1L)){
+            throw new ApiException(ResultCode.VALIDATE_FAILED, "超级管理员不允许修改密码！");
+        }
 
         User userResult = lambdaQuery()
                 .eq(User::getId, currentUserId).one();

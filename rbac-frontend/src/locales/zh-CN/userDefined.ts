@@ -16,9 +16,9 @@ export default {
   'type.permission.canAdminRole' : '角色管理',
   'type.permission.canRolePage': '角色分页数据',
 
-  'type.permission.canAddRole': '新建用户',
-  'type.permission.canDeleteRole':'删除用户',
-  'type.permission.canEditRole':'编辑用户',
+  'type.permission.canAddRole': '新建角色',
+  'type.permission.canDeleteRole':'删除角色',
+  'type.permission.canEditRole':'编辑角色',
 
   'type.permission.canAdminData': '数据管理',
 
@@ -68,5 +68,19 @@ export default {
   'rules.message.password.newPassword' : '请输入新密码！',
   'rules.message.password.checkNewPassword' : '请确认新密码！',
 
+  'type.permission.canPermissionAdmin' : '权限管理',
+
+  'type.permission.canDataAdmin' : '数据管理',
+  'type.permission.canGetUserById': '通过ID获取用户',
+  'type.permission.canGetUserPermissionsById' : '通过ID获取权限',
+  'type.permission.getUserPageByConditions' : '用户分页数据',
+  'type.permission.getLoginHistoryByConditions' : '登录历史分页数据',
+
+  'type.permission.canUserAdmin' : '用户管理',
+  'type.permission.canRoleAdmin' : '角色管理',
+
+  'profile.tabs.title.userInfo' : '用户资料',
+  'profile.tabs.title.basic' : '基本资料',
+  'profile.tabs.title.password':'修改密码',
 
 }

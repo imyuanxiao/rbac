@@ -63,7 +63,7 @@ const MyInfoCard: React.FC<{
             <Avatar
               size={{ xs: 50, sm: 50, md: 100, lg: 100, xl: 100, xxl: 100 }}
               icon={<AntDesignOutlined />}
-              src={`${userInfo.avatar}`}
+              src={`${userInfo && userInfo.avatar ? userInfo.avatar : 'https://img1.imgtp.com/2023/06/12/OMedYC4F.jpg'}`}
             />
           </div>
           <Descriptions bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
@@ -71,13 +71,13 @@ const MyInfoCard: React.FC<{
               label={<FormattedMessage id="typings.CurrentUser.username" defaultMessage="Username" />}
               span={3}
             >
-              {userInfo.username}
+              {userInfo?.username}
             </Descriptions.Item>
             <Descriptions.Item
               label={<FormattedMessage id="typings.CurrentUser.nickName" defaultMessage="Nick name" />}
               span={3}
             >
-              {userInfo.nickName}
+              {userInfo?.nickName}
             </Descriptions.Item>
             <Descriptions.Item
               label={<FormattedMessage id="typings.CurrentUser.roleIds" defaultMessage="Role" />}
@@ -89,7 +89,7 @@ const MyInfoCard: React.FC<{
                 request={fetchRoleOptions}
                 fieldProps={{
                   mode: 'multiple',
-                  value: userInfo.roleIds,
+                  value: userInfo?.roleIds,
                 }}
               />
             </Descriptions.Item>
@@ -107,7 +107,12 @@ const MyInfoCard: React.FC<{
       items={[
         {
           key: 'userInfo',
-          label: `用户资料`,
+          label:(
+            <FormattedMessage
+              id="profile.tabs.title.userInfo"
+              defaultMessage='用户资料'
+            />
+          ),
           children: <ProfileTab userInfo={userInfo} />,
         }
       ]}
@@ -180,9 +185,9 @@ const UpdateInfoCard: React.FC<{
           }
         }
         initialValues={{
-          nickName: userInfo.nickName,
-          userPhone: userInfo.userPhone,
-          userEmail: userInfo.userEmail
+          nickName: userInfo?.nickName,
+          userPhone: userInfo?.userPhone,
+          userEmail: userInfo?.userEmail
         }}
       >
         <ProFormText
@@ -271,7 +276,7 @@ const UpdateInfoCard: React.FC<{
               message: (
                 <FormattedMessage
                   id="rules.message.password.oldPassword"
-                  defaultMessage='Please enter your old password'
+                  defaultMessage='Please enter old password'
                 />
               ),
             }]
@@ -328,12 +333,22 @@ const UpdateInfoCard: React.FC<{
         items={[
           {
             key: 'basic',
-            label: `基础资料`,
+            label:(
+              <FormattedMessage
+                id="profile.tabs.title.basic"
+                defaultMessage='基本资料'
+              />
+            ),
             children: <BasicInfoTab userInfo={userInfo}/>,
           },
           {
             key: 'password',
-            label: `修改密码`,
+            label:(
+              <FormattedMessage
+                id="profile.tabs.title.password"
+                defaultMessage='修改密码'
+              />
+            ),
             children: <PasswordTab />,
           }
         ]}

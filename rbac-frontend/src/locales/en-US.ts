@@ -5,7 +5,7 @@ import pages from './en-US/pages';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
-import userDefined from './zh-CN/userDefined';
+import userDefined from './en-US/userDefined';
 
 export default {
   'navBar.lang': 'Languages',

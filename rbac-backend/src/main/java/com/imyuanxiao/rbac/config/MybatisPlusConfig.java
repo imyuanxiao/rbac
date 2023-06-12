@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
  * @author: <a href="https://github.com/imyuanxiao">imyuanxiao</a>
  **/
 @Configuration
-@MapperScan("com.imyuanxiao.rbac.mapper")
 public class MybatisPlusConfig {
 
     /**
