@@ -27,6 +27,10 @@ public class UserParam {
 
     private Integer userStatus;
 
+    private String userPhone;
+
+    private String userEmail;
+
     private Set<Long> roleIds;
 
     private Set<Long> orgIds;

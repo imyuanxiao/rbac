@@ -11,13 +11,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imyuanxiao.rbac.annotation.Auth;
 import com.imyuanxiao.rbac.enums.ResultCode;
 import com.imyuanxiao.rbac.exception.ApiException;
-import com.imyuanxiao.rbac.model.param.LoginHistoryPageParam;
+import com.imyuanxiao.rbac.model.param.*;
 import com.imyuanxiao.rbac.model.vo.LoginHistoryPageVO;
-import com.imyuanxiao.rbac.model.param.UserPageParam;
 import com.imyuanxiao.rbac.model.entity.User;
-import com.imyuanxiao.rbac.model.param.UserParam;
 import com.imyuanxiao.rbac.model.vo.UserPageVO;
 import com.imyuanxiao.rbac.service.PermissionService;
+import com.imyuanxiao.rbac.service.UserProfileService;
 import com.imyuanxiao.rbac.service.UserService;
 import com.imyuanxiao.rbac.util.SecurityContextUtil;
 import com.imyuanxiao.rbac.util.ValidationGroups;
@@ -51,6 +50,9 @@ public class UserController {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private UserProfileService userProfileService;
+
     @PostMapping("/add")
     @Auth(id = 1, name = "新增用户")
     @ApiOperation(value = "Add user")
@@ -75,6 +77,20 @@ public class UserController {
     @ApiOperation(value = "Update user")
     public String updateUser(@RequestBody @Validated(ValidationGroups.UpdateUser.class) UserParam param) {
         userService.update(param);
+        return ACTION_SUCCESSFUL;
+    }
+
+    @PutMapping("/profile")
+    @ApiOperation(value = "Update user profile")
+    public String updateUserProfile(@RequestBody UserProfileParam param) {
+        userService.updateUserProfile(param);
+        return ACTION_SUCCESSFUL;
+    }
+
+    @PutMapping("/profile/password")
+    @ApiOperation(value = "Update user password")
+    public String updateUserPassword(@RequestBody UserPasswordParam param) {
+        userService.updateUserPassword(param);
         return ACTION_SUCCESSFUL;
     }
 
@@ -140,6 +156,7 @@ public class UserController {
     public IPage<LoginHistoryPageVO> getLoginHistoryByConditions(@RequestBody LoginHistoryPageParam param) {
         return userService.getLoginHistoryByConditions(param);
     }
+
 
 
 }

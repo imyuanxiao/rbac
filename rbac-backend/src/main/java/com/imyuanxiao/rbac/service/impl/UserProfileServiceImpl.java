@@ -1,5 +1,7 @@
 package com.imyuanxiao.rbac.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imyuanxiao.rbac.model.entity.UserProfile;
 import com.imyuanxiao.rbac.service.UserProfileService;
@@ -22,7 +24,9 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
     }
 
     public boolean updateByUserId(UserProfile userProfile) {
-        return this.update(userProfile, lambdaUpdate().eq(UserProfile::getUserId, userProfile.getUserId()));
+
+        return lambdaUpdate().eq(ObjUtil.isNotNull(userProfile.getUserId()), UserProfile::getUserId, userProfile.getUserId()).update(userProfile);
+
     }
 
 }

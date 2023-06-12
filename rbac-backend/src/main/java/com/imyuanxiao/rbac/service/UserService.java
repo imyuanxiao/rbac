@@ -77,4 +77,7 @@ public interface UserService extends IService<User> {
 
     boolean removeUserByIds(Collection<?> idList);
 
+    void updateUserProfile(UserProfileParam param);
+
+    void updateUserPassword(UserPasswordParam param);
 }

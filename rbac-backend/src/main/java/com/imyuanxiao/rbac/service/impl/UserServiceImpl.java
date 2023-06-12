@@ -278,6 +278,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
+    public void updateUserProfile(UserProfileParam param) {
+
+        Long currentUserId = SecurityContextUtil.getCurrentUserId();
+
+        // 更新手机号邮箱
+        lambdaUpdate()
+                .set(StrUtil.isNotBlank(param.getUserPhone()), User::getUserPhone, param.getUserPhone())
+                .set(StrUtil.isNotBlank(param.getUserEmail()), User::getUserEmail, param.getUserEmail())
+                .eq(User::getId, currentUserId).update();
+
+        // 更新其他资料
+        UserProfile userProfile = BeanUtil.copyProperties(param, UserProfile.class);
+        userProfile.setUserId(currentUserId);
+        userProfileService.updateByUserId(userProfile);
+
+    }
+
+    @Override
+    public void updateUserPassword(UserPasswordParam param) {
+
+        Long currentUserId = SecurityContextUtil.getCurrentUserId();
+
+        User userResult = lambdaQuery()
+                .eq(User::getId, currentUserId).one();
+
+        if (userResult == null || !passwordEncoder.matches(param.getOldPassword(), userResult.getUserPassword())) {
+            throw new ApiException(ResultCode.VALIDATE_FAILED, "旧密码输入错误！");
+        }
+
+        this.lambdaUpdate()
+                .set(User::getUserPassword, passwordEncoder.encode(param.getNewPassword()))
+                .eq(User::getId, currentUserId).update();
+
+    }
+
+    @Override
     public void update(UserParam param) {
 
         // 检查用户名是否存在（排除当前ID）
@@ -288,14 +324,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 提取User信息
         User updateUser = BeanUtil.copyProperties(param, User.class);
 
-        // 更新基本信息
+        // 更新基本信息（含手机号和邮箱）
         lambdaUpdate().eq(User::getId, updateUser.getId()).update(updateUser);
-
-//        // 更新资料
-//        UserProfile userProfile = BeanUtil.copyProperties(param, UserProfile.class);
-//        if (!Objects.isNull(userProfile)) {
-//            userProfileService.updateByUserId(userProfile);
-//        }
 
         // 更新角色
         updateRoles(param);
