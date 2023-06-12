@@ -57,10 +57,16 @@ export default {
   'typings.LoginHistoryListItem.userAgent' : '用户代理',
 
   'typings.UserPasswordParam.oldPassword' : '旧密码',
-
   'typings.UserPasswordParam.newPassword' : '新密码',
-
   'typings.UserPasswordParam.checkNewPassword' : '确认密码',
+
+  'rules.message.profile.nickName' : '昵称不能为空！',
+  'rules.message.profile.userPhone' : '手机号格式不正确！！',
+  'rules.message.profile.userEmail' : '邮箱格式不正确',
+
+  'rules.message.password.oldPassword' : '请输入原密码！',
+  'rules.message.password.newPassword' : '请输入新密码！',
+  'rules.message.password.checkNewPassword' : '请确认新密码！',
 
 
 }

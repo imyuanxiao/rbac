@@ -191,6 +191,17 @@ const UpdateInfoCard: React.FC<{
             id: 'typings.CurrentUser.nickName',
             defaultMessage: 'Nick name',
           })}
+          rules={[
+            {
+              required: true,
+              message: (
+                <FormattedMessage
+                  id="rules.message.profile.nickName"
+                  defaultMessage='Please enter a nick name'
+                />
+              ),
+            },
+          ]}
         />
         <ProFormText
           name="userPhone"
@@ -205,6 +216,17 @@ const UpdateInfoCard: React.FC<{
             id: 'typings.UserListItem.userEmail',
             defaultMessage: 'Email',
           })}
+          rules={[
+            {
+              type: 'email',
+              message:(
+                <FormattedMessage
+                  id="rules.message.profile.userEmail"
+                  defaultMessage='Please enter a valid email'
+                />
+              ),
+            },
+          ]}
         />
       </ProForm>
     );
@@ -213,6 +235,17 @@ const UpdateInfoCard: React.FC<{
   const PasswordTab: React.FC = () => {
 
     const intl = useIntl();
+
+    const validatePsw = ({ getFieldValue }) => {
+      return {
+        validator: (_, value) => {
+          if (!value || getFieldValue("newPassword") === value) {
+            return Promise.resolve();
+          }
+          return Promise.reject(new Error("两次输入密码不一致，请重新输入！"));
+        },
+      };
+    };
 
     return (
       <ProForm
@@ -232,6 +265,17 @@ const UpdateInfoCard: React.FC<{
             id: 'typings.UserPasswordParam.oldPassword',
             defaultMessage: 'Old Password',
           })}
+          rules={[
+            {
+              required: true,
+              message: (
+                <FormattedMessage
+                  id="rules.message.password.oldPassword"
+                  defaultMessage='Please enter your old password'
+                />
+              ),
+            }]
+          }
         />
         <ProFormText
           name="newPassword"
@@ -239,13 +283,38 @@ const UpdateInfoCard: React.FC<{
             id: 'typings.UserPasswordParam.newPassword',
             defaultMessage: 'New Password',
           })}
+          rules={[
+            {
+              required: true,
+              message: (
+                <FormattedMessage
+                  id="rules.message.password.newPassword"
+                  defaultMessage='Please enter new password'
+                />
+              ),
+            }]
+            }
         />
         <ProFormText
           name="checkNewPassword"
           label={intl.formatMessage({
-            id: 'typings.UserPasswordParam.checkNewPassword',
-            defaultMessage: 'Check New Password',
+            id: 'rules.message.password.newPassword',
+            defaultMessage: 'Please enter new password',
           })}
+          dependencies={["newPassword"]}
+          validateTrigger="onBlur"
+          rules={[
+            validatePsw,
+            {
+              required: true,
+              message: (
+                <FormattedMessage
+                  id="rules.message.password.checkNewPassword"
+                  defaultMessage='Please check new password'
+                />
+              ),
+            }
+          ]}
         />
       </ProForm>
     );
