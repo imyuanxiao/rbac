@@ -1,5 +1,7 @@
 CREATE DATABASE IF NOT EXISTS `rbac` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 
+USE rbac;
+
 CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'user ID',
   `username` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'username',
