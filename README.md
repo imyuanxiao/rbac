@@ -8,9 +8,7 @@
 
 **项目演示地址**
 
-http://13.229.229.154:8000/ (实例失效，待更新)
-
-![项目截图](https://img1.imgtp.com/2023/06/12/2fS6fxzd.png)
+http://api-master.yuanxiao.icu/
 
 
 该项目的旧版仓库：
